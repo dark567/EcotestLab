@@ -236,13 +236,9 @@ namespace DG
                 FbDataReader reader = SelectSQL.ExecuteReader();
                 // SelectSQL.Parameters["cust_no"].Value = reader["0"];
 
-
-
                 try
                 {
-
                     while (reader.Read()) { Nom = reader.GetString(0); }
-
                 }
                 finally
                 {
@@ -258,19 +254,9 @@ namespace DG
                 MessageBox.Show("" + ex.Message);
             }
 
-
             return Nom;
-
         }
 
-
-
-        
-
-            private void DataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
-        {
-
-        }
 
         private void DataGridView1_ColumnAdded(object sender, DataGridViewColumnEventArgs e)
         {
@@ -329,15 +315,6 @@ namespace DG
         }
         private void TreeView1_BeforeExpand(object sender, TreeViewCancelEventArgs e)
         {
-            //treeView1.BeginUpdate();
-
-            //foreach (TreeNode node in e.Node.Nodes)
-            //{
-            //    GetGoods(node);
-            //}
-
-            //treeView1.EndUpdate();
-
             foreach (var childNode in e.Node.Nodes.Cast<TreeNode>())
             {
                 if (childNode.Nodes.Count == 0)
@@ -487,18 +464,6 @@ namespace DG
         }
         public static void getNomDicGoodsID_(string ID)
         {
-            //ArrayList Code = new ArrayList();
-            //ArrayList Name = new ArrayList();
-            //ArrayList PriceOut = new ArrayList();
-
-            // Описание: ExecuteScalar — получение единственного значения. Firebird, InterBase .Net провайдер (c#)
-            //string connString = "User=SYSDBA;" +
-            //                    "Password=masterkey;" +
-            //                    "Charset = UTF8;" +
-            //                    "Database=127.0.0.1:terra;" +
-            //                    "DataSource=localhost;" +
-            //                    "Port=3050;";
-            //FbConnection fb = new FbConnection(connString);
 
             FbConnectionStringBuilder fb_con = new FbConnectionStringBuilder();
             fb_con.Charset = "UTF8"; //используемая кодировка
@@ -508,7 +473,6 @@ namespace DG
                                              // fb_con.Database = "127.0.0.1:terra"; //путь к файлу базы данных
             fb_con.ServerType = 0; //указываем тип сервера (0 - "полноценный Firebird" (classic или super server), 1 - встроенный (embedded))
             FbConnection fb = new FbConnection(fb_con.ToString()); //передаем нашу строку подключения объекту класса FbConnection
-
 
             fb.Open();
             FbCommand SelectSQL = new FbCommand("SELECT id, code, name, IS_SERVICE, PRICE_OUT, IS_ACTIVE FROM dic_goods where GRP_ID = @cust_no ORDER BY name", fb);
@@ -542,19 +506,10 @@ namespace DG
             // return dgm;
         }
 
-
         private void DataGridView1_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
             var senderGrid = (DataGridView)sender;
 
-            //string x = dataGridView1.Rows[e.RowIndex].Cells[1].Value.ToString();
-            //MessageBox.Show($"{x}");
-
-            //if (senderGrid.Columns[e.ColumnIndex] is DataGridViewButtonColumn &&
-            //    e.RowIndex >= 0)
-            //{
-            //    MessageBox.Show($"");
-            //}
             if (e.RowIndex >= 0)
             {
                 string id = dataGridView1.Rows[e.RowIndex].Cells[0].Value.ToString();
@@ -564,33 +519,7 @@ namespace DG
                 EditDicGoods myform = new EditDicGoods();
                 myform.X = id;
                 myform.ShowDialog();
-
-                //TestModel.AddjrTestModel(new TestModel(id: id, name: name/*, secname: s.Surname, sex: s.Sex, birthdate: s?.Birthdate.ToString(), email: s.Email*/));
-
-               // MyLabelClicked?.Invoke(new TestModel(id, name));
-
-                
-                /*
-                  if (MyLabelClicked != null)
-                    MyLabelClicked(y);
-                */
-
             }
-
-
-
-            //if (senderGrid.Columns[e.ColumnIndex] is DataGridViewButtonColumn &&
-            //e.RowIndex >= 0)
-            //{
-
-            //    //TODO - Button Clicked - Execute Code Here
-            //    string y = dataGridView1.Rows[e.RowIndex].Cells[3].Value.ToString();
-            //    MessageBox.Show($"{y}");
-
-            //    Form1 myform = new Form1();
-            //    myform.X = y;
-            //    myform.Show();
-            //}
         }
 
         private void DataGridView1_KeyUp(object sender, KeyEventArgs e)
@@ -598,20 +527,11 @@ namespace DG
             if (/*e.KeyCode == Keys.Enter ||*/ e.KeyCode == Keys.Space)
             {
                 //var senderGrid = (DataGridView)sender;
-               
+
                 if (dataGridView1?.CurrentCell?.RowIndex != null)
                 {
-                    //string output = dataGridView1.Rows[dataGridView1.CurrentCell.RowIndex].Cells[2]?.Value.ToString();
-
                     string id = dataGridView1.Rows[dataGridView1.CurrentCell.RowIndex].Cells[0]?.Value.ToString();
                     string name = dataGridView1.Rows[dataGridView1.CurrentCell.RowIndex].Cells[2]?.Value.ToString();
-                    //string y = dataGridView1.CurrentCell.RowIndex.ToString();
-
-                    //richTextBox1.Text = y;
-                    //richTextBox1.AppendText("\r\n" + y);
-                    //richTextBox1.ScrollToCaret();
-
-                    //TestModel testModel = new TestModel(id, name);
 
                     forEditChecksModel.AddjrTestModel(new forEditChecksModel(id: id, name: name));
 
@@ -621,19 +541,8 @@ namespace DG
                         richTextBox1.AppendText(Environment.NewLine + name);
 
                     richTextBox1.ScrollToCaret();
-
-                   // MyLabelClicked?.Invoke(testModel);
                 }
             }
-        }
-        private void DataGridView1_CellClick(object sender, DataGridViewCellEventArgs e)
-        {
-            //if (e.RowIndex >= 0)
-            //{
-            //    string output = dataGridView1.Rows[e.RowIndex].Cells[2].Value.ToString();
-
-            //    richTextBox1.Text = output;
-            //}
         }
 
         private void Button3_Click(object sender, EventArgs e)

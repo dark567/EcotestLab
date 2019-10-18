@@ -51,13 +51,13 @@ namespace DClients
             this.label3 = new System.Windows.Forms.Label();
             this.panel2 = new System.Windows.Forms.Panel();
             this.panel3 = new System.Windows.Forms.Panel();
+            this.macButton1 = new MACButtonLib.MACButton();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
             this.toolStripButton2 = new System.Windows.Forms.ToolStripButton();
             this.toolStripButton3 = new System.Windows.Forms.ToolStripButton();
-            this.macButton1 = new MACButtonLib.MACButton();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
             this.panel3.SuspendLayout();
@@ -275,6 +275,25 @@ namespace DClients
             this.panel3.Size = new System.Drawing.Size(687, 60);
             this.panel3.TabIndex = 2;
             // 
+            // macButton1
+            // 
+            this.macButton1.BackColor = System.Drawing.Color.Transparent;
+            this.macButton1.ButtonColorDefault = System.Drawing.Color.FromArgb(((int)(((byte)(90)))), ((int)(((byte)(162)))), ((int)(((byte)(214)))));
+            this.macButton1.ButtonColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(132)))), ((int)(((byte)(130)))), ((int)(((byte)(132)))));
+            this.macButton1.ButtonColorHover = System.Drawing.Color.FromArgb(((int)(((byte)(59)))), ((int)(((byte)(122)))), ((int)(((byte)(87)))));
+            this.macButton1.ButtonColorNormal = System.Drawing.Color.DodgerBlue;
+            this.macButton1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold);
+            this.macButton1.Location = new System.Drawing.Point(556, 3);
+            this.macButton1.Name = "macButton1";
+            this.macButton1.Size = new System.Drawing.Size(121, 36);
+            this.macButton1.TabIndex = 44;
+            this.macButton1.Text = "OK";
+            this.macButton1.TextColorDefault = System.Drawing.Color.Black;
+            this.macButton1.TextColorDisabled = System.Drawing.Color.Black;
+            this.macButton1.TextColorHover = System.Drawing.Color.White;
+            this.macButton1.TextColorNormal = System.Drawing.Color.Black;
+            this.macButton1.Click += new System.EventHandler(this.MacButton1_Click);
+            // 
             // statusStrip1
             // 
             this.statusStrip1.Location = new System.Drawing.Point(0, 38);
@@ -294,6 +313,7 @@ namespace DClients
             this.dataGridView1.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dataGridView1.Size = new System.Drawing.Size(687, 562);
             this.dataGridView1.TabIndex = 1;
+            this.dataGridView1.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.DataGridView1_CellDoubleClick);
             this.dataGridView1.ColumnAdded += new System.Windows.Forms.DataGridViewColumnEventHandler(this.DataGridView1_ColumnAdded);
             this.dataGridView1.KeyUp += new System.Windows.Forms.KeyEventHandler(this.DataGridView1_KeyUp);
             // 
@@ -335,25 +355,6 @@ namespace DClients
             this.toolStripButton3.Name = "toolStripButton3";
             this.toolStripButton3.Size = new System.Drawing.Size(23, 22);
             this.toolStripButton3.Text = "toolStripButton3";
-            // 
-            // macButton1
-            // 
-            this.macButton1.BackColor = System.Drawing.Color.Transparent;
-            this.macButton1.ButtonColorDefault = System.Drawing.Color.FromArgb(((int)(((byte)(90)))), ((int)(((byte)(162)))), ((int)(((byte)(214)))));
-            this.macButton1.ButtonColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(132)))), ((int)(((byte)(130)))), ((int)(((byte)(132)))));
-            this.macButton1.ButtonColorHover = System.Drawing.Color.FromArgb(((int)(((byte)(59)))), ((int)(((byte)(122)))), ((int)(((byte)(87)))));
-            this.macButton1.ButtonColorNormal = System.Drawing.Color.DodgerBlue;
-            this.macButton1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold);
-            this.macButton1.Location = new System.Drawing.Point(556, 3);
-            this.macButton1.Name = "macButton1";
-            this.macButton1.Size = new System.Drawing.Size(121, 36);
-            this.macButton1.TabIndex = 44;
-            this.macButton1.Text = "OK";
-            this.macButton1.TextColorDefault = System.Drawing.Color.Black;
-            this.macButton1.TextColorDisabled = System.Drawing.Color.Black;
-            this.macButton1.TextColorHover = System.Drawing.Color.White;
-            this.macButton1.TextColorNormal = System.Drawing.Color.Black;
-            this.macButton1.Click += new System.EventHandler(this.MacButton1_Click);
             // 
             // dicClients
             // 

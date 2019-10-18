@@ -10,7 +10,7 @@ namespace DG
 {
     public class forEditChecksModel
     {
-        [VisibleTypes(true)]
+        [VisibleTypes(false)]
         [DisplayName("ID")]
         [ColumnWeight(10)] //todo
         [AutoSizeMode(DataGridViewAutoSizeColumnMode.AllCells)]

@@ -311,7 +311,7 @@ namespace JOrders
             this.textBox1.Location = new System.Drawing.Point(60, 12);
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(235, 20);
-            this.textBox1.TabIndex = 1;
+            this.textBox1.TabIndex = 0;
             this.textBox1.KeyUp += new System.Windows.Forms.KeyEventHandler(this.TextBox1_KeyUp);
             // 
             // label2

@@ -37,7 +37,8 @@ namespace JOrders
 
             textBox1.Text = $"ID:{Id}";
 
-           
+            this.ActiveControl = textBox1;
+
             #region read ini
             try
             {
@@ -431,7 +432,10 @@ namespace JOrders
         {
             if (/*e.KeyCode == Keys.Enter ||*/ e.KeyCode == Keys.F2)
             {
-                Button1_Click(sender, e);
+                dicClients f2 = new dicClients();
+                f2.MyLabelClicked += new dicClients.MyLabelClickedHandler(DicClientsAdd);
+                f2.Param = textBox1.Text;
+                f2.ShowDialog();
             }
         }
 

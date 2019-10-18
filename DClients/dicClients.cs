@@ -17,6 +17,8 @@ namespace DClients
         public string user;
         public string pass;
 
+        public string Param = "";
+
         public delegate void MyLabelClickedHandler(forAddDicClientsModel testModel);
         public event MyLabelClickedHandler MyLabelClicked;
 
@@ -63,7 +65,7 @@ namespace DClients
             dataGridView1.AllowUserToResizeColumns = true;
 
             DcClientsModel.ClearDcClientsModel();
-            getNomDicGoodsID_();
+            getNomDicGoodsID_(Param);
 
             SortableBindingList<DcClientsModel> data = new SortableBindingList<DcClientsModel>(); //Специальный список List с вызовом события обновления внутреннего состояния, необходимого для автообновления datagridview
 
@@ -73,8 +75,6 @@ namespace DClients
             }
             
             dataGridView1.DataSource = data;
- 
-     
         }
 
         public static void getNomDicGoodsID_(string SURNAME = null)
@@ -124,12 +124,6 @@ namespace DClients
             }
         }
 
-        //private static string MyConvert(string dateTime)
-        //{
-        //    if (dateTime == null) return null;
-        //    return (DateTime.ParseExact(dateTime, "yyyy-MM-dd",
-        //                               CultureInfo.InvariantCulture)).ToString("yyyy-MM-dd");
-        //}
 
         private void DicClients_Load(object sender, EventArgs e)
         {
@@ -264,6 +258,25 @@ namespace DClients
 
             //    // MyLabelClicked?.Invoke(testModel);
             //}
+        }
+
+        private void DataGridView1_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (dataGridView1?.CurrentCell?.RowIndex != null)
+            {
+                string id = dataGridView1.Rows[dataGridView1.CurrentCell.RowIndex].Cells[0]?.Value.ToString();
+                string name = dataGridView1.Rows[dataGridView1.CurrentCell.RowIndex].Cells[1]?.Value.ToString();
+                string codename = dataGridView1.Rows[dataGridView1.CurrentCell.RowIndex].Cells[4]?.Value.ToString();
+
+                forAddDicClientsModel.AddjrTestModel(new forAddDicClientsModel(id: id, name: name, codeName: codename));
+            }
+
+            foreach (forAddDicClientsModel s in forAddDicClientsModel.GetjrTestModel)
+            {
+                MyLabelClicked?.Invoke(s);
+            }
+
+            Close();
         }
     }
 }
