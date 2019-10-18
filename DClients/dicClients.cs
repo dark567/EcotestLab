@@ -17,6 +17,9 @@ namespace DClients
         public string user;
         public string pass;
 
+        public delegate void MyLabelClickedHandler(forAddDicClientsModel testModel);
+        public event MyLabelClickedHandler MyLabelClicked;
+
         public dicClients()
         {
             InitializeComponent();
@@ -66,7 +69,7 @@ namespace DClients
 
             foreach (DcClientsModel s in DcClientsModel.GetDcClientsModel)
             {
-                data.Add(new DcClientsModel(id: s.Id, surname: s.Secname, name: s.Name, secname: s.Surname, sex: s.Sex, birthdate: s?.Birthdate.ToString(), email: s.Email));
+                data.Add(new DcClientsModel(id: s.Id, surname: s.Secname, name: s.Name, secname: s.Surname, codeName: s.CodeName, sex: s.Sex, birthdate: s?.Birthdate.ToString(), email: s.Email));
             }
             
             dataGridView1.DataSource = data;
@@ -89,8 +92,8 @@ namespace DClients
 
             fb.Open();
             FbCommand SelectSQL;
-            if (SURNAME == null || SURNAME == "") SelectSQL = new FbCommand("SELECT first 100 Id, SURNAME, Name, SECNAME, SEX, BIRTH_DATE, EMAIL FROM dic_clients ORDER BY SURNAME", fb);
-            else SelectSQL = new FbCommand("SELECT first 1000 Id, SURNAME, Name, SECNAME, SEX, BIRTH_DATE, EMAIL FROM dic_clients where UPPER(CODE_NAME) LIKE UPPER(@param) ORDER BY SURNAME", fb);
+            if (SURNAME == null || SURNAME == "") SelectSQL = new FbCommand("SELECT first 100 Id, SURNAME, Name, SECNAME, code_name, SEX, BIRTH_DATE, EMAIL FROM dic_clients ORDER BY SURNAME", fb);
+            else SelectSQL = new FbCommand("SELECT Id, SURNAME, Name, SECNAME, code_name, SEX, BIRTH_DATE, EMAIL FROM dic_clients where UPPER(CODE_NAME) LIKE UPPER(@param)", fb);
             //add one IN parameter                     
             FbParameter nameParam = new FbParameter("@param", "%" + SURNAME + "%");
            // FbParameter nameParam = new FbParameter("@param", SURNAME + "%");
@@ -105,7 +108,7 @@ namespace DClients
             {
                 while (reader.Read())
                 {
-                    DcClientsModel.AddDcClientsModel(new DcClientsModel(id: reader?.GetString(0), surname: reader?.GetString(1), name: reader?.GetString(2), secname: reader?.GetString(3), sex: reader.GetString(4), birthdate: reader?.GetString(5), email: reader?.GetString(6)));
+                    DcClientsModel.AddDcClientsModel(new DcClientsModel(id: reader?.GetString(0), surname: reader?.GetString(1), name: reader?.GetString(2), secname: reader?.GetString(3), codeName: reader?.GetString(4), sex: reader.GetString(5), birthdate: reader?.GetString(6), email: reader?.GetString(7)));
                 }
             }
             catch (Exception) 
@@ -156,7 +159,7 @@ namespace DClients
 
             foreach (DcClientsModel s in DcClientsModel.GetDcClientsModel)
             {
-                data.Add(new DcClientsModel(id: s.Id, surname: s.Secname, name: s.Name, secname: s.Surname, sex: s.Sex, birthdate: s?.Birthdate.ToString(), email: s.Email));
+                data.Add(new DcClientsModel(id: s.Id, surname: s.Secname, name: s.Name, secname: s.Surname, codeName: s.CodeName, sex: s.Sex, birthdate: s?.Birthdate.ToString(), email: s.Email));
             }
 
             dataGridView1.DataSource = data;
@@ -216,6 +219,51 @@ namespace DClients
                 // base.DataGridView1_ColumnAdded(sender, e);
 
             
+        }
+
+        private void MacButton1_Click(object sender, EventArgs e)
+        {
+
+            if (dataGridView1?.CurrentCell?.RowIndex != null)
+            {
+                string id = dataGridView1.Rows[dataGridView1.CurrentCell.RowIndex].Cells[0]?.Value.ToString();
+                string name = dataGridView1.Rows[dataGridView1.CurrentCell.RowIndex].Cells[1]?.Value.ToString();
+                string codename = dataGridView1.Rows[dataGridView1.CurrentCell.RowIndex].Cells[4]?.Value.ToString();
+
+                forAddDicClientsModel.AddjrTestModel(new forAddDicClientsModel(id: id, name: name, codeName: codename));
+            }
+
+            foreach (forAddDicClientsModel s in forAddDicClientsModel.GetjrTestModel)
+            {
+                MyLabelClicked?.Invoke(s);
+            }
+
+            Close();
+        }
+
+        private void DataGridView1_KeyUp(object sender, KeyEventArgs e)
+        {
+            //if (dataGridView1?.CurrentCell?.RowIndex != null)
+            //{
+            //    //string output = dataGridView1.Rows[dataGridView1.CurrentCell.RowIndex].Cells[2]?.Value.ToString();
+
+            //    string id = dataGridView1.Rows[dataGridView1.CurrentCell.RowIndex].Cells[0]?.Value.ToString();
+            //    string name = dataGridView1.Rows[dataGridView1.CurrentCell.RowIndex].Cells[1]?.Value.ToString();
+            //    string codename = dataGridView1.Rows[dataGridView1.CurrentCell.RowIndex].Cells[2]?.Value.ToString();
+            //    //string y = dataGridView1.CurrentCell.RowIndex.ToString();
+
+            //    //richTextBox1.Text = y;
+            //    //richTextBox1.AppendText("\r\n" + y);
+            //    //richTextBox1.ScrollToCaret();
+
+            //    //TestModel testModel = new TestModel(id, name);
+
+            //    forAddDicClientsModel.AddjrTestModel(new forAddDicClientsModel(id: id, name: name, codeName: codename));
+
+              
+
+            //    // MyLabelClicked?.Invoke(testModel);
+            //}
         }
     }
 }

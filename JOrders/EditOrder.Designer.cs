@@ -195,6 +195,7 @@ namespace JOrders
             this.button10.TabIndex = 15;
             this.button10.Text = "...";
             this.button10.UseVisualStyleBackColor = true;
+            this.button10.Click += new System.EventHandler(this.Button10_Click);
             // 
             // button9
             // 
@@ -311,6 +312,7 @@ namespace JOrders
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(235, 20);
             this.textBox1.TabIndex = 1;
+            this.textBox1.KeyUp += new System.Windows.Forms.KeyEventHandler(this.TextBox1_KeyUp);
             // 
             // label2
             // 
@@ -536,6 +538,7 @@ namespace JOrders
             this.button3.TextColorDisabled = System.Drawing.Color.Black;
             this.button3.TextColorHover = System.Drawing.Color.White;
             this.button3.TextColorNormal = System.Drawing.Color.Black;
+            this.button3.Click += new System.EventHandler(this.Button3_Click);
             // 
             // button2
             // 

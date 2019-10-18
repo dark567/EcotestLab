@@ -1,4 +1,5 @@
-﻿using DG;
+﻿using DClients;
+using DG;
 using FirebirdSql.Data.FirebirdClient;
 using System;
 using System.Collections.Generic;
@@ -318,6 +319,11 @@ namespace JOrders
             dataGridView1.DataSource = data;
         }
 
+        void DicClientsAdd(forAddDicClientsModel testModel)
+        {
+            textBox1.Text = testModel.CodeName.ToString();
+        }
+
         private void Button1_Click(object sender, EventArgs e)
         {
            
@@ -414,6 +420,26 @@ namespace JOrders
                 printForm.Param = "FJOR_CHECKS_EDITOR";
                 printForm.ShowDialog();
             }
+        }
+
+        private void Button3_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void TextBox1_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (/*e.KeyCode == Keys.Enter ||*/ e.KeyCode == Keys.F2)
+            {
+                Button1_Click(sender, e);
+            }
+        }
+
+        private void Button10_Click(object sender, EventArgs e)
+        {
+            dicClients f2 = new dicClients();
+            f2.MyLabelClicked += new dicClients.MyLabelClickedHandler(DicClientsAdd);
+            f2.ShowDialog();
         }
     }
 }

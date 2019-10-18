@@ -57,6 +57,7 @@ namespace DClients
             this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
             this.toolStripButton2 = new System.Windows.Forms.ToolStripButton();
             this.toolStripButton3 = new System.Windows.Forms.ToolStripButton();
+            this.macButton1 = new MACButtonLib.MACButton();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
             this.panel3.SuspendLayout();
@@ -86,7 +87,7 @@ namespace DClients
             this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(715, 84);
+            this.panel1.Size = new System.Drawing.Size(687, 84);
             this.panel1.TabIndex = 0;
             // 
             // comboBox1
@@ -215,6 +216,7 @@ namespace DClients
             this.button1.TextColorDisabled = System.Drawing.Color.Black;
             this.button1.TextColorHover = System.Drawing.Color.White;
             this.button1.TextColorNormal = System.Drawing.Color.Black;
+            this.button1.Click += new System.EventHandler(this.Button1_Click);
             // 
             // button4
             // 
@@ -260,23 +262,24 @@ namespace DClients
             this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel2.Location = new System.Drawing.Point(0, 84);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(715, 587);
+            this.panel2.Size = new System.Drawing.Size(687, 587);
             this.panel2.TabIndex = 1;
             // 
             // panel3
             // 
+            this.panel3.Controls.Add(this.macButton1);
             this.panel3.Controls.Add(this.statusStrip1);
             this.panel3.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel3.Location = new System.Drawing.Point(0, 559);
+            this.panel3.Location = new System.Drawing.Point(0, 527);
             this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(715, 28);
+            this.panel3.Size = new System.Drawing.Size(687, 60);
             this.panel3.TabIndex = 2;
             // 
             // statusStrip1
             // 
-            this.statusStrip1.Location = new System.Drawing.Point(0, 6);
+            this.statusStrip1.Location = new System.Drawing.Point(0, 38);
             this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(715, 22);
+            this.statusStrip1.Size = new System.Drawing.Size(687, 22);
             this.statusStrip1.TabIndex = 0;
             this.statusStrip1.Text = "statusStrip1";
             // 
@@ -289,9 +292,10 @@ namespace DClients
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.ReadOnly = true;
             this.dataGridView1.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridView1.Size = new System.Drawing.Size(715, 562);
+            this.dataGridView1.Size = new System.Drawing.Size(687, 562);
             this.dataGridView1.TabIndex = 1;
             this.dataGridView1.ColumnAdded += new System.Windows.Forms.DataGridViewColumnEventHandler(this.DataGridView1_ColumnAdded);
+            this.dataGridView1.KeyUp += new System.Windows.Forms.KeyEventHandler(this.DataGridView1_KeyUp);
             // 
             // toolStrip1
             // 
@@ -301,7 +305,7 @@ namespace DClients
             this.toolStripButton3});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Size = new System.Drawing.Size(715, 25);
+            this.toolStrip1.Size = new System.Drawing.Size(687, 25);
             this.toolStrip1.TabIndex = 0;
             this.toolStrip1.Text = "toolStrip1";
             // 
@@ -332,11 +336,30 @@ namespace DClients
             this.toolStripButton3.Size = new System.Drawing.Size(23, 22);
             this.toolStripButton3.Text = "toolStripButton3";
             // 
+            // macButton1
+            // 
+            this.macButton1.BackColor = System.Drawing.Color.Transparent;
+            this.macButton1.ButtonColorDefault = System.Drawing.Color.FromArgb(((int)(((byte)(90)))), ((int)(((byte)(162)))), ((int)(((byte)(214)))));
+            this.macButton1.ButtonColorDisabled = System.Drawing.Color.FromArgb(((int)(((byte)(132)))), ((int)(((byte)(130)))), ((int)(((byte)(132)))));
+            this.macButton1.ButtonColorHover = System.Drawing.Color.FromArgb(((int)(((byte)(59)))), ((int)(((byte)(122)))), ((int)(((byte)(87)))));
+            this.macButton1.ButtonColorNormal = System.Drawing.Color.DodgerBlue;
+            this.macButton1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold);
+            this.macButton1.Location = new System.Drawing.Point(556, 3);
+            this.macButton1.Name = "macButton1";
+            this.macButton1.Size = new System.Drawing.Size(121, 36);
+            this.macButton1.TabIndex = 44;
+            this.macButton1.Text = "OK";
+            this.macButton1.TextColorDefault = System.Drawing.Color.Black;
+            this.macButton1.TextColorDisabled = System.Drawing.Color.Black;
+            this.macButton1.TextColorHover = System.Drawing.Color.White;
+            this.macButton1.TextColorNormal = System.Drawing.Color.Black;
+            this.macButton1.Click += new System.EventHandler(this.MacButton1_Click);
+            // 
             // dicClients
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(715, 671);
+            this.ClientSize = new System.Drawing.Size(687, 671);
             this.Controls.Add(this.panel2);
             this.Controls.Add(this.panel1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -385,5 +408,6 @@ namespace DClients
         private MACButtonLib.MACButton button1;
         private System.Windows.Forms.Panel panel3;
         private System.Windows.Forms.StatusStrip statusStrip1;
+        private MACButtonLib.MACButton macButton1;
     }
 }

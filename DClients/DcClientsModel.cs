@@ -38,6 +38,12 @@ namespace DClients
         //[TypesIService(false)]
         public string Surname { get; set; }
 
+        [DisplayName("CodeName")]
+        [ColumnWeight(10)] //todo
+        [AutoSizeMode(DataGridViewAutoSizeColumnMode.AllCells)]
+        //[TypesIService(false)]
+        public string CodeName { get; set; }
+
         [DisplayName("Пол")]
         [ColumnWeight(10)] //todo
         [AutoSizeMode(DataGridViewAutoSizeColumnMode.AllCells)]
@@ -79,12 +85,13 @@ namespace DClients
 
 
 
-        public DcClientsModel(string id, string surname, string name, string secname, string sex, string birthdate = "", string email = null)
+        public DcClientsModel(string id, string surname, string name, string secname, string codeName, string sex, string birthdate = "", string email = null)
         {
             Id = id;
             Surname = surname;
             Name = name;
             Secname = secname;
+            CodeName = codeName;
             Sex = sex;
             Birthdate = birthdate = birthdate == "" ? "": (DateTime.Parse(birthdate).ToShortDateString()).ToString();
             Email = email;

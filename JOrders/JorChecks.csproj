@@ -121,6 +121,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\DClients\DicClients.csproj">
+      <Project>{927F79D5-119A-4E0F-BE6D-3A58074EF22A}</Project>
+      <Name>DicClients</Name>
+    </ProjectReference>
     <ProjectReference Include="..\DG\DicGoods.csproj">
       <Project>{7011A8F6-FFE4-4081-BA12-5D7ED7B32A3F}</Project>
       <Name>DicGoods</Name>
