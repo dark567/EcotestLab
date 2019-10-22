@@ -255,7 +255,7 @@ namespace JResultsAdd
 
         private void DateTimePickerTo_ValueChanged(object sender, EventArgs e)
         {
-            if (dateTimePickerFrom.Value > dateTimePickerTo.Value) dateTimePickerTo.Value = dateTimePickerFrom.Value;
+            if (dateTimePickerFrom.Value > dateTimePickerTo.Value) dateTimePickerFrom.Value = dateTimePickerTo.Value;
         }
 
         private void Button1_Click(object sender, EventArgs e)

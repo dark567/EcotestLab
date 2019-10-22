@@ -81,6 +81,12 @@
     </Compile>
     <Compile Include="ApplicLogic.cs" />
     <Compile Include="INIManager.cs" />
+    <Compile Include="KeyLic.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="KeyLic.Designer.cs">
+      <DependentUpon>KeyLic.cs</DependentUpon>
+    </Compile>
     <Compile Include="LoginForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -97,6 +103,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="About.resx">
       <DependentUpon>About.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="KeyLic.resx">
+      <DependentUpon>KeyLic.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="LoginForm.resx">
       <DependentUpon>LoginForm.cs</DependentUpon>
@@ -124,6 +133,9 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <None Include="set.ini">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -261,6 +273,9 @@
     <None Include="Resources\Exel.bmp" />
     <None Include="Resources\SettingsCol.bmp" />
     <None Include="Resources\rcld.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="bin\Debug\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

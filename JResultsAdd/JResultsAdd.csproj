@@ -65,6 +65,7 @@
     <Compile Include="JResultsAddEdit.Designer.cs">
       <DependentUpon>JResultsAddEdit.cs</DependentUpon>
     </Compile>
+    <Compile Include="JResultsAddEditModel.cs" />
     <Compile Include="JrResultsChildModel.cs" />
     <Compile Include="JrResultsMainModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

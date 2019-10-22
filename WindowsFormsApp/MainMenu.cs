@@ -64,7 +64,12 @@ namespace WindowsFormsApp
 
                     if (!CheckLic())
                     {
-                        MessageBox.Show(Key.Value + ":" + ApplicLogic.CalculateMD5Hash(ApplicLogic.GetProcessorIdAndGetOSSerialNumberID()), "", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        //MessageBox.Show(Key.Value + ":" + ApplicLogic.CalculateMD5Hash(ApplicLogic.GetProcessorIdAndGetOSSerialNumberID()), "", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+
+                        KeyLic keyLic = new KeyLic();
+                        keyLic.Param = ApplicLogic.CalculateMD5Hash(ApplicLogic.GetProcessorIdAndGetOSSerialNumberID());
+                        keyLic.ShowDialog();
+
                     }
                     // else MessageBox.Show(Key.Value);
                 }

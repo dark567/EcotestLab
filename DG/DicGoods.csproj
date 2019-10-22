@@ -90,9 +90,6 @@
   <ItemGroup>
     <None Include="packages.config" />
     <None Include="Resources\About.bmp" />
-    <None Include="set.ini">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Accounting.bmp" />
