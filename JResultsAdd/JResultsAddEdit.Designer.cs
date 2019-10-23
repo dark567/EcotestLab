@@ -60,8 +60,6 @@
             this.label14 = new System.Windows.Forms.Label();
             this.textBox15 = new System.Windows.Forms.TextBox();
             this.label15 = new System.Windows.Forms.Label();
-            this.dateTimePicker1 = new System.Windows.Forms.DateTimePicker();
-            this.dateTimePicker2 = new System.Windows.Forms.DateTimePicker();
             this.richTextBox1 = new System.Windows.Forms.RichTextBox();
             this.label16 = new System.Windows.Forms.Label();
             this.checkBox1 = new System.Windows.Forms.CheckBox();
@@ -74,6 +72,8 @@
             this.button6 = new System.Windows.Forms.Button();
             this.button7 = new System.Windows.Forms.Button();
             this.button8 = new System.Windows.Forms.Button();
+            this.textBox12 = new System.Windows.Forms.TextBox();
+            this.textBox14 = new System.Windows.Forms.TextBox();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -134,6 +134,8 @@
             // panel1
             // 
             this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel1.Controls.Add(this.textBox14);
+            this.panel1.Controls.Add(this.textBox12);
             this.panel1.Controls.Add(this.button7);
             this.panel1.Controls.Add(this.button8);
             this.panel1.Controls.Add(this.button5);
@@ -146,8 +148,6 @@
             this.panel1.Controls.Add(this.checkBox1);
             this.panel1.Controls.Add(this.label16);
             this.panel1.Controls.Add(this.richTextBox1);
-            this.panel1.Controls.Add(this.dateTimePicker2);
-            this.panel1.Controls.Add(this.dateTimePicker1);
             this.panel1.Controls.Add(this.textBox10);
             this.panel1.Controls.Add(this.textBox11);
             this.panel1.Controls.Add(this.label11);
@@ -266,7 +266,7 @@
             // panel2
             // 
             this.panel2.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.panel2.Location = new System.Drawing.Point(11, 177);
+            this.panel2.Location = new System.Drawing.Point(10, 166);
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(610, 12);
             this.panel2.TabIndex = 12;
@@ -392,22 +392,6 @@
             this.label15.TabIndex = 19;
             this.label15.Text = "Сотрудник исполнитель";
             // 
-            // dateTimePicker1
-            // 
-            this.dateTimePicker1.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
-            this.dateTimePicker1.Location = new System.Drawing.Point(416, 216);
-            this.dateTimePicker1.Name = "dateTimePicker1";
-            this.dateTimePicker1.Size = new System.Drawing.Size(200, 20);
-            this.dateTimePicker1.TabIndex = 31;
-            // 
-            // dateTimePicker2
-            // 
-            this.dateTimePicker2.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
-            this.dateTimePicker2.Location = new System.Drawing.Point(416, 268);
-            this.dateTimePicker2.Name = "dateTimePicker2";
-            this.dateTimePicker2.Size = new System.Drawing.Size(200, 20);
-            this.dateTimePicker2.TabIndex = 32;
-            // 
             // richTextBox1
             // 
             this.richTextBox1.Location = new System.Drawing.Point(12, 216);
@@ -516,6 +500,20 @@
             this.button8.Text = "...";
             this.button8.UseVisualStyleBackColor = true;
             // 
+            // textBox12
+            // 
+            this.textBox12.Location = new System.Drawing.Point(429, 216);
+            this.textBox12.Name = "textBox12";
+            this.textBox12.Size = new System.Drawing.Size(163, 20);
+            this.textBox12.TabIndex = 45;
+            // 
+            // textBox14
+            // 
+            this.textBox14.Location = new System.Drawing.Point(429, 271);
+            this.textBox14.Name = "textBox14";
+            this.textBox14.Size = new System.Drawing.Size(163, 20);
+            this.textBox14.TabIndex = 46;
+            // 
             // JResultsAddEdit
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -569,8 +567,6 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.TextBox textBox2;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.DateTimePicker dateTimePicker2;
-        private System.Windows.Forms.DateTimePicker dateTimePicker1;
         private System.Windows.Forms.Label label17;
         private System.Windows.Forms.CheckBox checkBox1;
         private System.Windows.Forms.Label label16;
@@ -583,5 +579,7 @@
         private System.Windows.Forms.Button button4;
         private System.Windows.Forms.Button button11;
         private System.Windows.Forms.Button button10;
+        private System.Windows.Forms.TextBox textBox14;
+        private System.Windows.Forms.TextBox textBox12;
     }
 }

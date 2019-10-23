@@ -52,6 +52,13 @@
   <ItemGroup>
     <Compile Include="AutoSizeMode.cs" />
     <Compile Include="ColumnWeight.cs" />
+    <Compile Include="Filtr.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Filtr.Designer.cs">
+      <DependentUpon>Filtr.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FiltrModel.cs" />
     <Compile Include="INIManager.cs" />
     <Compile Include="jResultsAdd.cs">
       <SubType>Form</SubType>
@@ -78,6 +85,9 @@
     <Compile Include="VisibleTypes.cs" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Filtr.resx">
+      <DependentUpon>Filtr.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="jResultsAdd.resx">
       <DependentUpon>jResultsAdd.cs</DependentUpon>
     </EmbeddedResource>

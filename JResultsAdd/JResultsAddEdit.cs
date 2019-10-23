@@ -16,6 +16,7 @@ namespace JResultsAdd
     public partial class JResultsAddEdit : Form
     {
         public string Id = "n/a";
+       // public string Id = "f7e38f5b0fd24330be3b4d5a8bfffabf";
         public readonly string fileIniPath = Application.StartupPath + @"\set.ini";
         public static string path_db;
 
@@ -28,8 +29,13 @@ namespace JResultsAdd
         {
             textBox1.Text = $"ID:{Id}";
 
-            dateTimePicker1.CustomFormat = "dd-MM-yyyy HH:mm:ss";
-            dateTimePicker2.CustomFormat = "dd-MM-yyyy HH:mm:ss";
+            //dateTimePicker1.Format = DateTimePickerFormat.Custom;
+            //dateTimePicker1.CustomFormat = " ";
+            //dateTimePicker2.Format = DateTimePickerFormat.Custom;
+            //dateTimePicker2.CustomFormat = " ";
+
+            //dateTimePicker1.CustomFormat = "dd-MM-yyyy HH:mm:ss";
+            //dateTimePicker2.CustomFormat = "dd-MM-yyyy HH:mm:ss";
 
             #region read ini
             try
@@ -76,13 +82,17 @@ namespace JResultsAdd
 
                 if (s.PLAN_DATE_DONE != null && s.PLAN_DATE_DONE != "")
                 {
+                   // dateTimePicker1.CustomFormat = "dd-MM-yyyy HH:mm:ss";
                     DateTime PLAN_DATE_DONE = DateTime.ParseExact(s.PLAN_DATE_DONE, "dd.MM.yyyy HH:mm:ss", CultureInfo.InvariantCulture);
-                    if (PLAN_DATE_DONE != null) dateTimePicker1.Value = PLAN_DATE_DONE;
+                   // if (PLAN_DATE_DONE != null) dateTimePicker1.Value = PLAN_DATE_DONE;
+                    textBox12.Text = PLAN_DATE_DONE.ToString();
                 }
-                if (s.DATE_DONE != null && s.PLAN_DATE_DONE != "")
+                if (s.DATE_DONE != null && s.DATE_DONE != "")
                 {
+                    //dateTimePicker2.CustomFormat = "dd-MM-yyyy HH:mm:ss";
                     DateTime DATE_DONE = DateTime.ParseExact(s.DATE_DONE, "dd.MM.yyyy HH:mm:ss", CultureInfo.InvariantCulture);
-                    if (DATE_DONE != null) dateTimePicker1.Value = DATE_DONE;
+                   // if (DATE_DONE != null) dateTimePicker1.Value = DATE_DONE;
+                    textBox14.Text = DATE_DONE.ToString();
                 }
 
                 //if (s.PLAN_DATE_DONE != null || s.PLAN_DATE_DONE != "") dateTimePicker1.Value = DateTime.ParseExact(s.PLAN_DATE_DONE, "dd.MM.yyyy HH:mm:ss", CultureInfo.InvariantCulture);
@@ -94,13 +104,90 @@ namespace JResultsAdd
 
         private void Button1_Click(object sender, EventArgs e)
         {
+            foreach (JResultsAddEditModel s in JResultsAddEditModel.GetJrOrdersModel)
+            {
+                //if (dateTimePicker1.Value == DateTime.Parse("01.01.1753") && s.DATE_DONE != null)
+                //{
+                //    MessageBox.Show("null");
+                //    delJrCheckEditModel(Id);
+                //}
+                //else MessageBox.Show($"not null {dateTimePicker1.Value}");
+                if (s.DATE_DONE != "" && textBox14.Text == "")
+                {
+                    delJrCheckEditModel(Id);
+                }
+                
+            }
             Close();
+        }
+
+        public static void delJrCheckEditModel(string param = "")
+        {
+            //MessageBox.Show(string.Format("Вы выбрали период с {0} до {1}", from.ToLongDateString(), to.ToLongDateString()), "Информация");
+            //File.AppendAllText(Application.StartupPath + @"\Event.log", string.Format("Вы выбрали период с {0} до {1}", from.ToLongDateString(), to.ToLongDateString()) + "\n");
+
+            FbConnectionStringBuilder fb_con = new FbConnectionStringBuilder();
+            fb_con.Charset = "UTF8"; //используемая кодировка
+            fb_con.UserID = "SYSDBA"; //логин
+            fb_con.Password = "masterkey"; //пароль
+            fb_con.Database = path_db; //путь к файлу базы данных
+                                       // fb_con.Database = "127.0.0.1:terra"; //путь к файлу базы данных
+            fb_con.ServerType = 0; //указываем тип сервера (0 - "полноценный Firebird" (classic или super server), 1 - встроенный (embedded))
+            FbConnection fb = new FbConnection(fb_con.ToString()); //передаем нашу строку подключения объекту класса FbConnection
+
+            fb.Open();
+            //FbCommand SelectSQL = new FbCommand("delete from JOR_CHECKS where id = cast(@param as ID)", fb);
+            FbCommand SelectSQL = new FbCommand("update JOR_CHECKS_DT set date_done = null where id = cast(@param as ID)", fb);
+
+            //add one IN parameter                     
+            FbParameter nameParam = new FbParameter("@param", value: param);
+            // добавляем параметр к команде
+            SelectSQL.Parameters.Add(nameParam);
+
+            FbTransaction fbt = fb.BeginTransaction();
+            SelectSQL.Transaction = fbt;
+            try
+            {
+                SelectSQL.ExecuteNonQuery();
+                MessageBox.Show("update dateDone");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("error" + ex.Message);
+            }
+            finally
+            {
+                fbt.Commit();
+                SelectSQL.Dispose();
+                fb.Close();
+            }
+
+            //FbConnection conn = new FbConnection(fb_con.ToString());
+            //FbTransaction fbt_ = conn.BeginTransaction();
+            //try
+            //{
+            //    using (FbCommand cmd = new FbCommand("delete from JOR_CHECKS where id = cast(@param as ID)", conn))
+            //    {
+            //        //add one IN parameter                     
+            //        FbParameter nameParam_ = new FbParameter("@param", value: param);
+            //        // добавляем параметр к команде
+            //        cmd.Parameters.Add(nameParam_);
+            //        cmd.Transaction = fbt_;
+            //        cmd.ExecuteNonQuery();
+            //    }
+            //}
+            //finally
+            //{
+            //    fbt_.Commit();
+            //    //SelectSQL.Dispose();
+            //    conn.Close();
+            //}
         }
 
 
         public static void getJrOrdersModel(string param = null)
         {
-             // param = "24dda31f0bfd4371867b8820123924f6";
+            // param = "f7e38f5b0fd24330be3b4d5a8bfffabf";
 
             //MessageBox.Show(string.Format("Вы выбрали период с {0} до {1}", from.ToLongDateString(), to.ToLongDateString()), "Информация");
             //File.AppendAllText(Application.StartupPath + @"\Event.log", string.Format("Вы выбрали период с {0} до {1}", from.ToLongDateString(), to.ToLongDateString()) + "\n");
@@ -167,7 +254,7 @@ namespace JResultsAdd
             {
                 while (reader.Read())
                 {
-                    JResultsAddEditModel.AddJrOrdersModel(new JResultsAddEditModel(id: reader.GetString(0), dataDoc: reader.GetString(9), nomerDoc: reader.GetString(3), shkProb: reader.GetString(4), typeAnaliz: reader.GetString(6), grpAnaliz: reader.GetString(8), codeName: reader.GetString(11), pLAN_DATE_DONE: reader.GetString(20), dATE_DONE: reader.GetString(21)));
+                    JResultsAddEditModel.AddJrOrdersModel(new JResultsAddEditModel(id: reader.GetString(0), dataDoc: reader.GetString(9), nomerDoc: reader.GetString(3), shkProb: reader.GetString(4), typeAnaliz: reader.GetString(6), grpAnaliz: reader.GetString(8), codeName: reader.GetString(11), pLAN_DATE_DONE: reader.GetString(21), dATE_DONE: reader.GetString(20)));
                 }
             }
             catch (Exception)
@@ -186,6 +273,16 @@ namespace JResultsAdd
         private void Button2_Click(object sender, EventArgs e)
         {
             Close();
+        }
+
+        private void DateTimePicker1_ValueChanged(object sender, EventArgs e)
+        {
+           // dateTimePicker1.CustomFormat = "dd-MM-yyyy HH:mm:ss";
+        }
+
+        private void DateTimePicker2_ValueChanged(object sender, EventArgs e)
+        {
+           // dateTimePicker2.CustomFormat = "dd-MM-yyyy HH:mm:ss";
         }
     }
 }

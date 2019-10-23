@@ -85,21 +85,22 @@
             this.заказыКлиентовToolStripMenuItem.Image = global::WindowsFormsApp.Properties.Resources.Orders;
             this.заказыКлиентовToolStripMenuItem.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.заказыКлиентовToolStripMenuItem.Name = "заказыКлиентовToolStripMenuItem";
-            this.заказыКлиентовToolStripMenuItem.Size = new System.Drawing.Size(175, 30);
+            this.заказыКлиентовToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Q)));
+            this.заказыКлиентовToolStripMenuItem.Size = new System.Drawing.Size(218, 30);
             this.заказыКлиентовToolStripMenuItem.Text = "Заказы клиентов";
             this.заказыКлиентовToolStripMenuItem.Click += new System.EventHandler(this.ЗаказыКлиентовToolStripMenuItem_Click);
             // 
             // toolStripMenuItem3
             // 
             this.toolStripMenuItem3.Name = "toolStripMenuItem3";
-            this.toolStripMenuItem3.Size = new System.Drawing.Size(172, 6);
+            this.toolStripMenuItem3.Size = new System.Drawing.Size(215, 6);
             // 
             // выходToolStripMenuItem
             // 
             this.выходToolStripMenuItem.Image = global::WindowsFormsApp.Properties.Resources.Exit;
             this.выходToolStripMenuItem.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.выходToolStripMenuItem.Name = "выходToolStripMenuItem";
-            this.выходToolStripMenuItem.Size = new System.Drawing.Size(175, 30);
+            this.выходToolStripMenuItem.Size = new System.Drawing.Size(218, 30);
             this.выходToolStripMenuItem.Text = "Выход";
             this.выходToolStripMenuItem.Click += new System.EventHandler(this.ВыходToolStripMenuItem_Click);
             // 
@@ -117,7 +118,8 @@
             this.заполнениеРезультатовToolStripMenuItem.Image = global::WindowsFormsApp.Properties.Resources.AddResults;
             this.заполнениеРезультатовToolStripMenuItem.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.заполнениеРезультатовToolStripMenuItem.Name = "заполнениеРезультатовToolStripMenuItem";
-            this.заполнениеРезультатовToolStripMenuItem.Size = new System.Drawing.Size(272, 30);
+            this.заполнениеРезультатовToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.W)));
+            this.заполнениеРезультатовToolStripMenuItem.Size = new System.Drawing.Size(317, 30);
             this.заполнениеРезультатовToolStripMenuItem.Text = "Заполнение результатов анализов";
             this.заполнениеРезультатовToolStripMenuItem.Click += new System.EventHandler(this.ЗаполнениеРезультатовToolStripMenuItem_Click);
             // 
@@ -126,7 +128,8 @@
             this.результатыToolStripMenuItem.Image = global::WindowsFormsApp.Properties.Resources.Results;
             this.результатыToolStripMenuItem.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.результатыToolStripMenuItem.Name = "результатыToolStripMenuItem";
-            this.результатыToolStripMenuItem.Size = new System.Drawing.Size(272, 30);
+            this.результатыToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.R)));
+            this.результатыToolStripMenuItem.Size = new System.Drawing.Size(317, 30);
             this.результатыToolStripMenuItem.Text = "Результаты анализов";
             this.результатыToolStripMenuItem.Click += new System.EventHandler(this.РезультатыToolStripMenuItem_Click);
             // 
@@ -282,7 +285,6 @@
             this.Name = "MainMenu";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "ClientBDTerra";
-           // this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.Load += new System.EventHandler(this.Form1_Load);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();

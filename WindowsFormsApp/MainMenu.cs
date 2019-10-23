@@ -9,6 +9,7 @@ using System.IO;
 using FirebirdSql.Data.FirebirdClient;
 using System.Data;
 using RbKey;
+using System.Linq;
 
 namespace WindowsFormsApp
 {
@@ -23,9 +24,9 @@ namespace WindowsFormsApp
         public readonly string fileIniPath = Application.StartupPath + @"\set.ini";
 
         public MainMenu()
-       {
-                InitializeComponent();
-               // Load += new EventHandler(Form1_Load);
+        {
+            InitializeComponent();
+            // Load += new EventHandler(Form1_Load);
         }
 
         /// <summary>
@@ -137,7 +138,7 @@ namespace WindowsFormsApp
 
                         //MessageBox.Show(fbcommand.CommandText, "", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
-                       // Application.Exit(); //!!!!!!!!!!!
+                        // Application.Exit(); //!!!!!!!!!!!
                     }
 
                     //if (!CheckLic())
@@ -174,44 +175,58 @@ namespace WindowsFormsApp
         }
         private void НоменклатураToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            DicGoods();
+            if (Application.OpenForms.OfType<DicGoods>().Count() < 1)
+                DicGoods();
         }
         private void ToolStripButton5_Click(object sender, EventArgs e)
         {
-            DicGoods();
+            if (Application.OpenForms.OfType<DicGoods>().Count() < 1)
+                DicGoods();
         }
         private void ToolStripButton1_Click(object sender, EventArgs e)
         {
-            JorChecks();
+            if (Application.OpenForms.OfType<JorChecks>().Count() < 1)
+                JorChecks();
 
         }
         private void ЗаказыКлиентовToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            JorChecks();
+            if (Application.OpenForms.OfType<JorChecks>().Count() < 1)
+                JorChecks();
         }
         private void КлиентыToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            dicClients();
+            if (Application.OpenForms.OfType<dicClients>().Count() < 1)
+                dicClients();
         }
         private void ToolStripButton6_Click(object sender, EventArgs e)
         {
-            dicClients();
+            if (Application.OpenForms.OfType<dicClients>().Count() < 1)
+                dicClients();
         }
         private void ЗаполнениеРезультатовToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            jResultsAdd();
+            //if (Application.OpenForms.OfType<jResultsAdd>().Count() == 1)
+            //    Application.OpenForms.OfType<jResultsAdd>().First().Close();
+
+            if (Application.OpenForms.OfType<jResultsAdd>().Count() < 1)
+                jResultsAdd();
+
         }
         private void ToolStripButton2_Click(object sender, EventArgs e)
         {
-            jResultsAdd();
+            if (Application.OpenForms.OfType<jResultsAdd>().Count() < 1)
+                jResultsAdd();
         }
         private void РезультатыToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            jResults();
+            if (Application.OpenForms.OfType<jResults>().Count() < 1)
+                jResults();
         }
         private void ToolStripButton3_Click(object sender, EventArgs e)
         {
-            jResults();
+            if (Application.OpenForms.OfType<jResults>().Count() < 1)
+                jResults();
         }
         private void jResults()
         {
