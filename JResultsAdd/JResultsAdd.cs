@@ -72,7 +72,7 @@ namespace JResultsAdd
 
         }
 
-        private void AddrowsToDataGrid()
+        private void AddrowsToDataGrid(string nomer = null)
         {
             dataGridView1.Rows.Clear();
             dataGridView2.Rows.Clear();
@@ -85,7 +85,7 @@ namespace JResultsAdd
             JrResultsMainModel.ClearJrOrdersModel();
             JrResultsChildModel.ClearJrOrdersModel();
 
-            getJrOrdersModel(dateTimePickerFrom.Value, dateTimePickerTo.Value, id: null, filtr: FiltrModel.FiltrTest);
+            getJrOrdersModel(dateTimePickerFrom.Value, dateTimePickerTo.Value, id: null, filtr: FiltrModel.FiltrTest, nomer);
 
             SortableBindingList<JrResultsMainModel> data = new SortableBindingList<JrResultsMainModel>(); //Специальный список List с вызовом события обновления внутреннего состояния, необходимого для автообновления datagridview
             SortableBindingList<JrResultsChildModel> dataChild = new SortableBindingList<JrResultsChildModel>(); //Специальный список List с вызовом события обновления внутреннего состояния, необходимого для автообновления datagridview
@@ -97,14 +97,14 @@ namespace JResultsAdd
 
             foreach (JrResultsChildModel s in JrResultsChildModel.GetJrOrdersChildModel)
             {
-                dataChild.Add(new JrResultsChildModel(id: s.Id, nomer: s.Nomer, codeName: s.CodeName, shkProb: s.ShkProb, goods: s.Goods, podrIsp: s.PodrIsp.ToString(), podrRec: s.PodrRec, datePlan: s.DatePlan, dateDone: s.DateDone));
+                dataChild.Add(new JrResultsChildModel(id: s.Id, name: s.Name, edIzm: s.EdIzm, textNorm: s.TextNorm, rezult: s.Rezult, descr: s.Descr, rezultNum: s.RezultNum, zaNorm: s.ZaNorm, sort: s.Sort));
             }
 
             dataGridView1.DataSource = data;
             dataGridView2.DataSource = dataChild;
         }
 
-        public static void getJrOrdersModel(DateTime from, DateTime to, string id = null, string filtr = null)
+        public static void getJrOrdersModel(DateTime from, DateTime to, string id = null, string filtr = null, string nomer = null)
         {
             // string _param = "5c79547510ab484fa0f4dbc72ccdb74e";
 
@@ -123,7 +123,7 @@ namespace JResultsAdd
 
             fb.Open();
             FbCommand SelectSQL;
-            if ((id == null || id == "") && (filtr == null || filtr == ""))
+            if ((id == null || id == "") && (filtr == null || filtr == "") && (nomer == null || nomer == ""))
                 SelectSQL = new FbCommand("select first 1000 D.ID as ID, D.IS_URGENT, D.IS_REFUSE, D.CHECK_NUM as NUM, D.BULB_NUM_CODE as BULB_CODE, D.GOODS_ID, " +
                                          " D.GOODS_NAME as GOODS, D.GOODS_GRP_ID as GRP_ID, D.GOODS_GRP_NAME as GRP_, D.CHECK_DATE as DATE_TIME, " +
                                          " D.CHECK_CLIENT_CODE_NAME as CLIENT, D.CHECK_CLIENT_ID as CLIENT_CODE, " +
@@ -166,7 +166,7 @@ namespace JResultsAdd
                                          " and D.CHECK_DATE < cast('" + to.ToString("dd.MM.yyyy") + "' as date) + 1 " +
                                          " and D.CHECK_DATE >= cast('" + from.ToString("dd.MM.yyyy") + "' as date) " +
                                          " /*ENDWHERECONDITIONS*/", fb);
-            else if ((id != null) && (filtr == null || filtr == ""))
+            else if ((id != null) && (filtr == null || filtr == "") && (nomer == null || nomer == ""))
             {
                 SelectSQL = new FbCommand("select first 1000 D.ID as ID, D.IS_URGENT, D.IS_REFUSE, D.CHECK_NUM as NUM, D.BULB_NUM_CODE as BULB_CODE, D.GOODS_ID, " +
                                         " D.GOODS_NAME as GOODS, D.GOODS_GRP_ID as GRP_ID, D.GOODS_GRP_NAME as GRP_, D.CHECK_DATE as DATE_TIME, " +
@@ -211,7 +211,7 @@ namespace JResultsAdd
                 // добавляем параметр к команде
                 SelectSQL.Parameters.Add(nameParamId);
             }
-            else if ((id == null || id == "") && (filtr != null))
+            else if ((id == null || id == "") && (filtr != null) && (nomer == null || nomer == ""))
             {
                 //add one IN parameter   
                 string param;
@@ -276,6 +276,60 @@ namespace JResultsAdd
                                        " /*ENDWHERECONDITIONS*/", fb);
 
                 
+
+                //FbParameter nameParamFiltr = new FbParameter("@param", param);
+                //// добавляем параметр к команде
+                //SelectSQL.Parameters.Add(nameParamFiltr);
+            }
+            else if ((id == null || id == "") && (nomer != null))
+            {
+                //add one IN parameter   
+
+                SelectSQL = new FbCommand("select first 1000 D.ID as ID, D.IS_URGENT, D.IS_REFUSE, D.CHECK_NUM as NUM, D.BULB_NUM_CODE as BULB_CODE, D.GOODS_ID, " +
+                                       " D.GOODS_NAME as GOODS, D.GOODS_GRP_ID as GRP_ID, D.GOODS_GRP_NAME as GRP_, D.CHECK_DATE as DATE_TIME, " +
+                                       " D.CHECK_CLIENT_CODE_NAME as CLIENT, D.CHECK_CLIENT_ID as CLIENT_CODE, " +
+                                       " D.CHECK_SUBDIVISION_NAME as SUBDIVISION_RECEPT, D.CHECK_SUBDIVISION_ID as SUBDIVISION_RECEPT_ID, " +
+                                       " D.CHECK_PAYER_ORG_CODE_NAME as PAYER_ORG, D.SUBDIVISION_EXEC_NAME as SUBDIVISION_EXEC, D.SUBDIVISION_EXEC_ID, " +
+                                       " D.ORG_EXEC_CODE_NAME as ORG_EXEC, D.ORG_EXEC_ID, D.PLAN_DATE_DONE, D.DATE_DONE, D.DATE_DONE_PREV, " +
+                                       " D.DONE_EMPLOYEE_ID, D.DONE_EMPLOYEE_CODE_NAME as DONE_EMPLOYEE, D.CHECK_EMPLOYEE_ID, " +
+                                       " D.CHECK_EMPLOYEE_CODE_NAME as CHECK_EMPLOYEE, CL.SEX as SEX_ID, CL.SEX as SEX_NAME, " +
+                                       " (select R_YEAR from GET_DATE_DIFF(CL.BIRTH_DATE, current_date)) as AGE, DI.CODE_NAME as DIAGNOSIS, DD.VAL_IDX as MENSTPHASE, " +
+                                       " C.PREG_WEEK_FROM, C.PREG_WEEK_TO, C.DESCR_PREVIEW as CHECK_DESCR, D.DESCR as DT_DESCR, " +
+                                       " D.DESCR_PREVIEW as DT_DESCR_PREVIEW, D.RESULT_TEXT_PREVIEW as RESULT_TEXT, D.GOODS_ORDER as ORDER_, " +
+                                       " D.CHECK_AGENT_CODE_NAME as AGENT, AGO.CODE_NAME as AGENT_ORG, C.AGENT_ID, D.HD_ID as JOR_CHECKS_ID, " +
+                                       " D.MANIPULATION_DATE_TIME as MANIPULATION_DATE, D.MANIPULATION_EMPLOYEE_CODE_NAME as MANIPULATION_EXECUTOR, " +
+                                       " case when VIS.CNT_ > 1 then 1 " +
+                                       " else 0 end as IS_WAS_BEFORE, " +
+                                       " LNUM.NUM_TEXT as NUM_TEXT_ADD, D.DIC_NO_OPPORT_TO_RES_ID, D.DIC_NO_OPPORT_TO_RES_NAME as NO_OPPORT_TO_RES_NAME, " +
+                                       " D.MATERIAL_ID, BM.VAL_IDX as BIOMATERIAL, D.LAB_PROCESS_ID, LP.NUM as LAB_PROCESS, M.VAL_IDX as METHODIC, " +
+                                       " D.IS_REMARKED_DATE_TIME, D.BLANK_ID as DIC_BLANK_ID " +
+                                       " , (select jb.print_time from JOR_BLANKS JB " +
+                                       " where d.date_done is not null " +
+                                       " and D.HD_ID = JB.JOR_CHECK_ID " +
+                                       " and D.BLANK_ID = JB.BLANK_ID) as PRINT_BLANK_DATE " +
+                                       " from JOR_CHECKS_DT D " +
+                                       " left join JOR_CHECKS C on C.ID = D.HD_ID " +
+                                       " left join DIC_CLIENTS CL on CL.ID = C.CLIENT_ID " +
+                                       " left join ACC_CNT_CLIENTS_VISITS VIS on VIS.CLIENT_ID = C.CLIENT_ID " +
+                                       " left join DIC_DIAGNOSIS DI on DI.ID = C.DIAGNOSIS_ID " +
+                                       " left join DIC_DICS DD on DD.ID = C.MENSTRPHASE_ID " +
+                                       " left join DIC_CLIENTS AG on AG.ID = C.AGENT_ID " +
+                                       " left join DIC_ORG AGO on AGO.ID = AG.ORG_ID " +
+                                       " left join JOR_CHECKS_DT_LABNUM LNUM on LNUM.HD_ID = D.ID " +
+                                       " left join DIC_DICS BM on BM.ID = D.MATERIAL_ID " +
+                                       " left join JOR_LAB_PROCESS LP on LP.ID = D.LAB_PROCESS_ID " +
+                                       " left join JOR_CHECKS_DT_METHODIC DTM on DTM.CHECK_DT_ID = D.ID " +
+                                       " left join DIC_DICS M on M.ID = DTM.METHODIC_ID " +
+                                       " where D.BULB_NUM_ID is not null and D.IS_COMPLEX = 0 " +
+                                       " /*BEGINWHERECONDITIONS*/ " +
+                                       " and D.IS_REFUSE = 0 " +
+                                        // " and D.DATE_DONE is null " +
+                                        " and D.CHECK_NUM = '" + nomer + "'" +
+                                       " and D.CHECK_DATE < cast('" + to.ToString("dd.MM.yyyy") + "' as date) + 1 " +
+                                       " and D.CHECK_DATE >= cast('" + from.ToString("dd.MM.yyyy") + "' as date) " +
+                                       " /*ENDWHERECONDITIONS*/", fb);
+
+
 
                 //FbParameter nameParamFiltr = new FbParameter("@param", param);
                 //// добавляем параметр к команде
@@ -358,7 +412,7 @@ namespace JResultsAdd
             {
                 while (readerChild.Read())
                 {
-                    JrResultsChildModel.AddJrOrdersModel(new JrResultsChildModel(id: readerChild?.GetString(0), nomer: readerChild?.GetString(1), codeName: readerChild?.GetString(2), shkProb: readerChild?.GetString(3), goods: readerChild.GetString(4), podrIsp: readerChild?.GetString(5), podrRec: readerChild?.GetString(6), datePlan: readerChild?.GetString(6), dateDone: readerChild?.GetString(6)));
+                    JrResultsChildModel.AddJrOrdersModel(new JrResultsChildModel(id: readerChild?.GetString(0), name: readerChild?.GetString(3), edIzm: readerChild?.GetString(2), textNorm: readerChild?.GetString(6), rezult: readerChild.GetString(9), descr: readerChild?.GetString(10), rezultNum: readerChild?.GetString(8), zaNorm: readerChild?.GetString(12), sort: readerChild?.GetString(13)));
                 }
             }
             catch (Exception)
@@ -387,8 +441,14 @@ namespace JResultsAdd
 
         private void Button1_Click(object sender, EventArgs e)
         {
-            AddrowsToDataGrid();
-        }
+            if (textBox2.Text != "")
+            {
+               // MessageBox.Show("");
+                AddrowsToDataGrid(textBox2.Text);
+            }
+            else AddrowsToDataGrid();
+
+    }
 
         private void DataGridView1_CellClick(object sender, DataGridViewCellEventArgs e)
         {
@@ -411,7 +471,7 @@ namespace JResultsAdd
 
                 foreach (JrResultsChildModel s in JrResultsChildModel.GetJrOrdersChildModel)
                 {
-                    dataChild.Add(new JrResultsChildModel(id: s.Id, nomer: s.Nomer, codeName: s.CodeName, shkProb: s.ShkProb, goods: s.Goods, podrIsp: s.PodrIsp.ToString(), podrRec: s.PodrRec, datePlan: s.DatePlan, dateDone: s.DateDone));
+                    dataChild.Add(new JrResultsChildModel(id: s.Id, name: s.Name, edIzm: s.EdIzm, textNorm: s.TextNorm, rezult: s.Rezult, descr: s.Descr, rezultNum: s.RezultNum, zaNorm: s.ZaNorm, sort: s.Sort));
                 }
 
                 dataGridView2.DataSource = dataChild;
@@ -537,7 +597,7 @@ namespace JResultsAdd
 
                 foreach (JrResultsChildModel s in JrResultsChildModel.GetJrOrdersChildModel)
                 {
-                    dataChild.Add(new JrResultsChildModel(id: s.Id, nomer: s.Nomer, codeName: s.CodeName, shkProb: s.ShkProb, goods: s.Goods, podrIsp: s.PodrIsp.ToString(), podrRec: s.PodrRec, datePlan: s.DatePlan, dateDone: s.DateDone));
+                    dataChild.Add(new JrResultsChildModel(id: s.Id, name: s.Name, edIzm: s.EdIzm, textNorm: s.TextNorm, rezult: s.Rezult, descr: s.Descr, rezultNum: s.RezultNum, zaNorm: s.ZaNorm, sort: s.Sort));
                 }
 
                 dataGridView2.DataSource = dataChild;
@@ -595,6 +655,40 @@ namespace JResultsAdd
         {
             // Get the property object based on the DataPropertyName of the column
             var property = typeof(JrResultsMainModel).GetProperty(e.Column.DataPropertyName);
+            // Get the ColumnWeight attribute from the property if it exists
+            var weightAttribute = (ColumnWeight)property?.GetCustomAttribute(typeof(ColumnWeight));
+            if (weightAttribute != null)
+            {
+                // Finally, set the FillWeight of the column to our defined weight in the attribute
+                e.Column.FillWeight = weightAttribute.Weight;
+            }
+
+            var weightAttributeDisp = (DisplayNameAttribute)property?.GetCustomAttribute(typeof(DisplayNameAttribute));
+            if (weightAttributeDisp != null)
+            {
+                // Finally, set the FillWeight of the column to our defined weight in the attribute
+                e.Column.HeaderText = weightAttributeDisp.DisplayName;
+            }
+
+            var autoSize = (AutoSizeMode)property?.GetCustomAttribute(typeof(AutoSizeMode));
+            if (autoSize != null)
+            {
+                // Finally, set the FillWeight of the column to our defined weight in the attribute
+                e.Column.AutoSizeMode = (DataGridViewAutoSizeColumnMode)autoSize.SizeMode;
+            }
+
+            var visibleTypes = (VisibleTypes)property?.GetCustomAttribute(typeof(VisibleTypes));
+            if (visibleTypes != null)
+            {
+                // Finally, set the FillWeight of the column to our defined weight in the attribute
+                e.Column.Visible = visibleTypes.typesVisible;
+            }
+        }
+
+        private void DataGridView2_ColumnAdded(object sender, DataGridViewColumnEventArgs e)
+        {
+            // Get the property object based on the DataPropertyName of the column
+            var property = typeof(JrResultsChildModel).GetProperty(e.Column.DataPropertyName);
             // Get the ColumnWeight attribute from the property if it exists
             var weightAttribute = (ColumnWeight)property?.GetCustomAttribute(typeof(ColumnWeight));
             if (weightAttribute != null)

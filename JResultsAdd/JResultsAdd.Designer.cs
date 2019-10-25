@@ -403,6 +403,7 @@
             this.dataGridView2.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dataGridView2.Size = new System.Drawing.Size(1076, 184);
             this.dataGridView2.TabIndex = 2;
+            this.dataGridView2.ColumnAdded += new System.Windows.Forms.DataGridViewColumnEventHandler(this.DataGridView2_ColumnAdded);
             // 
             // toolStrip2
             // 

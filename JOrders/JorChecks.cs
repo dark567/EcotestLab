@@ -66,7 +66,7 @@ namespace JOrders
             AddrowsToDataGrid();
         }
 
-        private void AddrowsToDataGrid()
+        private void AddrowsToDataGrid(string nomer = null)
         {
             dataGridView1.Rows.Clear();
             dataGridView2.Rows.Clear();
@@ -79,7 +79,7 @@ namespace JOrders
             JrOrdersMainModel.ClearJrOrdersModel();
             JrOrdersChildModel.ClearJrOrdersModel();
 
-            getJrOrdersModel(DateTimePickerFrom.Value, DateTimePickerTo.Value);
+            getJrOrdersModel(from: DateTimePickerFrom.Value, to: DateTimePickerTo.Value, nomer: nomer);
 
             SortableBindingList<JrOrdersMainModel> data = new SortableBindingList<JrOrdersMainModel>(); //Специальный список List с вызовом события обновления внутреннего состояния, необходимого для автообновления datagridview
             SortableBindingList<JrOrdersChildModel> dataChild = new SortableBindingList<JrOrdersChildModel>(); //Специальный список List с вызовом события обновления внутреннего состояния, необходимого для автообновления datagridview
@@ -98,9 +98,9 @@ namespace JOrders
             dataGridView2.DataSource = dataChild;
         }
 
-        public static void getJrOrdersModel(DateTime from, DateTime to, string param = null)
+        public static void getJrOrdersModel(DateTime from, DateTime to, string param = null, string nomer = null)
         {
-            string _param = "5c79547510ab484fa0f4dbc72ccdb74e";
+            //string _param = "5c79547510ab484fa0f4dbc72ccdb74e";
 
             //MessageBox.Show(string.Format("Вы выбрали период с {0} до {1}", from.ToLongDateString(), to.ToLongDateString()), "Информация");
             //File.AppendAllText(Application.StartupPath + @"\Event.log", string.Format("Вы выбрали период с {0} до {1}", from.ToLongDateString(), to.ToLongDateString()) + "\n");
@@ -117,7 +117,7 @@ namespace JOrders
 
             fb.Open();
             FbCommand SelectSQL;
-            if (param == null || param == "")
+            if ((param == null || param == "") && (nomer == null || nomer == ""))
                 SelectSQL = new FbCommand("select first 1000 S.ID, S.DATE_TIME, S.NUM, S.SUBDIVISION_ID, DS.NAME as SUB, S.CLIENT_ID," +
                                         "trim(coalesce(C.SURNAME || ' ', '') || coalesce(C.NAME || ' ', '') || coalesce(C.SECNAME || ' ', '')) as CLIENT," +
                                         "S.MANAGER_ID, M.CODE_NAME as MANAGER, S.AGENT_ID," +
@@ -139,6 +139,33 @@ namespace JOrders
                                         "where 1 = 1 " +
                                         " /*BEGINWHERECONDITIONS*/ " +
                                         //  " and S.SUBDIVISION_ID = :SUBDIVISION_ID " +
+                                        " and S.DATE_TIME < cast('" + to.ToString("dd.MM.yyyy") + "' as date) + 1 " +
+                                        " and S.DATE_TIME >= cast('" + from.ToString("dd.MM.yyyy") + "' as date) " +
+                                        " /*ENDWHERECONDITIONS*/", fb);
+
+            else if ((param == null || param == "") && (nomer != null))
+                SelectSQL = new FbCommand("select first 1000 S.ID, S.DATE_TIME, S.NUM, S.SUBDIVISION_ID, DS.NAME as SUB, S.CLIENT_ID," +
+                                        "trim(coalesce(C.SURNAME || ' ', '') || coalesce(C.NAME || ' ', '') || coalesce(C.SECNAME || ' ', '')) as CLIENT," +
+                                        "S.MANAGER_ID, M.CODE_NAME as MANAGER, S.AGENT_ID," +
+                                        "trim(coalesce(A.SURNAME || ' ', '') || coalesce(A.NAME || ' ', '') || coalesce(A.SECNAME || ' ', '')) as AGENT," +
+                                        "S.PAYER_ORG_ID, O.CODE_NAME as ORG, S.DESCR, S.DESCR_PREVIEW, S.IS_FISCAL, S.AGREEMENT_DOC, S.SUM_BASE, S.SUM_," +
+                                        "S.PAYED_SUM, C.SEX as SEX_NAME, S.DIAGNOSIS_ID, DIA.NAME as DIAGNOSIS, S.MENSTRPHASE_ID, C.SEX as SEX_ID_ID," +
+                                        "S.PREG_WEEK_FROM, S.PREG_WEEK_TO, S.LAST_MENSTR_DAY, S.CYCLE_LENGTH, S.DISCONT_DESCR, S.DISCONT_DESCR_PREVIEW," +
+                                        "ADDD.CODE_NAME as ADD_EMPLOYEE, S.FISCAL_PRINT_TIME, S.TYPE_DONE_FOR_COLOR as COLOR, " +
+                                        "S.TYPE_EMAIL_STATUS_FOR_COLOR as COLOR_EMAIL_SEND, S.TYPE_DONE_FOR_COLOR, S.TYPE_EMAIL_STATUS_FOR_COLOR " +
+                                        "/*ADDCOLUMNS*/ " +
+                                        "from JOR_CHECKS S " +
+                                        "left join DIC_SUBDIVISIONS DS on DS.ID = S.SUBDIVISION_ID " +
+                                        "left join DIC_CLIENTS C on C.ID = S.CLIENT_ID " +
+                                        "left join DIC_EMPLOYEE M on M.ID = S.MANAGER_ID " +
+                                        "left join DIC_EMPLOYEE ADDD on ADDD.ID = S.ADD_EMPLOYEE_ID " +
+                                        "left join DIC_CLIENTS A on A.ID = S.AGENT_ID " +
+                                        "left join DIC_ORG O on O.ID = S.PAYER_ORG_ID " +
+                                        "left join DIC_DIAGNOSIS DIA on DIA.ID = S.DIAGNOSIS_ID " +
+                                        "where 1 = 1 " +
+                                        " /*BEGINWHERECONDITIONS*/ " +
+                                        //  " and S.SUBDIVISION_ID = :SUBDIVISION_ID " +
+                                        " and S.NUM = '" + nomer + "'" +
                                         " and S.DATE_TIME < cast('" + to.ToString("dd.MM.yyyy") + "' as date) + 1 " +
                                         " and S.DATE_TIME >= cast('" + from.ToString("dd.MM.yyyy") + "' as date) " +
                                         " /*ENDWHERECONDITIONS*/", fb);
@@ -305,7 +332,14 @@ namespace JOrders
 
         private void Button1_Click_1(object sender, EventArgs e)
         {
-            AddrowsToDataGrid();
+            // AddrowsToDataGrid();
+
+            if (textBox2.Text != "")
+            {
+                // MessageBox.Show("");
+                AddrowsToDataGrid(textBox2.Text);
+            }
+            else AddrowsToDataGrid();
         }
 
         #region export exel
@@ -404,7 +438,7 @@ namespace JOrders
             // MessageBox.Show(e.RowIndex.ToString());
             // MessageBox.Show(dataGridView1.CurrentCell.RowIndex.ToString());
 
-           // var senderGrid = (DataGridView)sender;
+            // var senderGrid = (DataGridView)sender;
 
             if (e.RowIndex >= 0)
             {

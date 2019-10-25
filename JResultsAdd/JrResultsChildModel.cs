@@ -17,53 +17,53 @@ namespace JResultsAdd
         //[TypesIService(false)]
         public string Id { get; set; }
 
-        [DisplayName("Номер")]
+        [DisplayName("Наименование")]
         [ColumnWeight(5)] //todo
         [AutoSizeMode(DataGridViewAutoSizeColumnMode.AllCells)]
         //[TypesIService(false)]
-        public string Nomer { get; set; }
+        public string Name { get; set; }
 
-        [DisplayName("Клиент")]
+        [DisplayName("Единица измерения")]
         [ColumnWeight(15)] //todo
         [AutoSizeMode(DataGridViewAutoSizeColumnMode.AllCells)]
         // [TypesIService(false)]
-        public string CodeName { get; set; } //обязательно нужно использовать get конструкцию
+        public string EdIzm { get; set; } //обязательно нужно использовать get конструкцию
 
-        [DisplayName("Ш/к пробирки")]
+        [DisplayName("Текст нормы")]
         [ColumnWeight(15)] //todo
         [AutoSizeMode(DataGridViewAutoSizeColumnMode.AllCells)]
         // [TypesIService(false)]
-        public string ShkProb { get; set; } //обязательно нужно использовать get конструкцию
+        public string TextNorm { get; set; } //обязательно нужно использовать get конструкцию
 
-        [DisplayName("Анализ")]
+        [DisplayName("Результат")]
         [ColumnWeight(10)] //todo
         [AutoSizeMode(DataGridViewAutoSizeColumnMode.AllCells)]
         //[TypesIService(false)]
-        public string Goods { get; set; }
+        public string Rezult { get; set; }
 
-        [DisplayName("Подразделение исполнитель")]
+        [DisplayName("Описание")]
         [ColumnWeight(10)] //todo
         [AutoSizeMode(DataGridViewAutoSizeColumnMode.AllCells)]
         //[TypesIService(true)] //todo
-        public string PodrIsp { get; set; }
+        public string Descr { get; set; }
 
-        [DisplayName("Подразделение рецепции")]
+        [DisplayName("Результат число")]
         [ColumnWeight(10)] //todo
         [AutoSizeMode(DataGridViewAutoSizeColumnMode.AllCells)]
         //[TypesIService(false)] //todo
-        public string PodrRec { get; set; }
+        public string RezultNum { get; set; }
 
-        [DisplayName("Плановая дата выполнения")]
+        [DisplayName("За пределами нормы")]
         [ColumnWeight(10)] //todo
         [AutoSizeMode(DataGridViewAutoSizeColumnMode.AllCells)]
         //[TypesIService(false)] //todo
-        public string DatePlan { get; set; }
+        public string ZaNorm { get; set; }
 
-        [DisplayName("Дата выполнения")]
+        [DisplayName("Порядок сортировки")]
         [ColumnWeight(10)] //todo
         [AutoSizeMode(DataGridViewAutoSizeColumnMode.AllCells)]
         //[TypesIService(false)] //todo
-        public string DateDone { get; set; }
+        public string Sort { get; set; }
 
         public string Hidden = ""; //Данное свойство не будет отображаться как колонка
 
@@ -74,17 +74,17 @@ namespace JResultsAdd
             _jrOrdersChildModel = new List<JrResultsChildModel>();
         }
 
-        public JrResultsChildModel(string id, string nomer, string codeName, string shkProb, string goods, string podrIsp, string podrRec, string datePlan, string dateDone)
+        public JrResultsChildModel(string id, string name, string edIzm, string textNorm, string rezult, string descr, string rezultNum, string zaNorm, string sort)
         {
             Id = id;
-            Nomer = nomer;
-            CodeName = codeName;
-            ShkProb = shkProb;
-            Goods = goods;
-            PodrIsp = podrIsp;
-            PodrRec = podrRec;
-            DatePlan = datePlan;
-            DateDone = dateDone;
+            Name = name;
+            EdIzm = edIzm;
+            TextNorm = textNorm;
+            Rezult = rezult;
+            Descr = descr;
+            RezultNum = rezultNum;
+            ZaNorm = zaNorm;
+            Sort = sort;
         }
 
         public static JrResultsChildModel[] GetJrOrdersChildModel

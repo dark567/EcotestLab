@@ -26,13 +26,13 @@ namespace JResultsAdd
         public string Nomer { get; set; }
 
         [DisplayName("Клиент")]
-        [ColumnWeight(15)] //todo
+        [ColumnWeight(10)] //todo
         [AutoSizeMode(DataGridViewAutoSizeColumnMode.AllCells)]
         // [TypesIService(false)]
         public string CodeName { get; set; } //обязательно нужно использовать get конструкцию
 
         [DisplayName("Ш/к пробирки")]
-        [ColumnWeight(15)] //todo
+        [ColumnWeight(10)] //todo
         [AutoSizeMode(DataGridViewAutoSizeColumnMode.AllCells)]
         // [TypesIService(false)]
         public string ShkProb { get; set; } //обязательно нужно использовать get конструкцию
