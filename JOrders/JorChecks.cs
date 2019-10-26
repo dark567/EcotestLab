@@ -622,6 +622,36 @@ namespace JOrders
                 }
         }
 
+        private void DataGridView1_CellMouseDown(object sender, DataGridViewCellMouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
+            {
+                if (e.RowIndex != -1 && e.ColumnIndex != -1)
+                    if (dataGridView1.CurrentCell?.RowIndex >= 0)
+                    {
+                        // Add this
+                        dataGridView1.CurrentCell = dataGridView1.Rows[e.RowIndex].Cells[e.ColumnIndex];
+                        // Can leave these here - doesn't hurt
+                        dataGridView1.Rows[e.RowIndex].Selected = true;
+                        dataGridView1.Focus();
+                    }
+            }
+        }
 
+        private void DataGridView2_CellMouseDown(object sender, DataGridViewCellMouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
+            {
+                if (e.RowIndex != -1 && e.ColumnIndex != -1)
+                    if (dataGridView2.CurrentCell?.RowIndex >= 0)
+                    {
+                        // Add this
+                        dataGridView2.CurrentCell = dataGridView2.Rows[e.RowIndex].Cells[e.ColumnIndex];
+                        // Can leave these here - doesn't hurt
+                        dataGridView2.Rows[e.RowIndex].Selected = true;
+                        dataGridView2.Focus();
+                    }
+            }
+        }
     }
 }

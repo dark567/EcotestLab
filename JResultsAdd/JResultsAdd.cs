@@ -21,8 +21,8 @@ namespace JResultsAdd
         public string user;
         public string pass;
 
-        public string Id = "n/a";
-        public string filtr = "n/a";
+        public string Id = null;
+        public string filtr = null;
 
         public jResultsAdd()
         {
@@ -67,11 +67,11 @@ namespace JResultsAdd
             #endregion
 
 
-            AddrowsToDataGrid();
+            AddrowsToDataGrid(id: Id);
 
         }
 
-        private void AddrowsToDataGrid(string nomer = null)
+        private void AddrowsToDataGrid(string id = null, string nomer = null)
         {
             dataGridView1.Rows.Clear();
             dataGridView2.Rows.Clear();
@@ -84,7 +84,7 @@ namespace JResultsAdd
             JrResultsMainModel.ClearJrOrdersModel();
             JrResultsChildModel.ClearJrOrdersModel();
 
-            getJrOrdersModel(dateTimePickerFrom.Value, dateTimePickerTo.Value, id: null, filtr: FiltrModel.FiltrTest, nomer);
+            getJrOrdersModel(from: dateTimePickerFrom.Value, to: dateTimePickerTo.Value, id: id, filtr: FiltrModel.FiltrTest, nomer: nomer);
 
             SortableBindingList<JrResultsMainModel> data = new SortableBindingList<JrResultsMainModel>(); //Специальный список List с вызовом события обновления внутреннего состояния, необходимого для автообновления datagridview
             SortableBindingList<JrResultsChildModel> dataChild = new SortableBindingList<JrResultsChildModel>(); //Специальный список List с вызовом события обновления внутреннего состояния, необходимого для автообновления datagridview
@@ -204,11 +204,11 @@ namespace JResultsAdd
                                         " left join DIC_DICS M on M.ID = DTM.METHODIC_ID " +
                                         " where D.BULB_NUM_ID is not null and D.IS_COMPLEX = 0 " +
                                         " /*BEGINWHERECONDITIONS*/ " +
-                                        " and D.ID = cast(@param as ID) ", fb);
-                //add one IN parameter                     
-                FbParameter nameParamId = new FbParameter("@param", id);
-                // добавляем параметр к команде
-                SelectSQL.Parameters.Add(nameParamId);
+                                        " and D.HD_ID = cast('" + id + "' + as ID) ", fb);
+                ////add one IN parameter                     
+                //FbParameter nameParamId = new FbParameter("@param", id);
+                //// добавляем параметр к команде
+                //SelectSQL.Parameters.Add(nameParamId);
             }
             else if ((id == null || id == "") && (filtr != null) && (nomer == null || nomer == ""))
             {
@@ -268,13 +268,13 @@ namespace JResultsAdd
                                        " where D.BULB_NUM_ID is not null and D.IS_COMPLEX = 0 " +
                                        " /*BEGINWHERECONDITIONS*/ " +
                                        " and D.IS_REFUSE = 0 " +
-                                       // " and D.DATE_DONE is null " +
+                                        // " and D.DATE_DONE is null " +
                                         " and D.DATE_DONE " + param + "" +
                                        " and D.CHECK_DATE < cast('" + to.ToString("dd.MM.yyyy") + "' as date) + 1 " +
                                        " and D.CHECK_DATE >= cast('" + from.ToString("dd.MM.yyyy") + "' as date) " +
                                        " /*ENDWHERECONDITIONS*/", fb);
 
-                
+
 
                 //FbParameter nameParamFiltr = new FbParameter("@param", param);
                 //// добавляем параметр к команде
@@ -442,12 +442,12 @@ namespace JResultsAdd
         {
             if (textBox2.Text != "")
             {
-               // MessageBox.Show("");
-                AddrowsToDataGrid(textBox2.Text);
+                // MessageBox.Show("");
+                AddrowsToDataGrid(nomer: textBox2.Text);
             }
             else AddrowsToDataGrid();
 
-    }
+        }
 
         private void DataGridView1_CellClick(object sender, DataGridViewCellEventArgs e)
         {
@@ -728,6 +728,38 @@ namespace JResultsAdd
                 JResultsAddEdit edOr = new JResultsAddEdit();
                 edOr.Id = y;
                 edOr.ShowDialog();
+            }
+        }
+
+        private void DataGridView1_CellMouseDown(object sender, DataGridViewCellMouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
+            {
+                if (e.RowIndex != -1 && e.ColumnIndex != -1)
+                    if (dataGridView1.CurrentCell?.RowIndex >= 0)
+                    {
+                        // Add this
+                        dataGridView1.CurrentCell = dataGridView1.Rows[e.RowIndex].Cells[e.ColumnIndex];
+                        // Can leave these here - doesn't hurt
+                        dataGridView1.Rows[e.RowIndex].Selected = true;
+                        dataGridView1.Focus();
+                    }
+            }
+        }
+
+        private void DataGridView2_CellMouseDown(object sender, DataGridViewCellMouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
+            {
+                if (e.RowIndex != -1 && e.ColumnIndex != -1)
+                    if (dataGridView2.CurrentCell?.RowIndex >= 0)
+                    {
+                        // Add this
+                        dataGridView2.CurrentCell = dataGridView2.Rows[e.RowIndex].Cells[e.ColumnIndex];
+                        // Can leave these here - doesn't hurt
+                        dataGridView2.Rows[e.RowIndex].Selected = true;
+                        dataGridView2.Focus();
+                    }
             }
         }
     }
