@@ -66,7 +66,7 @@ namespace JResultsAdd
             }
             #endregion
 
-
+           // textBox2.Text = Id;
             AddrowsToDataGrid(id: Id);
 
         }
@@ -165,7 +165,7 @@ namespace JResultsAdd
                                          " and D.CHECK_DATE < cast('" + to.ToString("dd.MM.yyyy") + "' as date) + 1 " +
                                          " and D.CHECK_DATE >= cast('" + from.ToString("dd.MM.yyyy") + "' as date) " +
                                          " /*ENDWHERECONDITIONS*/", fb);
-            else if ((id != null) && (filtr == null || filtr == "") && (nomer == null || nomer == ""))
+            else if ((id != null) && (filtr != null) && (nomer == null || nomer == ""))
             {
                 SelectSQL = new FbCommand("select first 1000 D.ID as ID, D.IS_URGENT, D.IS_REFUSE, D.CHECK_NUM as NUM, D.BULB_NUM_CODE as BULB_CODE, D.GOODS_ID, " +
                                         " D.GOODS_NAME as GOODS, D.GOODS_GRP_ID as GRP_ID, D.GOODS_GRP_NAME as GRP_, D.CHECK_DATE as DATE_TIME, " +
@@ -204,7 +204,7 @@ namespace JResultsAdd
                                         " left join DIC_DICS M on M.ID = DTM.METHODIC_ID " +
                                         " where D.BULB_NUM_ID is not null and D.IS_COMPLEX = 0 " +
                                         " /*BEGINWHERECONDITIONS*/ " +
-                                        " and D.HD_ID = cast('" + id + "' + as ID) ", fb);
+                                        " and D.HD_ID = cast('" + id + "' as ID) ", fb);
                 ////add one IN parameter                     
                 //FbParameter nameParamId = new FbParameter("@param", id);
                 //// добавляем параметр к команде
@@ -343,7 +343,6 @@ namespace JResultsAdd
                 SelectSQL.Parameters.Add(nameParam_Null);
             }
 
-
             FbTransaction fbt = fb.BeginTransaction();
             SelectSQL.Transaction = fbt;
             FbDataReader reader = SelectSQL.ExecuteReader();
@@ -355,9 +354,9 @@ namespace JResultsAdd
                     JrResultsMainModel.AddJrOrdersModel(new JrResultsMainModel(id: reader?.GetString(0), nomer: reader?.GetString(3), codeName: reader?.GetString(10), shkProb: reader?.GetString(4), goods: reader.GetString(6), podrIsp: reader?.GetString(14), podrRec: reader?.GetString(12), datePlan: reader?.GetString(19), dateDone: reader?.GetString(20)));
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
+                MessageBox.Show($"Err {ex.Message}");
             }
             finally
             {
