@@ -19,6 +19,13 @@ namespace JResultsAdd
         //[TypesIService(false)]
         public string Id { get; set; }
 
+        [VisibleTypes(true)]
+        [DisplayName("Дата Документа")]
+        [ColumnWeight(5)] //todo
+        [AutoSizeMode(DataGridViewAutoSizeColumnMode.AllCells)]
+        //[TypesIService(false)]
+        public string DateDoc { get; set; }
+
         [DisplayName("Номер")]
         [ColumnWeight(5)] //todo
         [AutoSizeMode(DataGridViewAutoSizeColumnMode.AllCells)]
@@ -76,9 +83,10 @@ namespace JResultsAdd
             _jrOrdersModel = new List<JrResultsMainModel>();
         }
 
-        public JrResultsMainModel(string id, string nomer, string codeName, string shkProb, string goods, string podrIsp, string podrRec, string datePlan, string dateDone)
+        public JrResultsMainModel(string id, string dateDoc, string nomer, string codeName, string shkProb, string goods, string podrIsp, string podrRec, string datePlan, string dateDone)
         {
             Id = id;
+            DateDoc = dateDoc;
             Nomer = nomer;
             CodeName = codeName;
             ShkProb = shkProb;

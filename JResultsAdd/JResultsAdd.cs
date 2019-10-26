@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -66,7 +67,7 @@ namespace JResultsAdd
             }
             #endregion
 
-           // textBox2.Text = Id;
+            // textBox2.Text = Id;
             AddrowsToDataGrid(id: Id);
 
         }
@@ -91,7 +92,17 @@ namespace JResultsAdd
 
             foreach (JrResultsMainModel s in JrResultsMainModel.GetJrOrdersModel)
             {
-                data.Add(new JrResultsMainModel(id: s.Id, nomer: s.Nomer, codeName: s.CodeName, shkProb: s.ShkProb, goods: s.Goods, podrIsp: s.PodrIsp.ToString(), podrRec: s.PodrRec, datePlan: s.DatePlan, dateDone: s.DateDone));
+                data.Add(new JrResultsMainModel(id: s.Id, dateDoc: s.DateDoc,nomer: s.Nomer, codeName: s.CodeName, shkProb: s.ShkProb, goods: s.Goods, podrIsp: s.PodrIsp.ToString(), podrRec: s.PodrRec, datePlan: s.DatePlan, dateDone: s.DateDone));
+
+                if (id != null)
+                {
+                    textBox2.Text = s.Nomer;
+                    DateTime DateFrom = DateTime.ParseExact(s.DateDoc, "dd.MM.yyyy HH:mm:ss", CultureInfo.InvariantCulture);
+                    dateTimePickerFrom.Value = DateFrom;
+                    DateTime DateTo = DateTime.ParseExact(s.DateDoc, "dd.MM.yyyy HH:mm:ss", CultureInfo.InvariantCulture);
+                    dateTimePickerTo.Value = DateTo;
+                }
+
             }
 
             foreach (JrResultsChildModel s in JrResultsChildModel.GetJrOrdersChildModel)
@@ -284,7 +295,8 @@ namespace JResultsAdd
             {
                 //add one IN parameter   
 
-                SelectSQL = new FbCommand("select first 1000 D.ID as ID, D.IS_URGENT, D.IS_REFUSE, D.CHECK_NUM as NUM, D.BULB_NUM_CODE as BULB_CODE, D.GOODS_ID, " +
+                SelectSQL = new FbCommand("select first 1000 D.ID as ID, D.IS_URGENT, D.IS_REFUSE, D.CHECK_NUM as NUM," +
+                    " D.BULB_NUM_CODE as BULB_CODE, D.GOODS_ID, " +
                                        " D.GOODS_NAME as GOODS, D.GOODS_GRP_ID as GRP_ID, D.GOODS_GRP_NAME as GRP_, D.CHECK_DATE as DATE_TIME, " +
                                        " D.CHECK_CLIENT_CODE_NAME as CLIENT, D.CHECK_CLIENT_ID as CLIENT_CODE, " +
                                        " D.CHECK_SUBDIVISION_NAME as SUBDIVISION_RECEPT, D.CHECK_SUBDIVISION_ID as SUBDIVISION_RECEPT_ID, " +
@@ -351,7 +363,7 @@ namespace JResultsAdd
             {
                 while (reader.Read())
                 {
-                    JrResultsMainModel.AddJrOrdersModel(new JrResultsMainModel(id: reader?.GetString(0), nomer: reader?.GetString(3), codeName: reader?.GetString(10), shkProb: reader?.GetString(4), goods: reader.GetString(6), podrIsp: reader?.GetString(14), podrRec: reader?.GetString(12), datePlan: reader?.GetString(19), dateDone: reader?.GetString(20)));
+                    JrResultsMainModel.AddJrOrdersModel(new JrResultsMainModel(id: reader?.GetString(0), dateDoc: reader.GetString(9), nomer: reader?.GetString(3), codeName: reader?.GetString(10), shkProb: reader?.GetString(4), goods: reader.GetString(6), podrIsp: reader?.GetString(14), podrRec: reader?.GetString(12), datePlan: reader?.GetString(19), dateDone: reader?.GetString(20)));
                 }
             }
             catch (Exception ex)
