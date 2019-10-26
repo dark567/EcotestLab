@@ -1,5 +1,4 @@
 ﻿using FirebirdSql.Data.FirebirdClient;
-using JOrders;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -716,6 +715,19 @@ namespace JResultsAdd
             {
                 // Finally, set the FillWeight of the column to our defined weight in the attribute
                 e.Column.Visible = visibleTypes.typesVisible;
+            }
+        }
+
+        private void ToolStripMenuItem2_Click(object sender, EventArgs e)
+        {
+            // var senderGrid = (DataGridView)sender;
+            if (dataGridView1.CurrentCell?.RowIndex >= 0)
+            {
+                string y = dataGridView1.Rows[dataGridView1.CurrentCell.RowIndex].Cells[0].Value.ToString();
+
+                JResultsAddEdit edOr = new JResultsAddEdit();
+                edOr.Id = y;
+                edOr.ShowDialog();
             }
         }
     }

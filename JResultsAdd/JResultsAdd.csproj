@@ -31,6 +31,18 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="FastReport, Version=2019.4.7.0, Culture=neutral, PublicKeyToken=db7e5ce63278458c, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\lib\FastReport.dll</HintPath>
+    </Reference>
+    <Reference Include="FastReport.Bars, Version=2019.4.7.0, Culture=neutral, PublicKeyToken=db7e5ce63278458c, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\lib\FastReport.Bars.dll</HintPath>
+    </Reference>
+    <Reference Include="FastReport.Editor, Version=2019.4.7.0, Culture=neutral, PublicKeyToken=db7e5ce63278458c, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\lib\FastReport.Editor.dll</HintPath>
+    </Reference>
     <Reference Include="FirebirdSql.Data.FirebirdClient, Version=7.1.0.0, Culture=neutral, PublicKeyToken=3750abcc3150b00c, processorArchitecture=MSIL">
       <HintPath>..\packages\FirebirdSql.Data.FirebirdClient.7.1.0\lib\net452\FirebirdSql.Data.FirebirdClient.dll</HintPath>
     </Reference>
@@ -60,6 +72,7 @@
     </Compile>
     <Compile Include="FiltrModel.cs" />
     <Compile Include="INIManager.cs" />
+    <Compile Include="JrChecksPrintRepModel.cs" />
     <Compile Include="jResultsAdd.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -75,6 +88,12 @@
     <Compile Include="JResultsAddEditModel.cs" />
     <Compile Include="JrResultsChildModel.cs" />
     <Compile Include="JrResultsMainModel.cs" />
+    <Compile Include="PrintReport.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="PrintReport.Designer.cs">
+      <DependentUpon>PrintReport.cs</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -94,6 +113,9 @@
     <EmbeddedResource Include="JResultsAddEdit.resx">
       <DependentUpon>JResultsAddEdit.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="PrintReport.resx">
+      <DependentUpon>PrintReport.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -103,10 +125,6 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\JOrders\JorChecks.csproj">
-      <Project>{7D4F774A-986C-4433-B3A5-7B6EA9BEA311}</Project>
-      <Name>JorChecks</Name>
-    </ProjectReference>
     <ProjectReference Include="..\MACButtonLib\MACButtonLib.csproj">
       <Project>{a0a0b292-a0e5-4352-9d24-b3ea29b7e4ef}</Project>
       <Name>MACButtonLib</Name>

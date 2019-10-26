@@ -11,6 +11,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Excel = Microsoft.Office.Interop.Excel;
+using JResultsAdd;
 
 namespace JOrders
 {
@@ -594,5 +595,33 @@ namespace JOrders
             //    }
             //}
         }
+
+        private void РедактироватьToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+            if (dataGridView1.CurrentCell?.RowIndex >= 0)
+            {
+                string y = dataGridView1.Rows[dataGridView1.CurrentCell.RowIndex].Cells[0].Value.ToString();
+
+                EditOrder edOr = new EditOrder();
+                edOr.Id = y;
+                edOr.ShowDialog();
+            }
+        }
+
+        private void ЗаполнениеРезультатовАнализовToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (Application.OpenForms.OfType<jResultsAdd>().Count() < 1)
+                if (dataGridView1.CurrentCell?.RowIndex >= 0)
+                {
+                    string y = dataGridView1.Rows[dataGridView1.CurrentCell.RowIndex].Cells[0].Value.ToString();
+
+                    jResultsAdd edOr = new jResultsAdd();
+                    edOr.Id = y;
+                    edOr.ShowDialog();
+                }
+        }
+
+
     }
 }

@@ -129,6 +129,10 @@
       <Project>{7011A8F6-FFE4-4081-BA12-5D7ED7B32A3F}</Project>
       <Name>DicGoods</Name>
     </ProjectReference>
+    <ProjectReference Include="..\JResultsAdd\JResultsAdd.csproj">
+      <Project>{094a437e-2b15-41e6-9b13-28e4071d17cf}</Project>
+      <Name>JResultsAdd</Name>
+    </ProjectReference>
     <ProjectReference Include="..\MACButtonLib\MACButtonLib.csproj">
       <Project>{a0a0b292-a0e5-4352-9d24-b3ea29b7e4ef}</Project>
       <Name>MACButtonLib</Name>
