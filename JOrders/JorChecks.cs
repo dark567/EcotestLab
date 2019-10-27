@@ -87,7 +87,7 @@ namespace JOrders
 
             foreach (JrOrdersMainModel s in JrOrdersMainModel.GetJrOrdersModel)
             {
-                data.Add(new JrOrdersMainModel(id: s.Id, numCheck: s.NumCheck, subdivision: s.Subdivision, client: s.Client, agent: s.Agent, dataCheck: s?.DataCheck.ToString(), isFiscal: s.IsFiscal));
+                data.Add(new JrOrdersMainModel(id: s.Id, numCheck: s.NumCheck, subdivision: s.Subdivision, client: s.Client, agent: s.Agent, manager: s.Manager, dataCheck: s?.DataCheck.ToString(), isFiscal: s.IsFiscal, sum_Base: s.SUM_BASE, sum_Realiz: s.SUM_Realiz, pAYED_SUM: s.PAYED_SUM, isDone: s.IsDone, dataPrintFiscal:s.DataPrintFiscal, isPrintRecent: s.IsPrintRecent));
             }
 
             foreach (JrOrdersChildModel s in JrOrdersChildModel.GetJrOrdersChildModel)
@@ -185,7 +185,7 @@ namespace JOrders
             {
                 while (reader.Read())
                 {
-                    JrOrdersMainModel.AddJrOrdersModel(new JrOrdersMainModel(id: reader?.GetString(0), numCheck: reader?.GetString(2), subdivision: reader?.GetString(4), client: reader?.GetString(6), agent: reader.GetString(10), dataCheck: reader?.GetString(1), isFiscal: reader.GetBoolean(15)));
+                    JrOrdersMainModel.AddJrOrdersModel(new JrOrdersMainModel(id: reader?.GetString(0), numCheck: reader?.GetString(2), subdivision: reader?.GetString(4), client: reader?.GetString(6), agent: reader.GetString(10), manager: reader.GetString(8), dataCheck: reader?.GetString(1), isFiscal: reader.GetBoolean(15), sum_Base: reader.GetString(17), sum_Realiz: reader.GetString(18), pAYED_SUM: reader.GetString(19), isDone: reader.GetBoolean(15), dataPrintFiscal: reader?.GetString(32), isPrintRecent: reader.GetBoolean(15)));
                 }
             }
             catch (Exception)
@@ -490,7 +490,7 @@ namespace JOrders
         private void DataGridView1_ColumnAdded(object sender, DataGridViewColumnEventArgs e)
         {
             // Get the property object based on the DataPropertyName of the column
-            var property = typeof(JrChecksPrintRepModel).GetProperty(e.Column.DataPropertyName);
+            var property = typeof(JrOrdersMainModel).GetProperty(e.Column.DataPropertyName);
             // Get the ColumnWeight attribute from the property if it exists
             var weightAttribute = (ColumnWeight)property?.GetCustomAttribute(typeof(ColumnWeight));
             if (weightAttribute != null)
@@ -536,7 +536,7 @@ namespace JOrders
         private void DataGridView2_ColumnAdded(object sender, DataGridViewColumnEventArgs e)
         {
             // Get the property object based on the DataPropertyName of the column
-            var property = typeof(JrChecksPrintRepModel).GetProperty(e.Column.DataPropertyName);
+            var property = typeof(JrOrdersChildModel).GetProperty(e.Column.DataPropertyName);
             // Get the ColumnWeight attribute from the property if it exists
             var weightAttribute = (ColumnWeight)property?.GetCustomAttribute(typeof(ColumnWeight));
             if (weightAttribute != null)
@@ -652,6 +652,27 @@ namespace JOrders
                         dataGridView2.Focus();
                     }
             }
+        }
+
+        private void DataGridView1_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
+        {
+            foreach (DataGridViewRow Myrow in dataGridView1.Rows)
+            {       
+                if (Convert.ToBoolean(Myrow.Cells[11].Value) == true) dataGridView1[11, Myrow.Index].Style.BackColor = Color.Green;
+                else dataGridView1[11, Myrow.Index].Style.BackColor = Color.Red;
+
+                if (Convert.ToBoolean(Myrow.Cells[13].Value) == true) dataGridView1[13, Myrow.Index].Style.BackColor = Color.Green;
+                else dataGridView1[13, Myrow.Index].Style.BackColor = Color.Red;
+            }
+
+            //foreach (DataGridViewRow row in dataGridView1.Rows)
+            //{
+            //    foreach (DataGridViewColumn col in dataGridView1.Columns)
+            //    {
+            //        //row.Cells[col.Index].Style.BackColor = Color.Green; //doesn't work
+            //        //col.Cells[row.Index].Style.BackColor = Color.Green; //doesn't work
+            //    }
+            //}
         }
     }
 }

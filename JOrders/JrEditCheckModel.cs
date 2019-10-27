@@ -17,45 +17,47 @@ namespace JOrders
         //[TypesIService(false)]
         public string Id { get; set; }
 
+        [VisibleTypes(true)]
         [DisplayName("Дата")]
         [ColumnWeight(10)] //todo
         [AutoSizeMode(DataGridViewAutoSizeColumnMode.AllCells)]
         //[TypesIService(false)] //todo
         public string DateChecks { get; set; }
 
+        [VisibleTypes(true)]
         [DisplayName("Номер")]
         [ColumnWeight(5)] //todo
         [AutoSizeMode(DataGridViewAutoSizeColumnMode.AllCells)]
         //[TypesIService(false)]
         public string NumChecks { get; set; }
 
+        [VisibleTypes(true)]
         [DisplayName("Имя")]
         [ColumnWeight(15)] //todo
         [AutoSizeMode(DataGridViewAutoSizeColumnMode.AllCells)]
         // [TypesIService(false)]
-        public string Name { get; set; } //обязательно нужно использовать get конструкцию
+        public string Name { get; set; } 
 
+        [VisibleTypes(true)]
         [DisplayName("Отчество")]
         [ColumnWeight(10)] //todo
         [AutoSizeMode(DataGridViewAutoSizeColumnMode.AllCells)]
         //[TypesIService(false)]
         public string Surname { get; set; }
 
+        [VisibleTypes(true)]
         [DisplayName("Пол")]
         [ColumnWeight(10)] //todo
         [AutoSizeMode(DataGridViewAutoSizeColumnMode.AllCells)]
         //[TypesIService(true)] //todo
         public string Sex { get; set; }
 
-
-
+        [VisibleTypes(true)]
         [DisplayName("Почта")]
         [ColumnWeight(10)] //todo
         [AutoSizeMode(DataGridViewAutoSizeColumnMode.AllCells)]
         //[TypesIService(false)] //todo
         public string Email { get; set; }
-
-
 
         public static List<JrEditCheckModel> _jrEditCheckModel;
 

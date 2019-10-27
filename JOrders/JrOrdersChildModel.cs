@@ -41,7 +41,7 @@ namespace JOrders
         //[TypesIService(true)] //todo
         public string Price { get; set; }
 
-        [DisplayName("Цена реализации")]
+        [DisplayName("Сумма реализации")]
         [ColumnWeight(10)] //todo
         [AutoSizeMode(DataGridViewAutoSizeColumnMode.AllCells)]
         //[TypesIService(true)] //todo
