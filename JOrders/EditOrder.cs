@@ -1,5 +1,6 @@
 ﻿using DClients;
 using DG;
+using DicEmployee;
 using FirebirdSql.Data.FirebirdClient;
 using System;
 using System.Collections.Generic;
@@ -325,9 +326,13 @@ namespace JOrders
             textBox1.Text = testModel.CodeName.ToString();
         }
 
+        void DicEmployeeуAdd(forAddDicEmployeeModel testModel)
+        {
+            textBox11.Text = testModel.CodeName.ToString();
+        }
+
         private void Button1_Click(object sender, EventArgs e)
         {
-           
             DialogResult dialogResult = MessageBox.Show("Предупреждение", "Удалить заказ?", MessageBoxButtons.YesNo);
             if (dialogResult == DialogResult.Yes)
             {
@@ -439,11 +444,40 @@ namespace JOrders
             }
         }
 
+        /// <summary>
+        /// клиенты
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Button10_Click(object sender, EventArgs e)
         {
             dicClients f2 = new dicClients();
             f2.MyLabelClicked += new dicClients.MyLabelClickedHandler(DicClientsAdd);
             f2.ShowDialog();
+        }
+
+        /// <summary>
+        /// агент
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Button13_Click(object sender, EventArgs e)
+        {
+            dicClients f2 = new dicClients();
+            f2.MyLabelClicked += new dicClients.MyLabelClickedHandler(DicClientsAdd);
+            f2.ShowDialog();
+        }
+
+        /// <summary>
+        /// менеджер
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Button19_Click(object sender, EventArgs e)
+        {
+            DicEmployee.DicEmployee dEm = new DicEmployee.DicEmployee();
+            dEm.MyLabelClicked += new DicEmployee.DicEmployee.MyLabelClickedHandler(DicEmployeeуAdd);
+            dEm.ShowDialog();
         }
     }
 }

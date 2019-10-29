@@ -129,6 +129,10 @@
       <Project>{7011A8F6-FFE4-4081-BA12-5D7ED7B32A3F}</Project>
       <Name>DicGoods</Name>
     </ProjectReference>
+    <ProjectReference Include="..\DicEmployee\DicEmployee.csproj">
+      <Project>{65BECAC5-65DA-4439-957A-030386AB9C01}</Project>
+      <Name>DicEmployee</Name>
+    </ProjectReference>
     <ProjectReference Include="..\JResultsAdd\JResultsAdd.csproj">
       <Project>{094a437e-2b15-41e6-9b13-28e4071d17cf}</Project>
       <Name>JResultsAdd</Name>

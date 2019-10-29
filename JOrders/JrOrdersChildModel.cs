@@ -17,42 +17,49 @@ namespace JOrders
         //[TypesIService(false)]
         public string Id { get; set; }
 
+        [VisibleTypes(true)]
         [DisplayName("Анализ")]
         [ColumnWeight(5)] //todo
         [AutoSizeMode(DataGridViewAutoSizeColumnMode.AllCells)]
         //[TypesIService(false)]
         public string Analiz { get; set; }
 
+        [VisibleTypes(true)]
         [DisplayName("Единица измерений")]
         [ColumnWeight(15)] //todo
         [AutoSizeMode(DataGridViewAutoSizeColumnMode.AllCells)]
         // [TypesIService(false)]
         public string EdIzm { get; set; } //обязательно нужно использовать get конструкцию
 
+        [VisibleTypes(true)]
         [DisplayName("Количество")]
         [ColumnWeight(10)] //todo
         [AutoSizeMode(DataGridViewAutoSizeColumnMode.AllCells)]
         //[TypesIService(false)]
         public string Count { get; set; }
 
+        [VisibleTypes(true)]
         [DisplayName("Цена")]
         [ColumnWeight(10)] //todo
         [AutoSizeMode(DataGridViewAutoSizeColumnMode.AllCells)]
         //[TypesIService(true)] //todo
         public string Price { get; set; }
 
+        [VisibleTypes(true)]
         [DisplayName("Сумма реализации")]
         [ColumnWeight(10)] //todo
         [AutoSizeMode(DataGridViewAutoSizeColumnMode.AllCells)]
         //[TypesIService(true)] //todo
         public string PriceOut { get; set; }
 
+        [VisibleTypes(true)]
         [DisplayName("Плановая дата выполнения")]
         [ColumnWeight(10)] //todo
         [AutoSizeMode(DataGridViewAutoSizeColumnMode.AllCells)]
         //[TypesIService(false)] //todo
         public string DatePlan { get; set; }
 
+        [VisibleTypes(true)]
         [DisplayName("Дата выполнения")]
         [ColumnWeight(10)] //todo
         [AutoSizeMode(DataGridViewAutoSizeColumnMode.AllCells)]

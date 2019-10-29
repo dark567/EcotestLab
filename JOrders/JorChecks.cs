@@ -87,7 +87,8 @@ namespace JOrders
 
             foreach (JrOrdersMainModel s in JrOrdersMainModel.GetJrOrdersModel)
             {
-                data.Add(new JrOrdersMainModel(id: s.Id, numCheck: s.NumCheck, subdivision: s.Subdivision, client: s.Client, agent: s.Agent, manager: s.Manager, dataCheck: s?.DataCheck.ToString(), isFiscal: s.IsFiscal, sum_Base: s.SUM_BASE, sum_Realiz: s.SUM_Realiz, pAYED_SUM: s.PAYED_SUM, isDone: s.IsDone, dataPrintFiscal:s.DataPrintFiscal, isPrintRecent: s.IsPrintRecent));
+                data.Add(new JrOrdersMainModel(id: s.Id, numCheck: s.NumCheck, subdivision: s.Subdivision, client: s.Client, agent: s.Agent, manager: s.Manager, dataCheck: s?.DataCheck.ToString(), isFiscal: s.IsFiscal, sum_Base: Convert.ToDecimal(s.SUM_BASE), sum_Realiz: Convert.ToDecimal(s.SUM_Realiz), pAYED_SUM: Convert.ToDecimal(s.PAYED_SUM), isDone: s.IsDone, dataPrintFiscal: s.DataPrintFiscal, isPrintRecent: s.IsPrintRecent));
+
             }
 
             foreach (JrOrdersChildModel s in JrOrdersChildModel.GetJrOrdersChildModel)
@@ -114,7 +115,6 @@ namespace JOrders
                                        // fb_con.Database = "127.0.0.1:terra"; //путь к файлу базы данных
             fb_con.ServerType = 0; //указываем тип сервера (0 - "полноценный Firebird" (classic или super server), 1 - встроенный (embedded))
             FbConnection fb = new FbConnection(fb_con.ToString()); //передаем нашу строку подключения объекту класса FbConnection
-
 
             fb.Open();
             FbCommand SelectSQL;
@@ -185,14 +185,13 @@ namespace JOrders
             {
                 while (reader.Read())
                 {
-                    JrOrdersMainModel.AddJrOrdersModel(new JrOrdersMainModel(id: reader?.GetString(0), numCheck: reader?.GetString(2), subdivision: reader?.GetString(4), client: reader?.GetString(6), agent: reader.GetString(10), manager: reader.GetString(8), dataCheck: reader?.GetString(1), isFiscal: reader.GetBoolean(15), sum_Base: reader.GetString(17), sum_Realiz: reader.GetString(18), pAYED_SUM: reader.GetString(19), isDone: reader.GetBoolean(15), dataPrintFiscal: reader?.GetString(32), isPrintRecent: reader.GetBoolean(15)));
+                    JrOrdersMainModel.AddJrOrdersModel(new JrOrdersMainModel(id: reader?.GetString(0), numCheck: reader?.GetString(2), subdivision: reader?.GetString(4), client: reader?.GetString(6), agent: reader.GetString(10), manager: reader.GetString(8), dataCheck: reader?.GetString(1), isFiscal: reader.GetBoolean(15), sum_Base: reader.GetDecimal(17), sum_Realiz: reader.GetDecimal(18), pAYED_SUM: reader.GetDecimal(19), isDone: reader.GetBoolean(15), dataPrintFiscal: reader?.GetString(32), isPrintRecent: reader.GetBoolean(15)));
                 }
             }
             catch (Exception)
             {
 
             }
-
             finally
             {
                 fbt.Commit();
@@ -569,12 +568,12 @@ namespace JOrders
 
         private void ToolStripButton1_Click(object sender, EventArgs e)
         {
-
             EditOrder editForm = new EditOrder();
             editForm.ShowDialog();
         }
 
         FormWindowState LastWindowState = FormWindowState.Minimized;
+
         private void JorChecks_Resize(object sender, EventArgs e)
         {
             // When window state changes

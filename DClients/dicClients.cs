@@ -65,21 +65,21 @@ namespace DClients
             dataGridView1.AllowUserToResizeColumns = true;
 
             DcClientsModel.ClearDcClientsModel();
-            getNomDicGoodsID_(Param);
+            getNomDicGoodsID(Param);
 
             SortableBindingList<DcClientsModel> data = new SortableBindingList<DcClientsModel>(); //Специальный список List с вызовом события обновления внутреннего состояния, необходимого для автообновления datagridview
 
             foreach (DcClientsModel s in DcClientsModel.GetDcClientsModel)
             {
                 data.Add(new DcClientsModel(id: s.Id, surname: s.Secname, name: s.Name, secname: s.Surname, codeName: s.CodeName, sex: s.Sex, birthdate: s?.Birthdate.ToString(), email: s.Email));
+
+                secnameFIO.Text = Param;
             }
-            
             dataGridView1.DataSource = data;
         }
 
-        public static void getNomDicGoodsID_(string SURNAME = null)
+        public static void getNomDicGoodsID(string SURNAME = null)
         {
-
             FbConnectionStringBuilder fb_con = new FbConnectionStringBuilder();
             fb_con.Charset = "UTF8"; //используемая кодировка
             fb_con.UserID = "SYSDBA"; //логин
@@ -147,7 +147,7 @@ namespace DClients
             dataGridView1.AllowUserToResizeColumns = true;
 
             DcClientsModel.ClearDcClientsModel();
-            getNomDicGoodsID_(secnameFIO.Text);
+            getNomDicGoodsID(secnameFIO.Text);
 
             BindingList<DcClientsModel> data = new BindingList<DcClientsModel>(); //Специальный список List с вызовом события обновления внутреннего состояния, необходимого для автообновления datagridview
 

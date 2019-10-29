@@ -119,7 +119,7 @@ namespace JOrders
             _jrOrdersModel = new List<JrOrdersMainModel>();
         }
 
-        public JrOrdersMainModel(string id, string numCheck, string subdivision, string client, string agent, string manager, bool isFiscal, string sum_Base, string sum_Realiz, string pAYED_SUM, bool isDone, string dataPrintFiscal, bool isPrintRecent, string dataCheck = "")
+        public JrOrdersMainModel(string id, string numCheck, string subdivision, string client, string agent, string manager, bool isFiscal, decimal sum_Base, decimal sum_Realiz, decimal pAYED_SUM, bool isDone, string dataPrintFiscal, bool isPrintRecent, string dataCheck = "")
         {
             Id = id;
             NumCheck = numCheck;
