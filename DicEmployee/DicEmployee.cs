@@ -33,7 +33,6 @@ namespace DicEmployee
 
         private void DicEmployee_Load(object sender, EventArgs e)
         {
-            comboBox1.SelectedIndex = 0;
 
             #region read ini
             try
@@ -70,13 +69,17 @@ namespace DicEmployee
             dataGridView1.AllowUserToResizeColumns = true;
 
             DcEmployeeModel.ClearDcClientsModel();
-            getNomDicGoodsID(Param);
+
+            if (checkBox1.Checked) getNomDicGoodsID(Param);
+            else getNomDicGoodsID_(Param);
+
+
 
             SortableBindingList<DcEmployeeModel> data = new SortableBindingList<DcEmployeeModel>(); //Специальный список List с вызовом события обновления внутреннего состояния, необходимого для автообновления datagridview
 
             foreach (DcEmployeeModel s in DcEmployeeModel.GetDcClientsModel)
             {
-                data.Add(new DcEmployeeModel(id: s.Id, surname: s.Secname, name: s.Name, secname: s.Surname, codeName: s.CodeName, sex: s.Sex, birthdate: s?.Birthdate.ToString(), email: s.Email));
+                data.Add(new DcEmployeeModel(id: s.Id, surname: s.Secname, name: s.Name, secname: s.Surname, codeName: s.CodeName));
 
                 secnameFIO.Text = Param;
             }
@@ -97,8 +100,8 @@ namespace DicEmployee
 
             fb.Open();
             FbCommand SelectSQL;
-            if (SURNAME == null || SURNAME == "") SelectSQL = new FbCommand("SELECT first 100 Id, SURNAME, Name, SECNAME, code_name, SEX, BIRTH_DATE, EMAIL FROM dic_clients ORDER BY SURNAME", fb);
-            else SelectSQL = new FbCommand("SELECT Id, SURNAME, Name, SECNAME, code_name, SEX, BIRTH_DATE, EMAIL FROM dic_clients where UPPER(CODE_NAME) LIKE UPPER(@param)", fb);
+            if (SURNAME == null || SURNAME == "") SelectSQL = new FbCommand("SELECT first 100 Id, SURNAME, Name, SECNAME, code_name FROM DIC_EMPLOYEE where IS_ACTIVE = 1 ORDER BY SURNAME", fb);
+            else SelectSQL = new FbCommand("SELECT first 100 Id, SURNAME, Name, SECNAME, code_name FROM DIC_EMPLOYEE where IS_ACTIVE = 1 and UPPER(CODE_NAME) LIKE UPPER(@param)", fb);
             //add one IN parameter                     
             FbParameter nameParam = new FbParameter("@param", "%" + SURNAME + "%");
             // FbParameter nameParam = new FbParameter("@param", SURNAME + "%");
@@ -113,7 +116,53 @@ namespace DicEmployee
             {
                 while (reader.Read())
                 {
-                    DcEmployeeModel.AddDcClientsModel(new DcEmployeeModel(id: reader?.GetString(0), surname: reader?.GetString(1), name: reader?.GetString(2), secname: reader?.GetString(3), codeName: reader?.GetString(4), sex: reader.GetString(5), birthdate: reader?.GetString(6), email: reader?.GetString(7)));
+                    DcEmployeeModel.AddDcClientsModel(new DcEmployeeModel(id: reader?.GetString(0), surname: reader?.GetString(1), name: reader?.GetString(2), secname: reader?.GetString(3), codeName: reader?.GetString(4)));
+                }
+            }
+            catch (Exception)
+            {
+                //dataGridView1.Rows.Clear();
+            }
+            finally
+            {
+                fbt.Commit();
+                reader.Close();
+                SelectSQL.Dispose();
+                fb.Close();
+            }
+        }
+
+        public static void getNomDicGoodsID_(string SURNAME = null)
+        {
+            FbConnectionStringBuilder fb_con = new FbConnectionStringBuilder();
+            fb_con.Charset = "UTF8"; //используемая кодировка
+            fb_con.UserID = "SYSDBA"; //логин
+            fb_con.Password = "masterkey"; //пароль
+            fb_con.Database = path_db; //путь к файлу базы данных
+                                       // fb_con.Database = "127.0.0.1:terra"; //путь к файлу базы данных
+            fb_con.ServerType = 0; //указываем тип сервера (0 - "полноценный Firebird" (classic или super server), 1 - встроенный (embedded))
+            FbConnection fb = new FbConnection(fb_con.ToString()); //передаем нашу строку подключения объекту класса FbConnection
+
+
+            fb.Open();
+            FbCommand SelectSQL;
+            if (SURNAME == null || SURNAME == "") SelectSQL = new FbCommand("SELECT first 100 Id, SURNAME, Name, SECNAME, code_name FROM DIC_EMPLOYEE where IS_ACTIVE = 0 ORDER BY SURNAME", fb);
+            else SelectSQL = new FbCommand("SELECT first 100 Id, SURNAME, Name, SECNAME, code_name FROM DIC_EMPLOYEE where IS_ACTIVE = 0 and UPPER(CODE_NAME) LIKE UPPER(@param)", fb);
+            //add one IN parameter                     
+            FbParameter nameParam = new FbParameter("@param", "%" + SURNAME + "%");
+            // FbParameter nameParam = new FbParameter("@param", SURNAME + "%");
+            // добавляем параметр к команде
+            SelectSQL.Parameters.Add(nameParam);
+
+            FbTransaction fbt = fb.BeginTransaction();
+            SelectSQL.Transaction = fbt;
+            FbDataReader reader = SelectSQL.ExecuteReader();
+
+            try
+            {
+                while (reader.Read())
+                {
+                    DcEmployeeModel.AddDcClientsModel(new DcEmployeeModel(id: reader?.GetString(0), surname: reader?.GetString(1), name: reader?.GetString(2), secname: reader?.GetString(3), codeName: reader?.GetString(4)));
                 }
             }
             catch (Exception)
@@ -137,13 +186,15 @@ namespace DicEmployee
             dataGridView1.AllowUserToResizeColumns = true;
 
             DcEmployeeModel.ClearDcClientsModel();
-            getNomDicGoodsID(secnameFIO.Text);
+
+            if (checkBox1.Checked) getNomDicGoodsID(secnameFIO.Text);
+            else getNomDicGoodsID_(secnameFIO.Text);
 
             BindingList<DcEmployeeModel> data = new BindingList<DcEmployeeModel>(); //Специальный список List с вызовом события обновления внутреннего состояния, необходимого для автообновления datagridview
 
             foreach (DcEmployeeModel s in DcEmployeeModel.GetDcClientsModel)
             {
-                data.Add(new DcEmployeeModel(id: s.Id, surname: s.Secname, name: s.Name, secname: s.Surname, codeName: s.CodeName, sex: s.Sex, birthdate: s?.Birthdate.ToString(), email: s.Email));
+                data.Add(new DcEmployeeModel(id: s.Id, surname: s.Secname, name: s.Name, secname: s.Surname, codeName: s.CodeName));
             }
 
             dataGridView1.DataSource = data;
