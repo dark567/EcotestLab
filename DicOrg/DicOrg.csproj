@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{927F79D5-119A-4E0F-BE6D-3A58074EF22A}</ProjectGuid>
+    <ProjectGuid>{D1624309-2FDC-4A83-AE08-BF417D166E78}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>DClients</RootNamespace>
-    <AssemblyName>DClients</AssemblyName>
+    <RootNamespace>DicOrg</RootNamespace>
+    <AssemblyName>DicOrg</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
@@ -49,33 +49,29 @@
   <ItemGroup>
     <Compile Include="AutoSizeMode.cs" />
     <Compile Include="ColumnWeight.cs" />
-    <Compile Include="DcClientsModel.cs" />
-    <Compile Include="dicClients.cs">
+    <Compile Include="DcOrgModel.cs" />
+    <Compile Include="DicOrgForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="dicClients.Designer.cs">
-      <DependentUpon>dicClients.cs</DependentUpon>
+    <Compile Include="DicOrgForm.Designer.cs">
+      <DependentUpon>DicOrgForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="DicClientsModelFormMain.cs" />
-    <Compile Include="forAddDicClientsModel.cs" />
+    <Compile Include="forAddDicOrgModel.cs" />
+    <Compile Include="INIManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SortableBindingList.cs" />
     <Compile Include="VisibleTypes.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="dicClients.resx">
-      <DependentUpon>dicClients.cs</DependentUpon>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\DG\DicGoods.csproj">
-      <Project>{7011A8F6-FFE4-4081-BA12-5D7ED7B32A3F}</Project>
-      <Name>DicGoods</Name>
-    </ProjectReference>
     <ProjectReference Include="..\MACButtonLib\MACButtonLib.csproj">
       <Project>{a0a0b292-a0e5-4352-9d24-b3ea29b7e4ef}</Project>
       <Name>MACButtonLib</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="DicOrgForm.resx">
+      <DependentUpon>DicOrgForm.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

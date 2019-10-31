@@ -11,10 +11,12 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace DicEmployee
+namespace DicOrg
 {
-    public partial class DicEmployee : Form
+    public partial class DicOrgForm : Form
     {
+
+
         public readonly string fileIniPath = Application.StartupPath + @"\set.ini";
         public static string path_db;
         public string user;
@@ -22,18 +24,21 @@ namespace DicEmployee
 
         public string Param = "";
 
-        public delegate void MyLabelClickedHandler(forAddDicEmployeeModel testModel);
+        public delegate void MyLabelClickedHandler(forAddDicOrgModel testModel);
         public event MyLabelClickedHandler MyLabelClicked;
 
-
-        public DicEmployee()
+        public DicOrgForm()
         {
             InitializeComponent();
         }
 
-        private void DicEmployee_Load(object sender, EventArgs e)
+        private void MacButton2_Click(object sender, EventArgs e)
         {
+            Close();
+        }
 
+        private void DicOrgForm_Load(object sender, EventArgs e)
+        {
             #region read ini
             try
             {
@@ -68,18 +73,15 @@ namespace DicEmployee
             dataGridView1.AllowUserToAddRows = false; //запрешаем пользователю самому добавлять строки
             dataGridView1.AllowUserToResizeColumns = true;
 
-            DcEmployeeModel.ClearDcClientsModel();
+            DcOrgModel.ClearDcClientsModel();
 
-            if (checkBox1.Checked) getNomDicGoodsID(Param);
-            else getNomDicGoodsID_(Param);
+            getNomDicGoodsID(Param);
 
+            SortableBindingList<DcOrgModel> data = new SortableBindingList<DcOrgModel>(); //Специальный список List с вызовом события обновления внутреннего состояния, необходимого для автообновления datagridview
 
-
-            SortableBindingList<DcEmployeeModel> data = new SortableBindingList<DcEmployeeModel>(); //Специальный список List с вызовом события обновления внутреннего состояния, необходимого для автообновления datagridview
-
-            foreach (DcEmployeeModel s in DcEmployeeModel.GetDcClientsModel)
+            foreach (DcOrgModel s in DcOrgModel.GetDcClientsModel)
             {
-                data.Add(new DcEmployeeModel(id: s.Id, surname: s.Secname, name: s.Name, secname: s.Surname, codeName: s.CodeName));
+                data.Add(new DcOrgModel(id: s.Id, shortName: s.ShortName, name: s.Name, egrrpou: s.Egrrpou));
 
                 secnameFIO.Text = Param;
             }
@@ -100,8 +102,37 @@ namespace DicEmployee
 
             fb.Open();
             FbCommand SelectSQL;
-            if (SURNAME == null || SURNAME == "") SelectSQL = new FbCommand("SELECT first 100 Id, SURNAME, Name, SECNAME, code_name FROM DIC_EMPLOYEE where IS_ACTIVE = 1 ORDER BY SURNAME", fb);
-            else SelectSQL = new FbCommand("SELECT first 100 Id, SURNAME, Name, SECNAME, code_name FROM DIC_EMPLOYEE where IS_ACTIVE = 1 and UPPER(CODE_NAME) LIKE UPPER(@param)", fb);
+            if (SURNAME == null || SURNAME == "")
+                SelectSQL = new FbCommand("select first 1000 S.ID, S.CODE_NAME, S.NAME, S.EGRPOU, S.PHONE, S.FAX, S.ADDRESS," +
+                    " S.BANK_ACC, S.BANK_MFO, S.BANK_NAME, S.EMAIL, " +
+                    "S.WWW, S.DESCR, S.DESCR_PREVIEW, S.IS_FISCAL, S.LOGIN, S.PASS, S.EMPLOYEE_ID, E.CODE_NAME as EMPL, " +
+                    "S.TYPE_PRICE_ID, TP.NAME as TYPE_PRICE, S.TYPE_BONUSES_ID, TB.NAME as TYPE_BON, S.BONUS_PRC, S.CREDIT_LIMIT, " +
+                    "S.SYTE_SYNC_NEEDED, S.LOGO, S.LICENSE, S.TYPE_ORG_ID, cast(DD.VAL as NAME) as TYPE_ORG, S.CASH_PAY_TYPE_ID, " +
+                    "CP.NAME as CASH_PAY_TYPE, S.CITY_ID, CI.VAL_IDX as CITY, S.ADD_MARK_1 " +
+                    /*ADDCOLUMNS*/
+                    "from DIC_ORG S " +
+                    "left join DIC_EMPLOYEE E on S.EMPLOYEE_ID = E.ID " +
+                    "left join DIC_TYPE_PRICES TP on S.TYPE_PRICE_ID = TP.ID " +
+                    "left join DIC_TYPE_BONUSES TB on S.TYPE_BONUSES_ID = TP.ID " +
+                    "left join DIC_DICS DD on S.TYPE_ORG_ID = DD.ID " +
+                    "left join DIC_CASH_PAYS_TYPES CP on CP.ID = S.CASH_PAY_TYPE_ID " +
+                    "left join DIC_DICS CI on S.CITY_ID = CI.ID", fb);
+            else SelectSQL = new FbCommand("select first 1000 S.ID, S.CODE_NAME, S.NAME, S.EGRPOU, S.PHONE, S.FAX, S.ADDRESS," +
+                    " S.BANK_ACC, S.BANK_MFO, S.BANK_NAME, S.EMAIL, " +
+                    "S.WWW, S.DESCR, S.DESCR_PREVIEW, S.IS_FISCAL, S.LOGIN, S.PASS, S.EMPLOYEE_ID, E.CODE_NAME as EMPL, " +
+                    "S.TYPE_PRICE_ID, TP.NAME as TYPE_PRICE, S.TYPE_BONUSES_ID, TB.NAME as TYPE_BON, S.BONUS_PRC, S.CREDIT_LIMIT, " +
+                    "S.SYTE_SYNC_NEEDED, S.LOGO, S.LICENSE, S.TYPE_ORG_ID, cast(DD.VAL as NAME) as TYPE_ORG, S.CASH_PAY_TYPE_ID, " +
+                    "CP.NAME as CASH_PAY_TYPE, S.CITY_ID, CI.VAL_IDX as CITY, S.ADD_MARK_1 " +
+                    /*ADDCOLUMNS*/
+                    "from DIC_ORG S " +
+                    "left join DIC_EMPLOYEE E on S.EMPLOYEE_ID = E.ID " +
+                    "left join DIC_TYPE_PRICES TP on S.TYPE_PRICE_ID = TP.ID " +
+                    "left join DIC_TYPE_BONUSES TB on S.TYPE_BONUSES_ID = TP.ID " +
+                    "left join DIC_DICS DD on S.TYPE_ORG_ID = DD.ID " +
+                    "left join DIC_CASH_PAYS_TYPES CP on CP.ID = S.CASH_PAY_TYPE_ID " +
+                    "left join DIC_DICS CI on S.CITY_ID = CI.ID " +
+                    "where UPPER(S.NAME) LIKE UPPER(@param)", fb);
+
             //add one IN parameter                     
             FbParameter nameParam = new FbParameter("@param", "%" + SURNAME + "%");
             // FbParameter nameParam = new FbParameter("@param", SURNAME + "%");
@@ -116,53 +147,7 @@ namespace DicEmployee
             {
                 while (reader.Read())
                 {
-                    DcEmployeeModel.AddDcClientsModel(new DcEmployeeModel(id: reader?.GetString(0), surname: reader?.GetString(1), name: reader?.GetString(2), secname: reader?.GetString(3), codeName: reader?.GetString(4)));
-                }
-            }
-            catch (Exception)
-            {
-                //dataGridView1.Rows.Clear();
-            }
-            finally
-            {
-                fbt.Commit();
-                reader.Close();
-                SelectSQL.Dispose();
-                fb.Close();
-            }
-        }
-
-        public static void getNomDicGoodsID_(string SURNAME = null)
-        {
-            FbConnectionStringBuilder fb_con = new FbConnectionStringBuilder();
-            fb_con.Charset = "UTF8"; //используемая кодировка
-            fb_con.UserID = "SYSDBA"; //логин
-            fb_con.Password = "masterkey"; //пароль
-            fb_con.Database = path_db; //путь к файлу базы данных
-                                       // fb_con.Database = "127.0.0.1:terra"; //путь к файлу базы данных
-            fb_con.ServerType = 0; //указываем тип сервера (0 - "полноценный Firebird" (classic или super server), 1 - встроенный (embedded))
-            FbConnection fb = new FbConnection(fb_con.ToString()); //передаем нашу строку подключения объекту класса FbConnection
-
-
-            fb.Open();
-            FbCommand SelectSQL;
-            if (SURNAME == null || SURNAME == "") SelectSQL = new FbCommand("SELECT first 100 Id, SURNAME, Name, SECNAME, code_name FROM DIC_EMPLOYEE where IS_ACTIVE = 0 ORDER BY SURNAME", fb);
-            else SelectSQL = new FbCommand("SELECT first 100 Id, SURNAME, Name, SECNAME, code_name FROM DIC_EMPLOYEE where IS_ACTIVE = 0 and UPPER(CODE_NAME) LIKE UPPER(@param)", fb);
-            //add one IN parameter                     
-            FbParameter nameParam = new FbParameter("@param", "%" + SURNAME + "%");
-            // FbParameter nameParam = new FbParameter("@param", SURNAME + "%");
-            // добавляем параметр к команде
-            SelectSQL.Parameters.Add(nameParam);
-
-            FbTransaction fbt = fb.BeginTransaction();
-            SelectSQL.Transaction = fbt;
-            FbDataReader reader = SelectSQL.ExecuteReader();
-
-            try
-            {
-                while (reader.Read())
-                {
-                    DcEmployeeModel.AddDcClientsModel(new DcEmployeeModel(id: reader?.GetString(0), surname: reader?.GetString(1), name: reader?.GetString(2), secname: reader?.GetString(3), codeName: reader?.GetString(4)));
+                    DcOrgModel.AddDcClientsModel(new DcOrgModel(id: reader?.GetString(0), shortName: reader.GetString(1), name: reader.GetString(2), egrrpou: reader.GetString(3)));
                 }
             }
             catch (Exception)
@@ -185,34 +170,62 @@ namespace DicEmployee
             dataGridView1.AllowUserToAddRows = false; //запрешаем пользователю самому добавлять строки
             dataGridView1.AllowUserToResizeColumns = true;
 
-            DcEmployeeModel.ClearDcClientsModel();
+            DcOrgModel.ClearDcClientsModel();
 
-            if (checkBox1.Checked) getNomDicGoodsID(secnameFIO.Text);
-            else getNomDicGoodsID_(secnameFIO.Text);
+            getNomDicGoodsID(secnameFIO.Text);
 
-            BindingList<DcEmployeeModel> data = new BindingList<DcEmployeeModel>(); //Специальный список List с вызовом события обновления внутреннего состояния, необходимого для автообновления datagridview
+            BindingList<DcOrgModel> data = new BindingList<DcOrgModel>(); //Специальный список List с вызовом события обновления внутреннего состояния, необходимого для автообновления datagridview
 
-            foreach (DcEmployeeModel s in DcEmployeeModel.GetDcClientsModel)
+            foreach (DcOrgModel s in DcOrgModel.GetDcClientsModel)
             {
-                data.Add(new DcEmployeeModel(id: s.Id, surname: s.Secname, name: s.Name, secname: s.Surname, codeName: s.CodeName));
+                data.Add(new DcOrgModel(id: s.Id, shortName: s.ShortName, name: s.Name, egrrpou: s.Egrrpou));
             }
 
             dataGridView1.DataSource = data;
         }
 
-
-        private void SecnameFIO_KeyUp_1(object sender, KeyEventArgs e)
+        private void DataGridView1_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
-            if (/*e.KeyCode == Keys.Enter ||*/ e.KeyCode == Keys.F2)
+            if (dataGridView1?.CurrentCell?.RowIndex != null)
             {
-                Button1_Click(sender, e);
+                string id = dataGridView1.Rows[dataGridView1.CurrentCell.RowIndex].Cells[0]?.Value.ToString();
+                //string name = dataGridView1.Rows[dataGridView1.CurrentCell.RowIndex].Cells[1]?.Value.ToString();
+                 string codename = dataGridView1.Rows[dataGridView1.CurrentCell.RowIndex].Cells[1]?.Value.ToString();
+
+                forAddDicOrgModel.AddjrTestModel(new forAddDicOrgModel(id: id, codeName: codename));
             }
+
+            foreach (forAddDicOrgModel s in forAddDicOrgModel.GetjrTestModel)
+            {
+                MyLabelClicked?.Invoke(s);
+            }
+
+            Close();
+        }
+
+        private void MacButton1_Click(object sender, EventArgs e)
+        {
+            if (dataGridView1?.CurrentCell?.RowIndex != null)
+            {
+                string id = dataGridView1.Rows[dataGridView1.CurrentCell.RowIndex].Cells[0]?.Value.ToString();
+                //string name = dataGridView1.Rows[dataGridView1.CurrentCell.RowIndex].Cells[1]?.Value.ToString();
+                string codename = dataGridView1.Rows[dataGridView1.CurrentCell.RowIndex].Cells[1]?.Value.ToString();
+
+                forAddDicOrgModel.AddjrTestModel(new forAddDicOrgModel(id: id, codeName: codename));
+            }
+
+            foreach (forAddDicOrgModel s in forAddDicOrgModel.GetjrTestModel)
+            {
+                MyLabelClicked?.Invoke(s);
+            }
+
+            Close();
         }
 
         private void DataGridView1_ColumnAdded(object sender, DataGridViewColumnEventArgs e)
         {
             // Get the property object based on the DataPropertyName of the column
-            var property = typeof(DcEmployeeModel).GetProperty(e.Column.DataPropertyName);
+            var property = typeof(DcOrgModel).GetProperty(e.Column.DataPropertyName);
             // Get the ColumnWeight attribute from the property if it exists
             var weightAttribute = (ColumnWeight)property?.GetCustomAttribute(typeof(ColumnWeight));
             if (weightAttribute != null)
@@ -241,55 +254,6 @@ namespace DicEmployee
                 // Finally, set the FillWeight of the column to our defined weight in the attribute
                 e.Column.Visible = visibleTypes.typesVisible;
             }
-
-            //var TypeIsService = (TypesIServiceAttribute)property?.GetCustomAttribute(typeof(TypesIServiceAttribute));
-            //if (TypeIsService != null)
-            //{
-            //    // Finally, set the FillWeight of the column to our defined weight in the attribute
-            //    if (TypeIsService.typesIServiceAttribute)
-            //    {
-            //        AddOutOfOfficeColumn();
-            //    }
-            //}
-            // base.DataGridView1_ColumnAdded(sender, e);
-        }
-
-        private void MacButton1_Click(object sender, EventArgs e)
-        {
-            if (dataGridView1?.CurrentCell?.RowIndex != null)
-            {
-                string id = dataGridView1.Rows[dataGridView1.CurrentCell.RowIndex].Cells[0]?.Value.ToString();
-                string name = dataGridView1.Rows[dataGridView1.CurrentCell.RowIndex].Cells[1]?.Value.ToString();
-                string codename = dataGridView1.Rows[dataGridView1.CurrentCell.RowIndex].Cells[4]?.Value.ToString();
-
-                forAddDicEmployeeModel.AddjrTestModel(new forAddDicEmployeeModel(id: id, name: name, codeName: codename));
-            }
-
-            foreach (forAddDicEmployeeModel s in forAddDicEmployeeModel.GetjrTestModel)
-            {
-                MyLabelClicked?.Invoke(s);
-            }
-
-            Close();
-        }
-
-        private void DataGridView1_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
-        {
-            if (dataGridView1?.CurrentCell?.RowIndex != null)
-            {
-                string id = dataGridView1.Rows[dataGridView1.CurrentCell.RowIndex].Cells[0]?.Value.ToString();
-                string name = dataGridView1.Rows[dataGridView1.CurrentCell.RowIndex].Cells[1]?.Value.ToString();
-                string codename = dataGridView1.Rows[dataGridView1.CurrentCell.RowIndex].Cells[4]?.Value.ToString();
-
-                forAddDicEmployeeModel.AddjrTestModel(new forAddDicEmployeeModel(id: id, name: name, codeName: codename));
-            }
-
-            foreach (forAddDicEmployeeModel s in forAddDicEmployeeModel.GetjrTestModel)
-            {
-                MyLabelClicked?.Invoke(s);
-            }
-
-            Close();
         }
 
         private void DataGridView1_RowPostPaint(object sender, DataGridViewRowPostPaintEventArgs e)

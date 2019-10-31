@@ -129,9 +129,21 @@
       <Project>{7011A8F6-FFE4-4081-BA12-5D7ED7B32A3F}</Project>
       <Name>DicGoods</Name>
     </ProjectReference>
+    <ProjectReference Include="..\DicAgent\DicAgent.csproj">
+      <Project>{41b05ede-2953-45df-948f-55c90e382b99}</Project>
+      <Name>DicAgent</Name>
+    </ProjectReference>
     <ProjectReference Include="..\DicEmployee\DicEmployee.csproj">
       <Project>{65BECAC5-65DA-4439-957A-030386AB9C01}</Project>
       <Name>DicEmployee</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DicOrg\DicOrg.csproj">
+      <Project>{d1624309-2fdc-4a83-ae08-bf417d166e78}</Project>
+      <Name>DicOrg</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DicSubdivisions\DicSubdivisions.csproj">
+      <Project>{0c7b11e3-900f-4f27-ab74-831f7c65596b}</Project>
+      <Name>DicSubdivisions</Name>
     </ProjectReference>
     <ProjectReference Include="..\JResultsAdd\JResultsAdd.csproj">
       <Project>{094a437e-2b15-41e6-9b13-28e4071d17cf}</Project>

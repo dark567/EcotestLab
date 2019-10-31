@@ -1,6 +1,9 @@
 ﻿using DClients;
 using DG;
+using DicAgent;
 using DicEmployee;
+using DicOrg;
+using DicSubdivisions;
 using FirebirdSql.Data.FirebirdClient;
 using System;
 using System.Collections.Generic;
@@ -20,16 +23,17 @@ namespace JOrders
 
     public partial class EditOrder : Form
     {
-        public string Id = "n/a";
+        public string Id = null;
         public readonly string fileIniPath = Application.StartupPath + @"\set.ini";
         public static string path_db;
         public string user;
         public string pass;
         public string param = "";
 
+
+
         public EditOrder()
         {
-
             InitializeComponent();
         }
 
@@ -39,6 +43,8 @@ namespace JOrders
             textBox1.Text = $"ID:{Id}";
 
             this.ActiveControl = textBox1;
+
+            if (Id == null) AddFirstItems();
 
             #region read ini
             try
@@ -69,6 +75,19 @@ namespace JOrders
             #endregion
 
             AddrowsToDataGrid();
+        }
+
+        private void AddFirstItems()
+        {
+            DicClientsModelFormMain.idManager = "a223fbe2510a4a1a828486ae6275c793";
+            DicClientsModelFormMain.NameManager = "Admin";
+
+            DicClientsModelFormMain.idSubdivision = "1";
+            DicClientsModelFormMain.NameSubdivision = "Лаборатория-регистратура";
+
+            textBox10.Text = DicClientsModelFormMain.NameSubdivision;
+            textBox11.Text = DicClientsModelFormMain.NameManager;
+
         }
 
         private void AddrowsToDataGrid()
@@ -321,15 +340,6 @@ namespace JOrders
             dataGridView1.DataSource = data;
         }
 
-        void DicClientsAdd(forAddDicClientsModel testModel)
-        {
-            textBox1.Text = testModel.CodeName.ToString();
-        }
-
-        void DicEmployeeуAdd(forAddDicEmployeeModel testModel)
-        {
-            textBox11.Text = testModel.CodeName.ToString();
-        }
 
         private void Button1_Click(object sender, EventArgs e)
         {
@@ -430,8 +440,92 @@ namespace JOrders
 
         private void Button3_Click(object sender, EventArgs e)
         {
+           FbConnectionStringBuilder fb_con = new FbConnectionStringBuilder();
+            fb_con.Charset = "UTF8"; //используемая кодировка
+            fb_con.UserID = "SYSDBA"; //логин
+            fb_con.Password = "masterkey"; //пароль
+            fb_con.Database = path_db; //путь к файлу базы данных
+                                       // fb_con.Database = "127.0.0.1:terra"; //путь к файлу базы данных
+            fb_con.ServerType = 0; //указываем тип сервера (0 - "полноценный Firebird" (classic или super server), 1 - встроенный (embedded))
+            FbConnection fb = new FbConnection(fb_con.ToString()); //передаем нашу строку подключения объекту класса FbConnection
+
+            fb.Open();
+
+
+            string insertCmdStr = "INSERT INTO JOR_CHECKS (ID,/*1*/ DATE_TIME,/*2*/NUM,/*3*/ADD_EMPLOYEE_ID,/*4*/SUBDIVISION_ID,/*5*/CLIENT_ID,/*6*/" +
+                           "MANAGER_ID,/*7*/AGENT_ID,/*8*/PAYER_ORG_ID,/*9*/DESCR, /*10*/DESCR_PREVIEW,/*11*/IS_FISCAL,/*12*/AGREEMENT_DOC,/*13*/" +
+                           "SUM_BASE, SUM_,/*14*/DISCONT_DESCR,/*15*/DISCONT_DESCR_PREVIEW,/*16*/DIAGNOSIS_ID,/*17*/MENSTRPHASE_ID," +
+                           "/*18*/PREG_WEEK_FROM,/*19*/PREG_WEEK_TO,/*20*/LAST_MENSTR_DAY,/*21*/CYCLE_LENGTH,/*22*/AUTO_PRINT_DATE,/*23*/FISCAL_PRINT_TIME," +
+                           "/*24*/DISCONTS_CARD,/*25*/MANUAL_DISC_TYPE,/*26*/MANUAL_TYPE_PRICE_ID,/*27*/MANUAL_SUM_PRC_IDX,/*28*/MANUAL_SUM_PRC_VALUE," +
+                           "/*29*/TYPE_DONE_FOR_COLOR,/*30*/TYPE_EMAIL_STATUS_FOR_COLOR,/*31*/PAYED_SUM, /*32*/FISCAL_NUM/*33*/) " +
+                           " VALUES((select U.UUID from GET_HEX_UUID U)," +
+                           "'31.10.2019 13:15:28','888',NULL,'29483','9f651310027440c5b7f6bb6a4893a0c0','29627'," +
+                           "NULL,NULL,NULL,NULL,0,NULL,170,170,NULL,NULL,NULL," +
+                           "NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,0,170,NULL);";
+
+            FbCommand SelectSQL = new FbCommand(insertCmdStr, fb);
+           // FbCommand SelectSQL = new FbCommand("delete from JOR_CHECKS where id = cast(@param as ID)", fb);
+
+            ////add one IN parameter                     
+            //FbParameter nameParam = new FbParameter("@param", value: param);
+            //// добавляем параметр к команде
+            //SelectSQL.Parameters.Add(nameParam);
+
+            FbTransaction fbt = fb.BeginTransaction();
+            SelectSQL.Transaction = fbt;
+            try
+            {
+                SelectSQL.ExecuteNonQuery();
+                MessageBox.Show("Del");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("error" + ex.Message);
+            }
+            finally
+            {
+                fbt.Commit();
+                SelectSQL.Dispose();
+                fb.Close();
+            }
 
         }
+
+        void DicClientsAdd(forAddDicClientsModel testModel)
+        {
+            textBox1.Text = testModel.CodeName.ToString();
+            DicClientsModelFormMain.idClients = testModel.Id;
+            DicClientsModelFormMain.codeName = testModel.CodeName;
+        }
+
+        void DicEmployeeуAdd(forAddDicEmployeeModel testModel)
+        {
+            textBox11.Text = testModel.CodeName.ToString();
+            DicClientsModelFormMain.idManager = testModel.Id;
+            DicClientsModelFormMain.NameManager = testModel.CodeName;
+        }
+
+        void DicSubdivAdd(forAddDicSubDivModel testModel)
+        {
+            textBox10.Text = testModel.Name.ToString();
+            DicClientsModelFormMain.idSubdivision = testModel.Id;
+            DicClientsModelFormMain.NameSubdivision = testModel.Name;
+        }
+
+        void DicAgentAdd(forAddDicAgentModel testModel)
+        {
+            textBox4.Text = testModel.CodeName.ToString();
+            DicClientsModelFormMain.idAgent = testModel.Id;
+            DicClientsModelFormMain.NameAgent = testModel.CodeName;
+        }
+
+        void DicOrgAdd(forAddDicOrgModel testModel)
+        {
+            textBox5.Text = testModel.CodeName.ToString();
+            DicClientsModelFormMain.idOrg = testModel.Id;
+            DicClientsModelFormMain.NameOrg = testModel.CodeName;
+        }
+
 
         private void TextBox1_KeyUp(object sender, KeyEventArgs e)
         {
@@ -463,8 +557,8 @@ namespace JOrders
         /// <param name="e"></param>
         private void Button13_Click(object sender, EventArgs e)
         {
-            dicClients f2 = new dicClients();
-            f2.MyLabelClicked += new dicClients.MyLabelClickedHandler(DicClientsAdd);
+            DicAgentForm f2 = new DicAgentForm();
+            f2.MyLabelClicked += new DicAgentForm.MyLabelClickedHandler(DicAgentAdd);
             f2.ShowDialog();
         }
 
@@ -477,6 +571,30 @@ namespace JOrders
         {
             DicEmployee.DicEmployee dEm = new DicEmployee.DicEmployee();
             dEm.MyLabelClicked += new DicEmployee.DicEmployee.MyLabelClickedHandler(DicEmployeeуAdd);
+            dEm.ShowDialog();
+        }
+
+        /// <summary>
+        /// Subdiv
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Button17_Click(object sender, EventArgs e)
+        {
+            DicSubdivisionsForm dEm = new DicSubdivisionsForm();
+            dEm.MyLabelClicked += new DicSubdivisionsForm.MyLabelClickedHandler(DicSubdivAdd);
+            dEm.ShowDialog();
+        }
+
+        /// <summary>
+        /// Org
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Button15_Click(object sender, EventArgs e)
+        {
+            DicOrgForm dEm = new DicOrgForm();
+            dEm.MyLabelClicked += new DicOrgForm.MyLabelClickedHandler(DicOrgAdd);
             dEm.ShowDialog();
         }
     }
