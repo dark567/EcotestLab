@@ -195,6 +195,7 @@ namespace JOrders
             this.button18.TabIndex = 28;
             this.button18.Text = "х";
             this.button18.UseVisualStyleBackColor = true;
+            this.button18.Click += new System.EventHandler(this.Button18_Click);
             // 
             // button19
             // 
@@ -230,6 +231,7 @@ namespace JOrders
             this.button16.TabIndex = 24;
             this.button16.Text = "х";
             this.button16.UseVisualStyleBackColor = true;
+            this.button16.Click += new System.EventHandler(this.Button16_Click);
             // 
             // button17
             // 
@@ -265,6 +267,7 @@ namespace JOrders
             this.button14.TabIndex = 20;
             this.button14.Text = "х";
             this.button14.UseVisualStyleBackColor = true;
+            this.button14.Click += new System.EventHandler(this.Button14_Click);
             // 
             // button15
             // 
@@ -284,6 +287,7 @@ namespace JOrders
             this.button12.TabIndex = 18;
             this.button12.Text = "х";
             this.button12.UseVisualStyleBackColor = true;
+            this.button12.Click += new System.EventHandler(this.Button12_Click);
             // 
             // button13
             // 
@@ -303,6 +307,7 @@ namespace JOrders
             this.button11.TabIndex = 16;
             this.button11.Text = "х";
             this.button11.UseVisualStyleBackColor = true;
+            this.button11.Click += new System.EventHandler(this.Button11_Click);
             // 
             // button10
             // 

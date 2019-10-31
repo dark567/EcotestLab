@@ -386,7 +386,7 @@ namespace JOrders
             }
             catch (Exception ex)
             {
-                MessageBox.Show("error" +ex.Message);
+                MessageBox.Show("error" + ex.Message);
             }
             finally
             {
@@ -438,58 +438,131 @@ namespace JOrders
             }
         }
 
+        private FbConnection GetConnection()
+        {
+            string connectionString =
+                "User=SYSDBA;" +
+                "Password=masterkey;" +
+                @"Database=" + path_db + ";" +
+                "Charset=UTF8;" +
+                "Pooling=true;" +
+                "ServerType=0;";
+
+            FbConnection conn = new FbConnection(connectionString.ToString());
+            conn.Open();
+
+            return conn;
+        }
+
+
         private void Button3_Click(object sender, EventArgs e)
         {
-           FbConnectionStringBuilder fb_con = new FbConnectionStringBuilder();
-            fb_con.Charset = "UTF8"; //используемая кодировка
-            fb_con.UserID = "SYSDBA"; //логин
-            fb_con.Password = "masterkey"; //пароль
-            fb_con.Database = path_db; //путь к файлу базы данных
-                                       // fb_con.Database = "127.0.0.1:terra"; //путь к файлу базы данных
-            fb_con.ServerType = 0; //указываем тип сервера (0 - "полноценный Firebird" (classic или super server), 1 - встроенный (embedded))
-            FbConnection fb = new FbConnection(fb_con.ToString()); //передаем нашу строку подключения объекту класса FbConnection
+            //FbConnectionStringBuilder fb_con = new FbConnectionStringBuilder();
+            //fb_con.Charset = "UTF8"; //используемая кодировка
+            //fb_con.UserID = "SYSDBA"; //логин
+            //fb_con.Password = "masterkey"; //пароль
+            //fb_con.Database = path_db; //путь к файлу базы данных
+            //                           // fb_con.Database = "127.0.0.1:terra"; //путь к файлу базы данных
+            //fb_con.ServerType = 0; //указываем тип сервера (0 - "полноценный Firebird" (classic или super server), 1 - встроенный (embedded))
+            //FbConnection fb = new FbConnection(fb_con.ToString()); //передаем нашу строку подключения объекту класса FbConnection
 
-            fb.Open();
+            FbConnection fb = GetConnection();
+           // fb.Open();
 
-
-            string insertCmdStr = "INSERT INTO JOR_CHECKS (ID,/*1*/ DATE_TIME,/*2*/NUM,/*3*/ADD_EMPLOYEE_ID,/*4*/SUBDIVISION_ID,/*5*/CLIENT_ID,/*6*/" +
+            #region Title
+            string insertCmdStrTitle = "INSERT INTO JOR_CHECKS (ID,/*1*/ DATE_TIME,/*2*/NUM,/*3*/ADD_EMPLOYEE_ID,/*4*/SUBDIVISION_ID,/*5*/CLIENT_ID,/*6*/" +
                            "MANAGER_ID,/*7*/AGENT_ID,/*8*/PAYER_ORG_ID,/*9*/DESCR, /*10*/DESCR_PREVIEW,/*11*/IS_FISCAL,/*12*/AGREEMENT_DOC,/*13*/" +
                            "SUM_BASE, SUM_,/*14*/DISCONT_DESCR,/*15*/DISCONT_DESCR_PREVIEW,/*16*/DIAGNOSIS_ID,/*17*/MENSTRPHASE_ID," +
                            "/*18*/PREG_WEEK_FROM,/*19*/PREG_WEEK_TO,/*20*/LAST_MENSTR_DAY,/*21*/CYCLE_LENGTH,/*22*/AUTO_PRINT_DATE,/*23*/FISCAL_PRINT_TIME," +
                            "/*24*/DISCONTS_CARD,/*25*/MANUAL_DISC_TYPE,/*26*/MANUAL_TYPE_PRICE_ID,/*27*/MANUAL_SUM_PRC_IDX,/*28*/MANUAL_SUM_PRC_VALUE," +
                            "/*29*/TYPE_DONE_FOR_COLOR,/*30*/TYPE_EMAIL_STATUS_FOR_COLOR,/*31*/PAYED_SUM, /*32*/FISCAL_NUM/*33*/) " +
-                           " VALUES((select U.UUID from GET_HEX_UUID U)," +
-                           "'31.10.2019 13:15:28','888',NULL,'29483','9f651310027440c5b7f6bb6a4893a0c0','29627'," +
-                           "NULL,NULL,NULL,NULL,0,NULL,170,170,NULL,NULL,NULL," +
-                           "NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,0,170,NULL);";
+                           " VALUES((select U.UUID from GET_HEX_UUID U),@date,@num,NULL,@idsubdiv,@idclient,@idemployee, NULL,NULL," +
+                           "NULL,NULL,0,NULL,170,170,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,0,170,NULL);";
 
-            FbCommand SelectSQL = new FbCommand(insertCmdStr, fb);
-           // FbCommand SelectSQL = new FbCommand("delete from JOR_CHECKS where id = cast(@param as ID)", fb);
+            FbCommand SelectSQLTiTle = new FbCommand(insertCmdStrTitle, fb);
 
-            ////add one IN parameter                     
-            //FbParameter nameParam = new FbParameter("@param", value: param);
-            //// добавляем параметр к команде
-            //SelectSQL.Parameters.Add(nameParam);
+            // SelectSQL.Parameters.Add("@num", FbDbType.Numeric);
+            SelectSQLTiTle.Parameters.Add("@num", FbDbType.Text);
+            SelectSQLTiTle.Parameters.Add("@date", FbDbType.TimeStamp);
+            SelectSQLTiTle.Parameters.Add("@idclient", FbDbType.Text);
+            SelectSQLTiTle.Parameters.Add("@idsubdiv", FbDbType.Text);
+            SelectSQLTiTle.Parameters.Add("@idemployee", FbDbType.Text);
 
-            FbTransaction fbt = fb.BeginTransaction();
-            SelectSQL.Transaction = fbt;
+            SelectSQLTiTle.Parameters[0].Value = textBox3.Text == null ? "n/a" : textBox3.Text;
+            SelectSQLTiTle.Parameters[1].Value = dateTimePicker1.Value;
+            SelectSQLTiTle.Parameters[2].Value = DicClientsModelFormMain.idClients;
+            SelectSQLTiTle.Parameters[3].Value = DicClientsModelFormMain.idSubdivision; //DicClientsModelFormMain
+            SelectSQLTiTle.Parameters[4].Value = DicClientsModelFormMain.idManager; //DicClientsModelFormMain
+            //SelectSQL.Parameters[2].Direction = ParameterDirection.ReturnValue;
+
+            FbTransaction fbtTitle = fb.BeginTransaction();
+            SelectSQLTiTle.Transaction = fbtTitle;
+
+            #endregion
+
+            #region Spec
+            string insertCmdStrSpecific = "INSERT INTO JOR_CHECKS_DT (ID, HD_ID, CHECK_DATE, CHECK_NUM, CHECK_CLIENT_ID, CHECK_CLIENT_CODE_NAME, " +
+                   "CHECK_SUBDIVISION_ID, CHECK_SUBDIVISION_NAME, CHECK_AGENT_ID, CHECK_AGENT_CODE_NAME, CHECK_PAYER_ORG_ID, CHECK_PAYER_ORG_CODE_NAME," +
+                   "GOODS_ID, GOODS_NAME, GOODS_GRP_ID, GOODS_GRP_NAME, GOODS_ORDER, UNIT_ID, MATERIAL_ID, BARCODE_GEN_ID, BULB_NUM_ID, BLANK_ID, BULB_NUM_CODE, IS_EAN8, IS_REMARKED_DATE_TIME, REMARKED_EMPLOYEE_ID, REMARKER_EMPLOYEE_CODE_NAME, CNT, PRICE_BASE, PRICE, SUM_BASE, SUM_, SUBDIVISION_EXEC_ID, SUBDIVISION_EXEC_NAME, ORG_EXEC_ID, ORG_EXEC_CODE_NAME," +
+                    "PLAN_DATE_DONE, DATE_DONE, DATE_DONE_PREV, DONE_EMPLOYEE_ID, DONE_EMPLOYEE_CODE_NAME, CHECK_EMPLOYEE_ID, CHECK_EMPLOYEE_CODE_NAME, IS_URGENT, COMPLEX_ID," +
+                    "IS_COMPLEX, MANIPULATION_ID, MANIPULATION_DATE_TIME, MANIPULATION_EMPLOYEE_ID, MANIPULATION_EMPLOYEE_CODE_NAME, IS_MANIPULATION, IS_REFUSE, REFUSE_PRINT_TIME," +
+                    "DESCR, DESCR_PREVIEW, NEW_BULB_CODE, DATE_SEND, SUM_OUT, IMPORT_LAB_ID, DIC_NO_OPPORT_TO_RES_ID, DIC_NO_OPPORT_TO_RES_NAME, DATE_ADD, RESULT_TEXT_PREVIEW," +
+                    "LAB_PROCESS_ID, LAB_PROCESS_DATE_ADD, LAB_PROCESS_NUM, AUTO_PRINT_DATE)" +
+                    "VALUES((select U.UUID from GET_HEX_UUID U), '35f4722d2eed48648d5a135408355637'," +
+                    "'29.10.2019 13:15:28', '666', '9f651310027440c5b7f6bb6a4893a0c0', 'Верюхалова З. И.', '29483', 'Лаборатория - На дому'," +
+                    "NULL, NULL, NULL, NULL, '29419', 'КАК+Тромбоциты', '200', 'Общеклинические исследования крови', NULL, NULL, NULL," +
+                    "898, NULL, 'c84a047e46f640b598657ee8fa106d38', NULL, 0, NULL, NULL, NULL, 1, 125, 125, 125, 125, NULL, NULL, NULL, NULL," +
+                    "NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, NULL, 1, NULL, NULL, NULL, NULL, 0, 0, NULL, NULL, NULL, NULL, NULL, NULL," +
+                    "NULL, NULL, NULL, '9-JUL-2019 06:18:22', NULL, NULL, NULL, NULL, NULL); ";
+
+            FbCommand SelectSQLSpecific = new FbCommand(insertCmdStrSpecific, fb);
+
+            // SelectSQL.Parameters.Add("@num", FbDbType.Numeric);
+            SelectSQLSpecific.Parameters.Add("@num", FbDbType.Text);
+            SelectSQLSpecific.Parameters.Add("@date", FbDbType.TimeStamp);
+            SelectSQLSpecific.Parameters.Add("@idclient", FbDbType.Text);
+            SelectSQLSpecific.Parameters.Add("@idsubdiv", FbDbType.Text);
+            SelectSQLSpecific.Parameters.Add("@idemployee", FbDbType.Text);
+
+            SelectSQLSpecific.Parameters[0].Value = textBox3.Text == null ? "n/a" : textBox3.Text;
+            SelectSQLSpecific.Parameters[1].Value = dateTimePicker1.Value;
+            SelectSQLSpecific.Parameters[2].Value = DicClientsModelFormMain.idClients;
+            SelectSQLSpecific.Parameters[3].Value = DicClientsModelFormMain.idSubdivision; //DicClientsModelFormMain
+            SelectSQLSpecific.Parameters[4].Value = DicClientsModelFormMain.idManager; //DicClientsModelFormMain
+                                                                                       //SelectSQL.Parameters[2].Direction = ParameterDirection.ReturnValue;
+
+            // FbTransaction fbtSpecif = fb.BeginTransaction();
+            // SelectSQLSpecific.Transaction = fbtSpecif;
+
+            #endregion
             try
             {
-                SelectSQL.ExecuteNonQuery();
-                MessageBox.Show("Del");
+                int resultT = SelectSQLTiTle.ExecuteNonQuery();
+              //  int resultS = SelectSQLSpecific.ExecuteNonQuery();
+
+                MessageBox.Show($"Add {resultT}");
+               // MessageBox.Show($"Add {resultS}");
             }
             catch (Exception ex)
             {
                 MessageBox.Show("error" + ex.Message);
+                fbtTitle.Rollback();
+                //  fbtSpecif.Rollback();
             }
             finally
             {
-                fbt.Commit();
-                SelectSQL.Dispose();
+                fbtTitle.Commit();
+                // fbtSpecif.Commit();
+                SelectSQLTiTle.Dispose();
+              //  SelectSQLSpecific.Dispose();
                 fb.Close();
+
+                Close();
             }
 
         }
+
+
 
         void DicClientsAdd(forAddDicClientsModel testModel)
         {
@@ -596,6 +669,31 @@ namespace JOrders
             DicOrgForm dEm = new DicOrgForm();
             dEm.MyLabelClicked += new DicOrgForm.MyLabelClickedHandler(DicOrgAdd);
             dEm.ShowDialog();
+        }
+
+        private void Button12_Click(object sender, EventArgs e)
+        {
+            textBox4.Text = "";
+        }
+
+        private void Button11_Click(object sender, EventArgs e)
+        {
+            textBox1.Text = "";
+        }
+
+        private void Button14_Click(object sender, EventArgs e)
+        {
+            textBox5.Text = "";
+        }
+
+        private void Button16_Click(object sender, EventArgs e)
+        {
+            textBox10.Text = "";
+        }
+
+        private void Button18_Click(object sender, EventArgs e)
+        {
+            textBox11.Text = "";
         }
     }
 }
