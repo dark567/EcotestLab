@@ -591,8 +591,8 @@ namespace JOrders
                     "DESCR, DESCR_PREVIEW, NEW_BULB_CODE, DATE_SEND, SUM_OUT, IMPORT_LAB_ID, DIC_NO_OPPORT_TO_RES_ID, DIC_NO_OPPORT_TO_RES_NAME, DATE_ADD, RESULT_TEXT_PREVIEW," +
                     "LAB_PROCESS_ID, LAB_PROCESS_DATE_ADD, LAB_PROCESS_NUM, AUTO_PRINT_DATE)" +
                     "VALUES((select U.UUID from GET_HEX_UUID U), @idcheck," +
-                    "'29.10.2019 13:15:28', '666', '9f651310027440c5b7f6bb6a4893a0c0', 'Верюхалова З. И.', '29483', 'Лаборатория - На дому'," +
-                    "NULL, NULL, NULL, NULL, '29419', 'КАК+Тромбоциты', '200', 'Общеклинические исследования крови', NULL, NULL, NULL," +
+                    "@date, @num, @idclient, 'Верюхалова З. И.', @idsubdiv, 'Лаборатория - На дому'," +
+                    "NULL, NULL, @idemployee, NULL, '29419', 'КАК+Тромбоциты', '200', 'Общеклинические исследования крови', NULL, NULL, NULL," +
                     "898, NULL, 'c84a047e46f640b598657ee8fa106d38', NULL, 0, NULL, NULL, NULL, 1, 125, 125, 125, 125, NULL, NULL, NULL, NULL," +
                     "NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, NULL, 1, NULL, NULL, NULL, NULL, 0, 0, NULL, NULL, NULL, NULL, NULL, NULL," +
                     "NULL, NULL, NULL, '9-JUL-2019 06:18:22', NULL, NULL, NULL, NULL, NULL); ";
