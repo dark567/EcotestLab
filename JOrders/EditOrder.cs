@@ -466,8 +466,58 @@ namespace JOrders
             //fb_con.ServerType = 0; //указываем тип сервера (0 - "полноценный Firebird" (classic или super server), 1 - встроенный (embedded))
             //FbConnection fb = new FbConnection(fb_con.ToString()); //передаем нашу строку подключения объекту класса FbConnection
 
+            //
+
+            string IdCheck = CreateID();
+
+            if (IdCheck != null) WriteTitle(IdCheck);
+
+            //
+            if (IdCheck != null) WriteSpecification(IdCheck);
+            Close();
+        }
+
+        private string CreateID()
+        {
+            string id = null;
             FbConnection fb = GetConnection();
-           // fb.Open();
+            // fb.Open();
+
+            string getId = "select first 1 U.UUID from GET_HEX_UUID U";
+            FbCommand SelectID = new FbCommand(getId, fb);
+
+            FbTransaction fbt = fb.BeginTransaction();
+            SelectID.Transaction = fbt;
+            FbDataReader reader = SelectID.ExecuteReader();
+
+            try
+            {
+                while (reader.Read())
+                {
+                    id = reader.GetString(0);
+                }
+                return id;
+            }
+            catch (Exception ex)
+            {
+                 MessageBox.Show("error" + ex.Message);
+                // fbt.Rollback();
+            }
+            finally
+            {
+                fbt.Commit();
+                reader.Close();
+                SelectID.Dispose();
+                fb.Close();
+            }
+            return null;
+        }
+
+
+        private void WriteTitle(string idCheck)
+        {
+            FbConnection fb = GetConnection();
+            // fb.Open();
 
             #region Title
             string insertCmdStrTitle = "INSERT INTO JOR_CHECKS (ID,/*1*/ DATE_TIME,/*2*/NUM,/*3*/ADD_EMPLOYEE_ID,/*4*/SUBDIVISION_ID,/*5*/CLIENT_ID,/*6*/" +
@@ -476,29 +526,61 @@ namespace JOrders
                            "/*18*/PREG_WEEK_FROM,/*19*/PREG_WEEK_TO,/*20*/LAST_MENSTR_DAY,/*21*/CYCLE_LENGTH,/*22*/AUTO_PRINT_DATE,/*23*/FISCAL_PRINT_TIME," +
                            "/*24*/DISCONTS_CARD,/*25*/MANUAL_DISC_TYPE,/*26*/MANUAL_TYPE_PRICE_ID,/*27*/MANUAL_SUM_PRC_IDX,/*28*/MANUAL_SUM_PRC_VALUE," +
                            "/*29*/TYPE_DONE_FOR_COLOR,/*30*/TYPE_EMAIL_STATUS_FOR_COLOR,/*31*/PAYED_SUM, /*32*/FISCAL_NUM/*33*/) " +
-                           " VALUES((select U.UUID from GET_HEX_UUID U),@date,@num,NULL,@idsubdiv,@idclient,@idemployee, NULL,NULL," +
+                           " VALUES(@idcheck,@date,@num,NULL,@idsubdiv,@idclient,@idemployee, NULL,NULL," +
                            "NULL,NULL,0,NULL,170,170,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,0,170,NULL);";
 
             FbCommand SelectSQLTiTle = new FbCommand(insertCmdStrTitle, fb);
 
             // SelectSQL.Parameters.Add("@num", FbDbType.Numeric);
+            SelectSQLTiTle.Parameters.Add("@idcheck", FbDbType.Text);
             SelectSQLTiTle.Parameters.Add("@num", FbDbType.Text);
             SelectSQLTiTle.Parameters.Add("@date", FbDbType.TimeStamp);
             SelectSQLTiTle.Parameters.Add("@idclient", FbDbType.Text);
             SelectSQLTiTle.Parameters.Add("@idsubdiv", FbDbType.Text);
             SelectSQLTiTle.Parameters.Add("@idemployee", FbDbType.Text);
 
-            SelectSQLTiTle.Parameters[0].Value = textBox3.Text == null ? "n/a" : textBox3.Text;
-            SelectSQLTiTle.Parameters[1].Value = dateTimePicker1.Value;
-            SelectSQLTiTle.Parameters[2].Value = DicClientsModelFormMain.idClients;
-            SelectSQLTiTle.Parameters[3].Value = DicClientsModelFormMain.idSubdivision; //DicClientsModelFormMain
-            SelectSQLTiTle.Parameters[4].Value = DicClientsModelFormMain.idManager; //DicClientsModelFormMain
+            SelectSQLTiTle.Parameters[0].Value = idCheck;
+            SelectSQLTiTle.Parameters[1].Value = textBox3.Text == null ? "n/a" : textBox3.Text;
+            SelectSQLTiTle.Parameters[2].Value = dateTimePicker1.Value;
+            SelectSQLTiTle.Parameters[3].Value = DicClientsModelFormMain.idClients;
+            SelectSQLTiTle.Parameters[4].Value = DicClientsModelFormMain.idSubdivision; //DicClientsModelFormMain
+            SelectSQLTiTle.Parameters[5].Value = DicClientsModelFormMain.idManager; //DicClientsModelFormMain
             //SelectSQL.Parameters[2].Direction = ParameterDirection.ReturnValue;
 
             FbTransaction fbtTitle = fb.BeginTransaction();
             SelectSQLTiTle.Transaction = fbtTitle;
 
             #endregion
+
+            try
+            {
+                int resultT = SelectSQLTiTle.ExecuteNonQuery();
+                MessageBox.Show($"Add {resultT}");
+
+                foreach (DataGridViewRow row in dataGridView1.Rows)
+                {
+                    ////More code here
+                    //data.Add(new forEditChecksModel(id: row.Cells[0].Value.ToString(), name: row.Cells[1].Value.ToString()/*, secname: row.Cells[1].Value.ToString(), sex: row.Cells[1].Value.ToString(), birthdate: row.Cells[1].Value.ToString(), email: row.Cells[1].Value.ToString()*/));
+                    MessageBox.Show($"Add {row.Cells[0].Value.ToString()}");
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("error" + ex.Message);
+                fbtTitle.Rollback();
+            }
+            finally
+            {
+                fbtTitle.Commit();
+                SelectSQLTiTle.Dispose();
+                fb.Close();
+            }
+        }
+
+
+        private void WriteSpecification(string idCheck)
+        {
+            FbConnection fb = GetConnection();
 
             #region Spec
             string insertCmdStrSpecific = "INSERT INTO JOR_CHECKS_DT (ID, HD_ID, CHECK_DATE, CHECK_NUM, CHECK_CLIENT_ID, CHECK_CLIENT_CODE_NAME, " +
@@ -508,7 +590,7 @@ namespace JOrders
                     "IS_COMPLEX, MANIPULATION_ID, MANIPULATION_DATE_TIME, MANIPULATION_EMPLOYEE_ID, MANIPULATION_EMPLOYEE_CODE_NAME, IS_MANIPULATION, IS_REFUSE, REFUSE_PRINT_TIME," +
                     "DESCR, DESCR_PREVIEW, NEW_BULB_CODE, DATE_SEND, SUM_OUT, IMPORT_LAB_ID, DIC_NO_OPPORT_TO_RES_ID, DIC_NO_OPPORT_TO_RES_NAME, DATE_ADD, RESULT_TEXT_PREVIEW," +
                     "LAB_PROCESS_ID, LAB_PROCESS_DATE_ADD, LAB_PROCESS_NUM, AUTO_PRINT_DATE)" +
-                    "VALUES((select U.UUID from GET_HEX_UUID U), '35f4722d2eed48648d5a135408355637'," +
+                    "VALUES((select U.UUID from GET_HEX_UUID U), @idcheck," +
                     "'29.10.2019 13:15:28', '666', '9f651310027440c5b7f6bb6a4893a0c0', 'Верюхалова З. И.', '29483', 'Лаборатория - На дому'," +
                     "NULL, NULL, NULL, NULL, '29419', 'КАК+Тромбоциты', '200', 'Общеклинические исследования крови', NULL, NULL, NULL," +
                     "898, NULL, 'c84a047e46f640b598657ee8fa106d38', NULL, 0, NULL, NULL, NULL, 1, 125, 125, 125, 125, NULL, NULL, NULL, NULL," +
@@ -518,48 +600,57 @@ namespace JOrders
             FbCommand SelectSQLSpecific = new FbCommand(insertCmdStrSpecific, fb);
 
             // SelectSQL.Parameters.Add("@num", FbDbType.Numeric);
+            SelectSQLSpecific.Parameters.Add("@idcheck", FbDbType.Text);
             SelectSQLSpecific.Parameters.Add("@num", FbDbType.Text);
             SelectSQLSpecific.Parameters.Add("@date", FbDbType.TimeStamp);
             SelectSQLSpecific.Parameters.Add("@idclient", FbDbType.Text);
             SelectSQLSpecific.Parameters.Add("@idsubdiv", FbDbType.Text);
             SelectSQLSpecific.Parameters.Add("@idemployee", FbDbType.Text);
 
-            SelectSQLSpecific.Parameters[0].Value = textBox3.Text == null ? "n/a" : textBox3.Text;
-            SelectSQLSpecific.Parameters[1].Value = dateTimePicker1.Value;
-            SelectSQLSpecific.Parameters[2].Value = DicClientsModelFormMain.idClients;
-            SelectSQLSpecific.Parameters[3].Value = DicClientsModelFormMain.idSubdivision; //DicClientsModelFormMain
-            SelectSQLSpecific.Parameters[4].Value = DicClientsModelFormMain.idManager; //DicClientsModelFormMain
+            SelectSQLSpecific.Parameters[0].Value = idCheck;
+            SelectSQLSpecific.Parameters[1].Value = textBox3.Text == null ? "n/a" : textBox3.Text;
+            SelectSQLSpecific.Parameters[2].Value = dateTimePicker1.Value;
+            SelectSQLSpecific.Parameters[3].Value = DicClientsModelFormMain.idClients;
+            SelectSQLSpecific.Parameters[4].Value = DicClientsModelFormMain.idSubdivision; //DicClientsModelFormMain
+            SelectSQLSpecific.Parameters[5].Value = DicClientsModelFormMain.idManager; //DicClientsModelFormMain
                                                                                        //SelectSQL.Parameters[2].Direction = ParameterDirection.ReturnValue;
 
-            // FbTransaction fbtSpecif = fb.BeginTransaction();
-            // SelectSQLSpecific.Transaction = fbtSpecif;
+            FbTransaction fbtSpecif = fb.BeginTransaction();
+            SelectSQLSpecific.Transaction = fbtSpecif;
 
             #endregion
             try
             {
-                int resultT = SelectSQLTiTle.ExecuteNonQuery();
-              //  int resultS = SelectSQLSpecific.ExecuteNonQuery();
+                int resultT = SelectSQLSpecific.ExecuteNonQuery();
+                //  int resultS = SelectSQLSpecific.ExecuteNonQuery();
 
                 MessageBox.Show($"Add {resultT}");
-               // MessageBox.Show($"Add {resultS}");
+                // MessageBox.Show($"Add {resultS}");
+                //
+                foreach (DataGridViewRow row in dataGridView1.Rows)
+                {
+                    ////More code here
+                    //data.Add(new forEditChecksModel(id: row.Cells[0].Value.ToString(), name: row.Cells[1].Value.ToString()/*, secname: row.Cells[1].Value.ToString(), sex: row.Cells[1].Value.ToString(), birthdate: row.Cells[1].Value.ToString(), email: row.Cells[1].Value.ToString()*/));
+                    MessageBox.Show($"Add {row.Cells[0].Value.ToString()}");
+
+                }
             }
             catch (Exception ex)
             {
                 MessageBox.Show("error" + ex.Message);
-                fbtTitle.Rollback();
+                fbtSpecif.Rollback();
                 //  fbtSpecif.Rollback();
             }
             finally
             {
-                fbtTitle.Commit();
+                fbtSpecif.Commit();
                 // fbtSpecif.Commit();
-                SelectSQLTiTle.Dispose();
-              //  SelectSQLSpecific.Dispose();
+                SelectSQLSpecific.Dispose();
+                //  SelectSQLSpecific.Dispose();
                 fb.Close();
 
-                Close();
-            }
 
+            }
         }
 
 
