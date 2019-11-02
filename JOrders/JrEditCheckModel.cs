@@ -18,46 +18,67 @@ namespace JOrders
         public string Id { get; set; }
 
         [VisibleTypes(true)]
-        [DisplayName("Дата")]
+        [DisplayName("Анализ")]
         [ColumnWeight(10)] //todo
         [AutoSizeMode(DataGridViewAutoSizeColumnMode.AllCells)]
         //[TypesIService(false)] //todo
-        public string DateChecks { get; set; }
+        public string Goods { get; set; }
 
         [VisibleTypes(true)]
-        [DisplayName("Номер")]
+        [DisplayName("Категория")]
         [ColumnWeight(5)] //todo
         [AutoSizeMode(DataGridViewAutoSizeColumnMode.AllCells)]
         //[TypesIService(false)]
-        public string NumChecks { get; set; }
+        public string Categor { get; set; }
 
         [VisibleTypes(true)]
-        [DisplayName("Имя")]
+        [DisplayName("Код")]
         [ColumnWeight(15)] //todo
         [AutoSizeMode(DataGridViewAutoSizeColumnMode.AllCells)]
         // [TypesIService(false)]
-        public string Name { get; set; } 
+        public string Code { get; set; } 
 
         [VisibleTypes(true)]
-        [DisplayName("Отчество")]
+        [DisplayName("Единица измерения")]
         [ColumnWeight(10)] //todo
         [AutoSizeMode(DataGridViewAutoSizeColumnMode.AllCells)]
         //[TypesIService(false)]
-        public string Surname { get; set; }
+        public string Unit { get; set; }
 
         [VisibleTypes(true)]
-        [DisplayName("Пол")]
+        [DisplayName("Количество")]
         [ColumnWeight(10)] //todo
         [AutoSizeMode(DataGridViewAutoSizeColumnMode.AllCells)]
         //[TypesIService(true)] //todo
-        public string Sex { get; set; }
+        public string Count { get; set; }
 
         [VisibleTypes(true)]
-        [DisplayName("Почта")]
+        [DisplayName("Цена базовая")]
         [ColumnWeight(10)] //todo
         [AutoSizeMode(DataGridViewAutoSizeColumnMode.AllCells)]
         //[TypesIService(false)] //todo
-        public string Email { get; set; }
+        public string PriceBaz { get; set; }
+
+        [VisibleTypes(true)]
+        [DisplayName("Цена")]
+        [ColumnWeight(10)] //todo
+        [AutoSizeMode(DataGridViewAutoSizeColumnMode.AllCells)]
+        //[TypesIService(false)] //todo
+        public string Price { get; set; }
+
+        [VisibleTypes(true)]
+        [DisplayName("Цена реализации")]
+        [ColumnWeight(10)] //todo
+        [AutoSizeMode(DataGridViewAutoSizeColumnMode.AllCells)]
+        //[TypesIService(false)] //todo
+        public string PriceReal { get; set; }
+
+        [VisibleTypes(true)]
+        [DisplayName("Исполнитель")]
+        [ColumnWeight(10)] //todo
+        [AutoSizeMode(DataGridViewAutoSizeColumnMode.AllCells)]
+        //[TypesIService(false)] //todo
+        public string Employee { get; set; }
 
         public static List<JrEditCheckModel> _jrEditCheckModel;
 
@@ -66,15 +87,18 @@ namespace JOrders
             _jrEditCheckModel = new List<JrEditCheckModel>();
         }
 
-        public JrEditCheckModel(string id, string surname, string name, string numChecks, string sex, string dateChecks = "", string email = null)
+        public JrEditCheckModel(string id, string goods, string categor, string code, string unit, string count, decimal priceBaz, decimal price, decimal priceReal, string employee)
         {
             Id = id;
-            Surname = surname;
-            Name = name;
-            NumChecks = numChecks;
-            Sex = sex;
-            DateChecks = dateChecks;
-            Email = email;
+            Goods = goods;
+            Categor =categor;
+            Code = code;
+            Unit = unit;
+            Count = count;
+            PriceBaz = String.Format("{0:0.00}", priceBaz);
+            Price = String.Format("{0:0.00}", price);
+            PriceReal = String.Format("{0:0.00}", priceReal);
+            Employee = employee;
         }
 
         public static JrEditCheckModel[] GetJrEditCheckModel

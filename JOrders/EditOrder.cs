@@ -106,7 +106,7 @@ namespace JOrders
 
             foreach (JrEditCheckModel s in JrEditCheckModel.GetJrEditCheckModel)
             {
-                data.Add(new JrEditCheckModel(id: s.Id, dateChecks: s?.DateChecks.ToString(), numChecks: s.NumChecks, name: s.Name, surname: s.Surname, sex: s.Sex, email: s.Email));
+                data.Add(new JrEditCheckModel(id: s.Id, goods: s.Goods, categor: s.Categor, code: s.Code, unit: s.Unit, count: s.Count, priceBaz: Convert.ToDecimal(s.PriceBaz), price: Convert.ToDecimal(s.Price), priceReal: Convert.ToDecimal(s.PriceReal), employee: s.Employee));
             }
 
             dataGridView1.DataSource = data;
@@ -166,7 +166,7 @@ namespace JOrders
             {
                 while (reader.Read())
                 {
-                    JrEditCheckModel.AddJrOrdersModel(new JrEditCheckModel(id: reader?.GetString(0), surname: reader.GetString(1), name: reader.GetString(2), numChecks: reader.GetString(2), sex: reader.GetString(2), dateChecks: reader.GetString(2), email: reader.GetString(2)));
+                    JrEditCheckModel.AddJrOrdersModel(new JrEditCheckModel(id: reader.GetString(0), goods: reader.GetString(3), categor: reader.GetString(35), code: reader.GetString(4), unit: reader.GetString(6), count: reader.GetString(9), priceBaz: reader.GetDecimal(10), price: reader.GetDecimal(11), priceReal: reader.GetDecimal(13), employee: reader.GetString(19)));
                 }
             }
             catch (Exception)
