@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -24,11 +25,13 @@ namespace JOrders
     public partial class EditOrder : Form
     {
         public string Id = null;
+        public string param = null;
+
         public readonly string fileIniPath = Application.StartupPath + @"\set.ini";
         public static string path_db;
         public string user;
         public string pass;
-        public string param = "";
+
 
 
 
@@ -74,7 +77,41 @@ namespace JOrders
             }
             #endregion
 
+
+            AddTitle();
+
+
+
             AddrowsToDataGrid();
+        }
+
+        private void AddTitle()
+        {
+            getOrderDetailsModel(Id);
+
+
+            foreach (JrOrderDetailsModel s in JrOrderDetailsModel.GetJrOrdersModel)
+            {
+                // data.Add(new JResultsAddEditModel(id: s.Id, dateChecks: s?.DateChecks.ToString(), numChecks: s.NumChecks, name: s.Name, surname: s.Surname, sex: s.Sex, email: s.Email));
+                textBox1.Text = s.ClientName;
+
+                DateTime DataCheck = DateTime.ParseExact(s.DataCheck, "dd.MM.yyyy HH:mm:ss", CultureInfo.InvariantCulture);
+                if (DataCheck != null) dateTimePicker1.Value = DataCheck;
+
+                textBox3.Text = s.NumCheck;
+                textBox4.Text = s.AgentName;
+                textBox5.Text = s.OrgName;
+                textBox10.Text = s.SubdivisionName;
+                textBox11.Text = s.ManagerName;
+                //textBox15.Text = s.PLAN_DATE_DONE;
+                //textBox13.Text = s.DATE_DONE;
+
+              
+
+
+             
+
+            }
         }
 
         private void AddFirstItems()
@@ -111,6 +148,7 @@ namespace JOrders
 
             dataGridView1.DataSource = data;
         }
+
 
         public static void getJrCheckEditModel(string param = "")
         {
@@ -167,6 +205,61 @@ namespace JOrders
                 while (reader.Read())
                 {
                     JrEditCheckModel.AddJrOrdersModel(new JrEditCheckModel(id: reader.GetString(0), goods: reader.GetString(3), categor: reader.GetString(35), code: reader.GetString(4), unit: reader.GetString(6), count: reader.GetString(9), priceBaz: reader.GetDecimal(10), price: reader.GetDecimal(11), priceReal: reader.GetDecimal(13), employee: reader.GetString(19)));
+                }
+            }
+            catch (Exception)
+            {
+
+            }
+            finally
+            {
+                fbt.Commit();
+                reader.Close();
+                SelectSQL.Dispose();
+                fb.Close();
+            }
+        }
+
+        public void getOrderDetailsModel(string id = "")
+        {
+            //MessageBox.Show(string.Format("Вы выбрали период с {0} до {1}", from.ToLongDateString(), to.ToLongDateString()), "Информация");
+            //File.AppendAllText(Application.StartupPath + @"\Event.log", string.Format("Вы выбрали период с {0} до {1}", from.ToLongDateString(), to.ToLongDateString()) + "\n");
+
+            //FbConnectionStringBuilder fb_con = new FbConnectionStringBuilder();
+            //fb_con.Charset = "UTF8"; //используемая кодировка
+            //fb_con.UserID = "SYSDBA"; //логин
+            //fb_con.Password = "masterkey"; //пароль
+            //fb_con.Database = path_db; //путь к файлу базы данных
+            //                           // fb_con.Database = "127.0.0.1:terra"; //путь к файлу базы данных
+            //fb_con.ServerType = 0; //указываем тип сервера (0 - "полноценный Firebird" (classic или super server), 1 - встроенный (embedded))
+            //FbConnection fb = new FbConnection(fb_con.ToString()); //передаем нашу строку подключения объекту класса FbConnection
+
+            //fb.Open(); 
+
+            FbConnection fb = GetConnection();
+            FbCommand SelectSQL = new FbCommand("select first 1 jc.id, jc.date_time, jc.NUM, jc.SUBDIVISION_ID," +
+                "jcd.check_subdivision_name, jc.CLIENT_ID, jcd.check_client_code_name, jc.MANAGER_ID," +
+                "de.code_name, jc.AGENT_ID, jcd.CHECK_AGENT_CODE_NAME, jc.PAYER_ORG_ID, jcd.check_payer_org_code_name, jc.DESCR," +
+                "jc.SUM_BASE, jc.SUM_, jc.PAYED_SUM, jc.FISCAL_NUM " +
+                "from jor_checks jc " +
+                "join jor_checks_dt jcd on jcd.hd_id = jc.id " + 
+                "join dic_employee de on de.id = jc.MANAGER_ID " +
+                "where jc.id = cast(@paramId as ID)", fb);
+
+            //add one IN parameter                     
+            FbParameter nameParam = new FbParameter("@paramId", value: id);
+            // добавляем параметр к команде
+            SelectSQL.Parameters.Add(nameParam);
+
+            FbTransaction fbt = fb.BeginTransaction();
+            SelectSQL.Transaction = fbt;
+            FbDataReader reader = SelectSQL.ExecuteReader();
+
+            try
+            {
+                while (reader.Read())
+                {
+                    JrOrderDetailsModel.AddJrOrdersModel(new JrOrderDetailsModel(id: reader.GetString(0), dataCheck: reader.GetString(1), numCheck: reader.GetString(2), subdivisionId: reader.GetString(3), subdivisionName: reader.GetString(4), clientId: reader.GetString(5), clientName: reader.GetString(6), managerId: reader.GetString(7), managerName: reader.GetString(8), agentId: reader?.GetString(6), agentName: reader?.GetString(6), orgId: reader?.GetString(7), orgName: reader?.GetString(7), sum_Base: reader.GetDecimal(9), sum_Realiz: reader.GetDecimal(10), pAYED_SUM: reader.GetDecimal(11), isFiscal: reader.GetBoolean(8), fiscalNum: reader?.GetString(12)));
                 }
             }
             catch (Exception)

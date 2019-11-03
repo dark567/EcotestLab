@@ -74,6 +74,7 @@
     </Compile>
     <Compile Include="JrChecksPrintRepModel.cs" />
     <Compile Include="JrEditCheckModel.cs" />
+    <Compile Include="JrOrderDetailsModel.cs" />
     <Compile Include="JrOrdersChildModel.cs" />
     <Compile Include="JrOrdersMainModel.cs" />
     <Compile Include="INIManager.cs" />
