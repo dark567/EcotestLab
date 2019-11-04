@@ -43,11 +43,7 @@ namespace JOrders
         private void EditOrder_Load(object sender, EventArgs e)
         {
 
-            textBox1.Text = $"ID:{Id}";
 
-            this.ActiveControl = textBox1;
-
-            if (Id == null) AddFirstItems();
 
             #region read ini
             try
@@ -78,9 +74,13 @@ namespace JOrders
             #endregion
 
 
+          //  textBox1.Text = $"ID:{Id}"; //client
+
+            this.ActiveControl = textBox1;
+
+            if (Id == null) AddFirstItems();
+
             AddTitle();
-
-
 
             AddrowsToDataGrid();
         }
@@ -99,17 +99,22 @@ namespace JOrders
                 if (DataCheck != null) dateTimePicker1.Value = DataCheck;
 
                 textBox3.Text = s.NumCheck;
+
                 textBox4.Text = s.AgentName;
                 textBox5.Text = s.OrgName;
                 textBox10.Text = s.SubdivisionName;
                 textBox11.Text = s.ManagerName;
+                richTextBox1.Text = s.Descr;
+                checkBox1.Checked = s.IsFiscal;
+                textBox7.Text = s.SUM_Realiz;
+                textBox8.Text = s.PAYED_SUM;
                 //textBox15.Text = s.PLAN_DATE_DONE;
                 //textBox13.Text = s.DATE_DONE;
 
-              
 
 
-             
+
+
 
             }
         }
@@ -122,6 +127,7 @@ namespace JOrders
             DicClientsModelFormMain.idSubdivision = "1";
             DicClientsModelFormMain.NameSubdivision = "Лаборатория-регистратура";
 
+            textBox3.Text = CreateNum();
             textBox10.Text = DicClientsModelFormMain.NameSubdivision;
             textBox11.Text = DicClientsModelFormMain.NameManager;
 
@@ -239,8 +245,8 @@ namespace JOrders
             FbConnection fb = GetConnection();
             FbCommand SelectSQL = new FbCommand("select first 1 jc.id, jc.date_time, jc.NUM, jc.SUBDIVISION_ID," +
                 "jcd.check_subdivision_name, jc.CLIENT_ID, jcd.check_client_code_name, jc.MANAGER_ID," +
-                "de.code_name, jc.AGENT_ID, jcd.CHECK_AGENT_CODE_NAME, jc.PAYER_ORG_ID, jcd.check_payer_org_code_name, jc.DESCR," +
-                "jc.SUM_BASE, jc.SUM_, jc.PAYED_SUM, jc.FISCAL_NUM " +
+                "de.code_name, jc.AGENT_ID, jcd.CHECK_AGENT_CODE_NAME, jc.PAYER_ORG_ID, jcd.check_payer_org_code_name, jc.DESCR/*13*/," +
+                "jc.SUM_BASE, jc.SUM_, jc.PAYED_SUM, jc.FISCAL_NUM, jc.is_fiscal " +
                 "from jor_checks jc " +
                 "join jor_checks_dt jcd on jcd.hd_id = jc.id " + 
                 "join dic_employee de on de.id = jc.MANAGER_ID " +
@@ -259,8 +265,12 @@ namespace JOrders
             {
                 while (reader.Read())
                 {
-                    JrOrderDetailsModel.AddJrOrdersModel(new JrOrderDetailsModel(id: reader.GetString(0), dataCheck: reader.GetString(1), numCheck: reader.GetString(2), subdivisionId: reader.GetString(3), subdivisionName: reader.GetString(4), clientId: reader.GetString(5), clientName: reader.GetString(6), managerId: reader.GetString(7), managerName: reader.GetString(8), agentId: reader?.GetString(6), agentName: reader?.GetString(6), orgId: reader?.GetString(7), orgName: reader?.GetString(7), sum_Base: reader.GetDecimal(9), sum_Realiz: reader.GetDecimal(10), pAYED_SUM: reader.GetDecimal(11), isFiscal: reader.GetBoolean(8), fiscalNum: reader?.GetString(12)));
+                    JrOrderDetailsModel.AddJrOrdersModel(new JrOrderDetailsModel(id: reader.GetString(0), dataCheck: reader.GetString(1), numCheck: reader.GetString(2), subdivisionId: reader.GetString(3), subdivisionName: reader.GetString(4), clientId: reader.GetString(5), clientName: reader.GetString(6), managerId: reader.GetString(7), managerName: reader.GetString(8), agentId: reader?.GetString(9), agentName: reader?.GetString(10), orgId: reader?.GetString(11), orgName: reader?.GetString(12), descr: reader.GetString(13), sum_Base: reader.GetDecimal(14), sum_Realiz: reader.GetDecimal(15), pAYED_SUM: reader.GetDecimal(16), isFiscal: reader.GetBoolean(18), fiscalNum: reader?.GetString(17)));
                 }
+                //while (reader.Read())
+                //{
+                //    JrOrderDetailsModel.AddJrOrdersModel(new JrOrderDetailsModel(id: reader.GetString(0), dataCheck: reader.GetString(1), numCheck: reader.GetString(2), subdivisionId: reader.GetString(3), subdivisionName: reader.GetString(4), isFiscal: reader.GetBoolean(18), sum_Base: reader.GetDecimal(14), sum_Realiz: reader.GetDecimal(15), pAYED_SUM: reader.GetDecimal(16)));
+                //}
             }
             catch (Exception)
             {
@@ -448,19 +458,12 @@ namespace JOrders
             }
         }
 
-        public static void delJrCheckEditModel(string param = "")
+        public void delJrCheckEditModel(string param = "")
         {
             //MessageBox.Show(string.Format("Вы выбрали период с {0} до {1}", from.ToLongDateString(), to.ToLongDateString()), "Информация");
             //File.AppendAllText(Application.StartupPath + @"\Event.log", string.Format("Вы выбрали период с {0} до {1}", from.ToLongDateString(), to.ToLongDateString()) + "\n");
 
-            FbConnectionStringBuilder fb_con = new FbConnectionStringBuilder();
-            fb_con.Charset = "UTF8"; //используемая кодировка
-            fb_con.UserID = "SYSDBA"; //логин
-            fb_con.Password = "masterkey"; //пароль
-            fb_con.Database = path_db; //путь к файлу базы данных
-                                       // fb_con.Database = "127.0.0.1:terra"; //путь к файлу базы данных
-            fb_con.ServerType = 0; //указываем тип сервера (0 - "полноценный Firebird" (classic или super server), 1 - встроенный (embedded))
-            FbConnection fb = new FbConnection(fb_con.ToString()); //передаем нашу строку подключения объекту класса FbConnection
+            FbConnection fb = GetConnection();
 
             fb.Open();
             FbCommand SelectSQL = new FbCommand("delete from JOR_CHECKS where id = cast(@param as ID)", fb);
@@ -542,6 +545,7 @@ namespace JOrders
                 "ServerType=0;";
 
             FbConnection conn = new FbConnection(connectionString.ToString());
+
             conn.Open();
 
             return conn;
@@ -594,6 +598,42 @@ namespace JOrders
             catch (Exception ex)
             {
                  MessageBox.Show("error" + ex.Message);
+                // fbt.Rollback();
+            }
+            finally
+            {
+                fbt.Commit();
+                reader.Close();
+                SelectID.Dispose();
+                fb.Close();
+            }
+            return null;
+        }
+
+        private string CreateNum()
+        {
+            string num = null;
+            FbConnection fb = GetConnection();
+            // fb.Open();
+
+            string getNum = "select gen_id(NUM_JOR_CHECKS, 0) from CFG_GLOBAL_OPTIONS";
+            FbCommand SelectID = new FbCommand(getNum, fb);
+
+            FbTransaction fbt = fb.BeginTransaction();
+            SelectID.Transaction = fbt;
+            FbDataReader reader = SelectID.ExecuteReader();
+
+            try
+            {
+                while (reader.Read())
+                {
+                    num = reader.GetString(0);
+                }
+                return num;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("error" + ex.Message);
                 // fbt.Rollback();
             }
             finally
@@ -678,10 +718,17 @@ namespace JOrders
             #region Spec
             string insertCmdStrSpecific = "INSERT INTO JOR_CHECKS_DT (ID, HD_ID, CHECK_DATE, CHECK_NUM, CHECK_CLIENT_ID, CHECK_CLIENT_CODE_NAME, " +
                    "CHECK_SUBDIVISION_ID, CHECK_SUBDIVISION_NAME, CHECK_AGENT_ID, CHECK_AGENT_CODE_NAME, CHECK_PAYER_ORG_ID, CHECK_PAYER_ORG_CODE_NAME," +
-                   "GOODS_ID, GOODS_NAME, GOODS_GRP_ID, GOODS_GRP_NAME, GOODS_ORDER, UNIT_ID, MATERIAL_ID, BARCODE_GEN_ID, BULB_NUM_ID, BLANK_ID, BULB_NUM_CODE, IS_EAN8, IS_REMARKED_DATE_TIME, REMARKED_EMPLOYEE_ID, REMARKER_EMPLOYEE_CODE_NAME, CNT, PRICE_BASE, PRICE, SUM_BASE, SUM_, SUBDIVISION_EXEC_ID, SUBDIVISION_EXEC_NAME, ORG_EXEC_ID, ORG_EXEC_CODE_NAME," +
-                    "PLAN_DATE_DONE, DATE_DONE, DATE_DONE_PREV, DONE_EMPLOYEE_ID, DONE_EMPLOYEE_CODE_NAME, CHECK_EMPLOYEE_ID, CHECK_EMPLOYEE_CODE_NAME, IS_URGENT, COMPLEX_ID," +
-                    "IS_COMPLEX, MANIPULATION_ID, MANIPULATION_DATE_TIME, MANIPULATION_EMPLOYEE_ID, MANIPULATION_EMPLOYEE_CODE_NAME, IS_MANIPULATION, IS_REFUSE, REFUSE_PRINT_TIME," +
-                    "DESCR, DESCR_PREVIEW, NEW_BULB_CODE, DATE_SEND, SUM_OUT, IMPORT_LAB_ID, DIC_NO_OPPORT_TO_RES_ID, DIC_NO_OPPORT_TO_RES_NAME, DATE_ADD, RESULT_TEXT_PREVIEW," +
+                   "GOODS_ID, GOODS_NAME, GOODS_GRP_ID, GOODS_GRP_NAME, GOODS_ORDER, UNIT_ID, MATERIAL_ID, BARCODE_GEN_ID, BULB_NUM_ID, BLANK_ID," +
+                   "BULB_NUM_CODE, IS_EAN8, IS_REMARKED_DATE_TIME, REMARKED_EMPLOYEE_ID, REMARKER_EMPLOYEE_CODE_NAME, CNT, PRICE_BASE, PRICE, " +
+                   "SUM_BASE, SUM_, SUBDIVISION_EXEC_ID, " +
+                   "SUBDIVISION_EXEC_NAME, ORG_EXEC_ID, ORG_EXEC_CODE_NAME," +
+                    "PLAN_DATE_DONE, DATE_DONE, DATE_DONE_PREV, DONE_EMPLOYEE_ID, DONE_EMPLOYEE_CODE_NAME, CHECK_EMPLOYEE_ID, CHECK_EMPLOYEE_CODE_NAME, " +
+                    "IS_URGENT, COMPLEX_ID," +
+                    "IS_COMPLEX, MANIPULATION_ID, MANIPULATION_DATE_TIME, MANIPULATION_EMPLOYEE_ID, MANIPULATION_EMPLOYEE_CODE_NAME," +
+                    "IS_MANIPULATION," +
+                    "IS_REFUSE, REFUSE_PRINT_TIME," +
+                    "DESCR, DESCR_PREVIEW, NEW_BULB_CODE, DATE_SEND, SUM_OUT, IMPORT_LAB_ID, DIC_NO_OPPORT_TO_RES_ID, DIC_NO_OPPORT_TO_RES_NAME," +
+                    "DATE_ADD, RESULT_TEXT_PREVIEW," +
                     "LAB_PROCESS_ID, LAB_PROCESS_DATE_ADD, LAB_PROCESS_NUM, AUTO_PRINT_DATE)" +
                     "VALUES((select U.UUID from GET_HEX_UUID U), @idcheck," +
                     "@date, @num, @idclient, 'Верюхалова З. И.', @idsubdiv, 'Лаборатория - На дому'," +

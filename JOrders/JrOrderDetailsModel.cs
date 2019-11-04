@@ -129,6 +129,14 @@ namespace JOrders
         //[TypesIService(false)] //todo
         public string PAYED_SUM { get; set; }
 
+
+        [VisibleTypes(true)]
+        [DisplayName("Описание")]
+        [ColumnWeight(10)] //todo
+        [AutoSizeMode(DataGridViewAutoSizeColumnMode.AllCells)]
+        //[TypesIService(false)] //todo
+        public string Descr { get; set; }
+
         [VisibleTypes(true)]
         [DisplayName("Фискальный номер")]
         [ColumnWeight(10)] //todo
@@ -144,7 +152,7 @@ namespace JOrders
             _jrOrdersModel = new List<JrOrderDetailsModel>();
         }
 
-        public JrOrderDetailsModel(string id, string dataCheck, string numCheck, string subdivisionId, string subdivisionName, string clientId, string clientName, string agentId, string agentName, string managerId, string managerName, string orgId, string orgName, bool isFiscal, decimal sum_Base, decimal sum_Realiz, decimal pAYED_SUM, string fiscalNum = "")
+        public JrOrderDetailsModel(string id, bool isFiscal = false , decimal sum_Base = 0, decimal sum_Realiz = 0, decimal pAYED_SUM = 0, string dataCheck = "", string numCheck = "", string subdivisionId = "", string subdivisionName = "", string clientId = "", string clientName = "", string agentId = "", string agentName = "", string managerId = "", string managerName = "", string orgId = "", string orgName = "", string descr = "", string fiscalNum = "")
         {
             Id = id;
             NumCheck = numCheck;
@@ -163,6 +171,7 @@ namespace JOrders
             SUM_BASE = String.Format("{0:0.00}", sum_Base);
             SUM_Realiz = String.Format("{0:0.00}", sum_Realiz);
             PAYED_SUM = String.Format("{0:0.00}", pAYED_SUM);
+            Descr = descr;
             FiscalNum = fiscalNum;
         }
 
