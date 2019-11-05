@@ -630,7 +630,7 @@ namespace JOrders
             this.toolStripButton6.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButton6.Name = "toolStripButton6";
             this.toolStripButton6.Size = new System.Drawing.Size(30, 29);
-            this.toolStripButton6.Text = "toolStripButton6";
+            this.toolStripButton6.Text = "Печать";
             this.toolStripButton6.Click += new System.EventHandler(this.ToolStripButton6_Click);
             // 
             // toolStripButton8
@@ -793,6 +793,7 @@ namespace JOrders
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "[Изменение] Редактирование шапки заказа";
             this.Load += new System.EventHandler(this.EditOrder_Load);
+
             this.panel1.ResumeLayout(false);
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);

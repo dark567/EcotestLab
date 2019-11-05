@@ -468,7 +468,11 @@ namespace JOrders
         {
             // MessageBox.Show(dataGridView1.CurrentCell?.RowIndex.ToString());
 
-            // var senderGrid = (DataGridView)sender;
+            Print();
+        }
+
+        private void Print()
+        {
             if (dataGridView1.CurrentCell?.RowIndex >= 0)
             {
                 string y = dataGridView1.Rows[dataGridView1.CurrentCell.RowIndex].Cells[0].Value.ToString();
@@ -672,6 +676,27 @@ namespace JOrders
             //        //col.Cells[row.Index].Style.BackColor = Color.Green; //doesn't work
             //    }
             //}
+        }
+
+        private void DataGridView1_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (/*e.KeyCode == Keys.Enter ||*/ e.KeyCode == Keys.F4)
+            {
+                if (dataGridView1.CurrentCell?.RowIndex >= 0)
+                {
+                    string y = dataGridView1.Rows[dataGridView1.CurrentCell.RowIndex].Cells[0].Value.ToString();
+                    PrintReport printForm = new PrintReport();
+                    printForm.Id = y;
+                    printForm.Param = "FJOR_CHECKS_EDITOR";
+                    printForm.ShowDialog();
+                }
+                else
+                {
+                    PrintReport printForm = new PrintReport();
+                    printForm.Param = "FJOR_CHECKS_EDITOR";
+                    printForm.ShowDialog();
+                }
+            }
         }
     }
 }

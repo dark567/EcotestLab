@@ -6,16 +6,9 @@ using DicOrg;
 using DicSubdivisions;
 using FirebirdSql.Data.FirebirdClient;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Globalization;
 using System.IO;
-using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using Excel = Microsoft.Office.Interop.Excel;
 
@@ -229,19 +222,6 @@ namespace JOrders
 
         public void getOrderDetailsModel(string id = "")
         {
-            //MessageBox.Show(string.Format("Вы выбрали период с {0} до {1}", from.ToLongDateString(), to.ToLongDateString()), "Информация");
-            //File.AppendAllText(Application.StartupPath + @"\Event.log", string.Format("Вы выбрали период с {0} до {1}", from.ToLongDateString(), to.ToLongDateString()) + "\n");
-
-            //FbConnectionStringBuilder fb_con = new FbConnectionStringBuilder();
-            //fb_con.Charset = "UTF8"; //используемая кодировка
-            //fb_con.UserID = "SYSDBA"; //логин
-            //fb_con.Password = "masterkey"; //пароль
-            //fb_con.Database = path_db; //путь к файлу базы данных
-            //                           // fb_con.Database = "127.0.0.1:terra"; //путь к файлу базы данных
-            //fb_con.ServerType = 0; //указываем тип сервера (0 - "полноценный Firebird" (classic или super server), 1 - встроенный (embedded))
-            //FbConnection fb = new FbConnection(fb_con.ToString()); //передаем нашу строку подключения объекту класса FbConnection
-
-            //fb.Open(); 
 
             FbConnection fb = GetConnection();
             FbCommand SelectSQL = new FbCommand("select first 1 jc.id, jc.date_time, jc.NUM, jc.SUBDIVISION_ID," +
@@ -523,6 +503,7 @@ namespace JOrders
             {
                 string y = dataGridView1.Rows[dataGridView1.CurrentCell.RowIndex].Cells[0].Value.ToString();
                 PrintReport printForm = new PrintReport();
+                printForm.IdCh = Id;
                 printForm.Id = y;
                 printForm.Param = "FJOR_CHECKS_EDITOR";
                 printForm.ShowDialog();
@@ -927,5 +908,6 @@ namespace JOrders
         {
             textBox11.Text = "";
         }
+
     }
 }

@@ -19,7 +19,9 @@ namespace JOrders
 {
     public partial class PrintReport : Form
     {
+        public string IdCh = "n/a";
         public string Id = "n/a";
+
         public readonly string fileIniPath = Application.StartupPath + @"\set.ini";
         public static string path_db;
         public string user;
@@ -363,32 +365,46 @@ namespace JOrders
             //report1.Show();
             #endregion
 
-            FastReport.Report report = new FastReport.Report();
-            report.ReportInfo.Author = "Test Test";
-            report.ReportInfo.Description = "TEST Report";
-            report.ReportInfo.Created = DateTime.Now;
-            report.ReportInfo.CreatorVersion = "1.1";
-            report.ReportInfo.Modified = DateTime.Now;
-            report.ReportInfo.Name = "1.1";
-            report.ReportInfo.Version = "1.1";
-            /*
-            I wrote other codes here ()
-            */
-            //  report1.RegisterData(dataSet11.Tables["Datas"], "Datas");
-            //report1.GetDataSource("Datas").Enabled = true;
-            //(report1.Report.FindObject("Data1") as FastReport.DataBand).DataSource =
-            //report1.GetDataSource("Datas");
+            //FastReport.Report report = new FastReport.Report();
+            //report.ReportInfo.Author = "Test Test";
+            //report.ReportInfo.Description = "TEST Report";
+            //report.ReportInfo.Created = DateTime.Now;
+            //report.ReportInfo.CreatorVersion = "1.1";
+            //report.ReportInfo.Modified = DateTime.Now;
+            //report.ReportInfo.Name = "1.1";
+            //report.ReportInfo.Version = "1.1";
+            ///*
+            //I wrote other codes here ()
+            //*/
+            ////  report1.RegisterData(dataSet11.Tables["Datas"], "Datas");
+            ////report1.GetDataSource("Datas").Enabled = true;
+            ////(report1.Report.FindObject("Data1") as FastReport.DataBand).DataSource =
+            ////report1.GetDataSource("Datas");
 
-            ReportPage page = new ReportPage();
-            report.Pages.Add(page);
-            GroupHeaderBand group = new GroupHeaderBand();
-            page.Bands.Add(group);
+            //ReportPage page = new ReportPage();
+            //report.Pages.Add(page);
+            //GroupHeaderBand group = new GroupHeaderBand();
+            //page.Bands.Add(group);
 
-            group.CreateUniqueName();
-            report.Show();
+            //group.CreateUniqueName();
+            //report.Show();
 
             //FastReport.Report report = new FastReport.Report();
             //  report.Design();
+
+
+
+
+
+            FastReport.Report report = new FastReport.Report();
+            // report.Load(Application.StartupPath + @"\frx\Text.frx");
+
+            report.Load(Application.StartupPath + @"\frx\testКвитанция заказа.frx");
+            report.SetParameterValue("ID", IdCh);
+            report.Show();
+        
+
+            
 
         }
 
@@ -402,7 +418,13 @@ namespace JOrders
 
 
                 FastReport.Report report = new FastReport.Report();
-                report.Load(getJrOrdersModel_(jobId));
+               // report.Load(Application.StartupPath + @"\frx\Text.frx");
+
+                MessageBox.Show($"nameRep: {getJrOrdersModel_(jobId)}");
+                //report.Load(getJrOrdersModel_(jobId));
+
+                report.Load(Application.StartupPath + @"\frx\testКвитанция заказа.frx");
+                report.SetParameterValue("ID", IdCh);
                 report.Design();
 
             }
@@ -440,8 +462,6 @@ namespace JOrders
                                         " where upper(GRP_NAME) containing ',' || upper(cast('FJOR_CHECKS' as NAME_LARGE)) || ',' and " +
                                         " R.IS_VISIBLE = 1 " +
                                         " and R.ID = cast(@param as ID) " +
-                                        " /*BEGINWHERECONDITIONS*/ " +
-                                        " /*ENDWHERECONDITIONS*/ " +
                                         " order by NAME", fb);
 
             //add one IN parameter                     
@@ -459,6 +479,7 @@ namespace JOrders
             string putchFrx = null;
             try
             {
+                if(!reader.HasRows) MessageBox.Show("getJrOrdersModel_ rows null");
                 while (reader.Read())
                 {
                     JrChecksPrintRepModel.AddJrChecksPrintRepModel(new JrChecksPrintRepModel(id: reader?.GetString(0), name: reader.GetString(1), body: reader.GetString(2)));
@@ -467,7 +488,6 @@ namespace JOrders
                     //MessageBox.Show("ext: {0}", byte[])reader["Body");
                     putchFrx = tempFile + reader.GetString(1) + ".frx";
                     File.WriteAllBytes(putchFrx, (byte[])reader["Body"]); //todo !!!
-
 
                 }
             }
