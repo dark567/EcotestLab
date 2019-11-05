@@ -83,14 +83,16 @@ namespace JResultsAdd
                 if (s.PLAN_DATE_DONE != null && s.PLAN_DATE_DONE != "")
                 {
                    // dateTimePicker1.CustomFormat = "dd-MM-yyyy HH:mm:ss";
-                    DateTime PLAN_DATE_DONE = DateTime.ParseExact(s.PLAN_DATE_DONE, "dd.MM.yyyy HH:mm:ss", CultureInfo.InvariantCulture);
+                    //DateTime PLAN_DATE_DONE = DateTime.ParseExact(s.PLAN_DATE_DONE, "dd.MM.yyyy HH:mm:ss", CultureInfo.InvariantCulture);
+                    DateTime PLAN_DATE_DONE = DateTime.Parse(s.PLAN_DATE_DONE);
                    // if (PLAN_DATE_DONE != null) dateTimePicker1.Value = PLAN_DATE_DONE;
                     textBox12.Text = PLAN_DATE_DONE.ToString();
                 }
                 if (s.DATE_DONE != null && s.DATE_DONE != "")
                 {
                     //dateTimePicker2.CustomFormat = "dd-MM-yyyy HH:mm:ss";
-                    DateTime DATE_DONE = DateTime.ParseExact(s.DATE_DONE, "dd.MM.yyyy HH:mm:ss", CultureInfo.InvariantCulture);
+                   // DateTime DATE_DONE = DateTime.ParseExact(s.DATE_DONE, "dd.MM.yyyy HH:mm:ss", CultureInfo.InvariantCulture);
+                    DateTime DATE_DONE = DateTime.Parse(s.DATE_DONE);
                    // if (DATE_DONE != null) dateTimePicker1.Value = DATE_DONE;
                     textBox14.Text = DATE_DONE.ToString();
                 }

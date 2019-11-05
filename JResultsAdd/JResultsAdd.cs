@@ -97,9 +97,11 @@ namespace JResultsAdd
                 if (id != null)
                 {
                     textBox2.Text = s.Nomer;
-                    DateTime DateFrom = DateTime.ParseExact(s.DateDoc, "dd.MM.yyyy HH:mm:ss", CultureInfo.InvariantCulture);
+                   // DateTime DateFrom = DateTime.ParseExact(s.DateDoc, "dd.MM.yyyy HH:mm:ss", CultureInfo.InvariantCulture);
+                    DateTime DateFrom = DateTime.Parse(s.DateDoc);
                     dateTimePickerFrom.Value = DateFrom;
-                    DateTime DateTo = DateTime.ParseExact(s.DateDoc, "dd.MM.yyyy HH:mm:ss", CultureInfo.InvariantCulture);
+                   // DateTime DateTo = DateTime.ParseExact(s.DateDoc, "dd.MM.yyyy HH:mm:ss", CultureInfo.InvariantCulture);
+                    DateTime DateTo = DateTime.Parse(s.DateDoc);
                     dateTimePickerTo.Value = DateTo;
                 }
 

@@ -95,7 +95,8 @@ namespace JOrders
                 // data.Add(new JResultsAddEditModel(id: s.Id, dateChecks: s?.DateChecks.ToString(), numChecks: s.NumChecks, name: s.Name, surname: s.Surname, sex: s.Sex, email: s.Email));
                 textBox1.Text = s.ClientName;
 
-                DateTime DataCheck = DateTime.ParseExact(s.DataCheck, "dd.MM.yyyy HH:mm:ss", CultureInfo.InvariantCulture);
+               // DateTime DataCheck = DateTime.ParseExact(s.DataCheck, "dd.MM.yyyy HH:mm:ss", CultureInfo.InvariantCulture);
+                DateTime DataCheck = DateTime.Parse(s.DataCheck);
                 if (DataCheck != null) dateTimePicker1.Value = DataCheck;
 
                 textBox3.Text = s.NumCheck;
