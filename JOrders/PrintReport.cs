@@ -26,7 +26,7 @@ namespace JOrders
         public static string path_db;
         public string user;
         public string pass;
-        public string Param ="";
+        public string Param = "";
 
         public PrintReport()
         {
@@ -251,160 +251,14 @@ namespace JOrders
 
         private void Button1_Click(object sender, EventArgs e)
         {
-            //report1.Load(Application.StartupPath + @"\frx\Text.frx");
-            //report1.Prepare();
-            //report1.Show();
+            string jobId = dataGridView1.SelectedRows[0].Cells[0].Value + string.Empty;
+            string nameRep = dataGridView1.SelectedRows[0].Cells[1].Value + string.Empty;
 
-
-            /**/
-
-            // report1.Load(Application.StartupPath + @"\frx\ReportMy.frx"); // загружаем файл отчета
-            //// report1.Preview = previewControl1;
-            // (report1.FindObject("Text_iz_lbl") as TextObject).Text = this.label1.Text; // выводим текст из label1
-            // (report1.FindObject("Text_iz_Tbox") as TextObject).Text = this.textBox1.Text; // выводим текст из textBox1
-            // (report1.FindObject("Rich_iz_rich1") as RichObject).Text = this.richTextBox1.Text; // выводим текст из richTextBox1
-
-            // //выводим данные из datagrid 
-            // FastReport.Table.TableBase Mytbl = (FastReport.Table.TableBase)this.report1.Report.FindObject("Table1");
-            // Mytbl.RowCount = this.dataGridView1.RowCount; // синхронизируем кол-во строк таблиц
-            // Mytbl.ColumnCount = this.dataGridView1.ColumnCount; // синхронизируем кол-во колонок таблиц
-            // for (short RowShag = 0; RowShag != this.dataGridView1.RowCount - 1; RowShag++)
-            // {
-            //     for (short ColShag = 0; ColShag != this.dataGridView1.ColumnCount; ColShag++)
-            //     {
-            //         Mytbl[ColShag, RowShag].Text = (string)this.dataGridView1[ColShag, RowShag].Value; // переносим данные по ячейкам
-            //         Mytbl[ColShag, RowShag].Border.Lines = BorderLines.All; // границы ячеек таблицы отчета
-            //     }
-            // }
-
-            // report1.Show();// отображаем отчет
-
-            #region example
-            ////load data
-
-            ////Report report = new Report();
-
-            //DataSet ds = new DataSet();
-            //ds.ReadXml(Application.StartupPath + @"\frx\nwind.xml");
-
-            ////Register data source
-            //report1.RegisterData(ds);
-
-            ////Enable data table
-            //report1.GetDataSource("Products").Enabled = true;
-
-            ////Add report page
-            //ReportPage page = new ReportPage();
-            //report1.Pages.Add(page);
-            //page.CreateUniqueName();
-
-            ////Create GroupHeader band
-            //GroupHeaderBand group = new GroupHeaderBand();
-            //page.Bands.Add(group);
-            //group.CreateUniqueName();
-            //group.Height = Units.Centimeters * 1;
-            //group.Condition = "[Products.ProductName].Substring(0,1)";
-            //group.SortOrder = FastReport.SortOrder.Ascending;
-
-            //// create group text
-
-            //TextObject groupTxt = new TextObject();
-            //groupTxt.Parent = group;
-            //groupTxt.CreateUniqueName();
-            //groupTxt.Bounds = new RectangleF(0, 0, Units.Centimeters * 10, Units.Centimeters * 1);
-            //groupTxt.Text = "[[Products.ProductName].Substring(0,1)]";
-            //groupTxt.Font = new Font("Arial", 14, FontStyle.Bold);
-            //groupTxt.VertAlign = VertAlign.Center;
-            //groupTxt.Fill = new LinearGradientFill(Color.LightGoldenrodYellow, Color.Gold, 90, 0.5f, 1);
-
-            //// create data band
-            //DataBand data = new DataBand();
-            //group.Data = data;
-            //data.CreateUniqueName();
-            //data.DataSource = report1.GetDataSource("Products");
-            //data.Height = Units.Centimeters * 0.5f;
-
-            //// create product name text
-            //TextObject productText = new TextObject();
-            //productText.Parent = data;
-            //productText.CreateUniqueName();
-            //productText.Bounds = new RectangleF(0, 0, Units.Centimeters * 10, Units.Centimeters * 0.5f);
-            //productText.Text = "[Products.ProductName]";
-
-            //// create group footer
-            //group.GroupFooter = new GroupFooterBand();
-            //group.GroupFooter.CreateUniqueName();
-            //group.GroupFooter.Height = Units.Centimeters * 1;
-
-            //// create total
-            //Total groupTotal = new Total();
-            //groupTotal.Name = "TotalRows";
-            //groupTotal.TotalType = TotalType.Count;
-            //groupTotal.Evaluator = data;
-            //groupTotal.PrintOn = group.GroupFooter;
-            //report1.Dictionary.Totals.Add(groupTotal);
-
-            //// show total in the group footer
-            //TextObject totalText = new TextObject();
-            //totalText.Parent = group.GroupFooter;
-            //totalText.CreateUniqueName();
-            //totalText.Bounds = new RectangleF(0, 0, Units.Centimeters * 10, Units.Centimeters * 0.5f);
-            //totalText.Text = "Rows: [TotalRows]";
-            //totalText.HorzAlign = HorzAlign.Right;
-            //totalText.Border.Lines = BorderLines.Top;
-
-            ////if (PDFCheckBox.Checked)
-            ////{
-            ////    report.Prepare();
-            ////    FastReport.Export.Pdf.PDFExport export = new FastReport.Export.Pdf.PDFExport();
-            ////    export.Export(report);
-            ////    //export.Export(report, @"C:\Temp\ReportFromCode.pdf");
-            ////}
-            ////else
-
-            //report1.Show();
-            #endregion
-
-            //FastReport.Report report = new FastReport.Report();
-            //report.ReportInfo.Author = "Test Test";
-            //report.ReportInfo.Description = "TEST Report";
-            //report.ReportInfo.Created = DateTime.Now;
-            //report.ReportInfo.CreatorVersion = "1.1";
-            //report.ReportInfo.Modified = DateTime.Now;
-            //report.ReportInfo.Name = "1.1";
-            //report.ReportInfo.Version = "1.1";
-            ///*
-            //I wrote other codes here ()
-            //*/
-            ////  report1.RegisterData(dataSet11.Tables["Datas"], "Datas");
-            ////report1.GetDataSource("Datas").Enabled = true;
-            ////(report1.Report.FindObject("Data1") as FastReport.DataBand).DataSource =
-            ////report1.GetDataSource("Datas");
-
-            //ReportPage page = new ReportPage();
-            //report.Pages.Add(page);
-            //GroupHeaderBand group = new GroupHeaderBand();
-            //page.Bands.Add(group);
-
-            //group.CreateUniqueName();
-            //report.Show();
-
-            //FastReport.Report report = new FastReport.Report();
-            //  report.Design();
-
-
-
-
-
-            FastReport.Report report = new FastReport.Report();
-            // report.Load(Application.StartupPath + @"\frx\Text.frx");
-
-            report.Load(Application.StartupPath + @"\frx\testКвитанция заказа.frx");
+            Report report = new Report();
+            // report.Load(Application.StartupPath + @"\frx\testКвитанция заказа.frx");
+            report.Load(Application.StartupPath + @"\frx\test" + nameRep + ".frx");
             report.SetParameterValue("ID", IdCh);
             report.Show();
-        
-
-            
 
         }
 
@@ -414,16 +268,10 @@ namespace JOrders
             {
                 string jobId = dataGridView1.SelectedRows[0].Cells[0].Value + string.Empty;
                 string nameRep = dataGridView1.SelectedRows[0].Cells[1].Value + string.Empty;
-                MessageBox.Show($"nameRep: {nameRep}");
 
-
-                FastReport.Report report = new FastReport.Report();
-               // report.Load(Application.StartupPath + @"\frx\Text.frx");
-
-                MessageBox.Show($"nameRep: {getJrOrdersModel_(jobId)}");
-                //report.Load(getJrOrdersModel_(jobId));
-
-                report.Load(Application.StartupPath + @"\frx\testКвитанция заказа.frx");
+                Report report = new Report();
+               // report.Load(Application.StartupPath + @"\frx\testКвитанция заказа.frx");
+                report.Load(Application.StartupPath + @"\frx\test"+ nameRep + ".frx");
                 report.SetParameterValue("ID", IdCh);
                 report.Design();
 
@@ -479,7 +327,7 @@ namespace JOrders
             string putchFrx = null;
             try
             {
-                if(!reader.HasRows) MessageBox.Show("getJrOrdersModel_ rows null");
+                if (!reader.HasRows) MessageBox.Show("getJrOrdersModel_ rows null");
                 while (reader.Read())
                 {
                     JrChecksPrintRepModel.AddJrChecksPrintRepModel(new JrChecksPrintRepModel(id: reader?.GetString(0), name: reader.GetString(1), body: reader.GetString(2)));

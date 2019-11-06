@@ -499,6 +499,18 @@ namespace JOrders
             // MessageBox.Show(dataGridView1.CurrentCell?.RowIndex.ToString());
 
             // var senderGrid = (DataGridView)sender;
+
+            Print();
+            
+        }
+
+        private void ToolStripMenuItem3_Click(object sender, EventArgs e)
+        {
+            Print();
+        }
+
+        private void Print()
+        {
             if (dataGridView1.CurrentCell?.RowIndex >= 0)
             {
                 string y = dataGridView1.Rows[dataGridView1.CurrentCell.RowIndex].Cells[0].Value.ToString();
@@ -909,5 +921,6 @@ namespace JOrders
             textBox11.Text = "";
         }
 
+       
     }
 }
