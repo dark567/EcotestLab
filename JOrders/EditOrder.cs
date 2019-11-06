@@ -4,6 +4,7 @@ using DicAgent;
 using DicEmployee;
 using DicOrg;
 using DicSubdivisions;
+using FastReport;
 using FirebirdSql.Data.FirebirdClient;
 using System;
 using System.ComponentModel;
@@ -67,7 +68,7 @@ namespace JOrders
             #endregion
 
 
-          //  textBox1.Text = $"ID:{Id}"; //client
+            //  textBox1.Text = $"ID:{Id}"; //client
 
             this.ActiveControl = textBox1;
 
@@ -88,7 +89,7 @@ namespace JOrders
                 // data.Add(new JResultsAddEditModel(id: s.Id, dateChecks: s?.DateChecks.ToString(), numChecks: s.NumChecks, name: s.Name, surname: s.Surname, sex: s.Sex, email: s.Email));
                 textBox1.Text = s.ClientName;
 
-               // DateTime DataCheck = DateTime.ParseExact(s.DataCheck, "dd.MM.yyyy HH:mm:ss", CultureInfo.InvariantCulture);
+                // DateTime DataCheck = DateTime.ParseExact(s.DataCheck, "dd.MM.yyyy HH:mm:ss", CultureInfo.InvariantCulture);
                 DateTime DataCheck = DateTime.Parse(s.DataCheck);
                 if (DataCheck != null) dateTimePicker1.Value = DataCheck;
 
@@ -229,7 +230,7 @@ namespace JOrders
                 "de.code_name, jc.AGENT_ID, jcd.CHECK_AGENT_CODE_NAME, jc.PAYER_ORG_ID, jcd.check_payer_org_code_name, jc.DESCR/*13*/," +
                 "jc.SUM_BASE, jc.SUM_, jc.PAYED_SUM, jc.FISCAL_NUM, jc.is_fiscal " +
                 "from jor_checks jc " +
-                "join jor_checks_dt jcd on jcd.hd_id = jc.id " + 
+                "join jor_checks_dt jcd on jcd.hd_id = jc.id " +
                 "join dic_employee de on de.id = jc.MANAGER_ID " +
                 "where jc.id = cast(@paramId as ID)", fb);
 
@@ -501,7 +502,7 @@ namespace JOrders
             // var senderGrid = (DataGridView)sender;
 
             Print();
-            
+
         }
 
         private void ToolStripMenuItem3_Click(object sender, EventArgs e)
@@ -591,7 +592,7 @@ namespace JOrders
             }
             catch (Exception ex)
             {
-                 MessageBox.Show("error" + ex.Message);
+                MessageBox.Show("error" + ex.Message);
                 // fbt.Rollback();
             }
             finally
@@ -921,6 +922,42 @@ namespace JOrders
             textBox11.Text = "";
         }
 
-       
+        private void ToolStripButton8_Click(object sender, EventArgs e)
+        {
+            PrintAuto();
+        }
+
+        private void PrintAuto()
+        {
+
+
+            if (dataGridView1.CurrentCell?.RowIndex >= 0)
+            {
+                Report report = new Report();
+                // report.Load(Application.StartupPath + @"\frx\testКвитанция заказа.frx");
+                report.Load(Application.StartupPath + @"\frx\Этикетка на заказ 3x2.frx");
+                report.SetParameterValue("ID", Id);
+                report.PrintSettings.Printer = "";
+                report.PrintSettings.Copies = 1;
+                report.PrintSettings.ShowDialog = false;
+                report.Print();
+
+
+                report.Load(Application.StartupPath + @"\frx\Квитанция заказа.frx");
+                report.SetParameterValue("ID", dataGridView1.Rows[dataGridView1.CurrentCell.RowIndex].Cells[0].Value.ToString());
+                report.PrintSettings.Printer = "";
+                report.PrintSettings.Copies = 1;
+                report.PrintSettings.ShowDialog = false;
+                report.Print();
+            }
+            //else
+            //{
+            //    PrintReport printForm = new PrintReport();
+            //    printForm.Param = "FJOR_CHECKS_EDITOR";
+            //    printForm.IdCh = Id;
+            //    printForm.ShowDialog();
+            //}
+
+        }
     }
 }

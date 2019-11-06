@@ -257,7 +257,11 @@ namespace JOrders
             Report report = new Report();
             // report.Load(Application.StartupPath + @"\frx\testКвитанция заказа.frx");
             report.Load(Application.StartupPath + @"\frx\test" + nameRep + ".frx");
-            report.SetParameterValue("ID", IdCh);
+            //report.SetParameterValue("ID", IdCh);
+
+            if(nameRep == "Этикетка на заказ 3x2") report.SetParameterValue("ID", Id);
+            if(nameRep == "Квитанция заказа") report.SetParameterValue("ID", IdCh);
+
             report.Show();
 
         }
@@ -271,8 +275,10 @@ namespace JOrders
 
                 Report report = new Report();
                // report.Load(Application.StartupPath + @"\frx\testКвитанция заказа.frx");
-                report.Load(Application.StartupPath + @"\frx\test"+ nameRep + ".frx");
-                report.SetParameterValue("ID", IdCh);
+                report.Load(Application.StartupPath + @"\frx\"+ nameRep + ".frx");
+
+                if (nameRep == "Этикетка на заказ 3x2") report.SetParameterValue("ID", Id);
+                if (nameRep == "Квитанция заказа") report.SetParameterValue("ID", IdCh);
                 report.Design();
 
             }
