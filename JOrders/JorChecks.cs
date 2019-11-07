@@ -326,6 +326,7 @@ namespace JOrders
 
                 EditOrder edOr = new EditOrder();
                 edOr.Id = y;
+               
                 edOr.ShowDialog();
             }
         }

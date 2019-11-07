@@ -688,6 +688,7 @@ namespace JOrders
             this.toolStripMenuItem4.ShortcutKeys = System.Windows.Forms.Keys.F9;
             this.toolStripMenuItem4.Size = new System.Drawing.Size(180, 22);
             this.toolStripMenuItem4.Text = "AutoPrint";
+            this.toolStripMenuItem4.Click += new System.EventHandler(this.ToolStripMenuItem4_Click);
             // 
             // toolStripMenuItem5
             // 

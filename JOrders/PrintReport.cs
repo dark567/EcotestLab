@@ -249,23 +249,98 @@ namespace JOrders
 
         }
 
+        /// <summary>
+        /// печать
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Button1_Click(object sender, EventArgs e)
         {
-            string jobId = dataGridView1.SelectedRows[0].Cells[0].Value + string.Empty;
-            string nameRep = dataGridView1.SelectedRows[0].Cells[1].Value + string.Empty;
+            //переделать  под hd_id
 
-            Report report = new Report();
-            // report.Load(Application.StartupPath + @"\frx\testКвитанция заказа.frx");
-            report.Load(Application.StartupPath + @"\frx\test" + nameRep + ".frx");
-            //report.SetParameterValue("ID", IdCh);
+            if (dataGridView1.SelectedRows.Count > 0) // make sure user select at least 1 row 
+            {
+               // string jobId = dataGridView1.SelectedRows[0].Cells[0].Value + string.Empty;
+                string nameRep = dataGridView1.SelectedRows[0].Cells[1].Value + string.Empty;
 
-            if(nameRep == "Этикетка на заказ 3x2") report.SetParameterValue("ID", Id);
-            if(nameRep == "Квитанция заказа") report.SetParameterValue("ID", IdCh);
+                Report report = new Report();
+                // report.Load(Application.StartupPath + @"\frx\testКвитанция заказа.frx");
+                report.Load(Application.StartupPath + @"\frx\test" + nameRep + ".frx");
+                //report.SetParameterValue("ID", IdCh);
 
-            report.Show();
+             //   if (nameRep == "Этикетка на заказ 3x2") report.SetParameterValue("ID", Id);
+             //  if (nameRep == "Квитанция заказа") report.SetParameterValue("ID", IdCh);
+
+                report.SetParameterValue("ID", IdCh);
+
+             //   MessageBox.Show(Id);
+              ///  MessageBox.Show(IdCh);
+
+                report.Prepare();
+                report.Show();
+            }
+
+
+            //// перенести в отчет
+            //FbConnection fb = GetConnection();
+
+            //string getId = "select id from jor_checks_dt where hd_id = cast(@param as ID)";
+            //FbCommand SelectID = new FbCommand(getId, fb);
+
+            ////add one IN parameter                     
+            //FbParameter nameParam = new FbParameter("@param", value: IdCh);
+            //// добавляем параметр к команде
+            //SelectID.Parameters.Add(nameParam);
+
+            //FbTransaction fbt = fb.BeginTransaction();
+            //SelectID.Transaction = fbt;
+            //FbDataReader reader = SelectID.ExecuteReader();
+
+            //try
+            //{
+            //    while (reader.Read())
+            //    {
+            //        MessageBox.Show(reader.GetString(0));
+            //    }
+
+            //}
+            //catch (Exception ex)
+            //{
+            //    MessageBox.Show("error" + ex.Message);
+            //    // fbt.Rollback();
+            //}
+            //finally
+            //{
+            //    fbt.Commit();
+            //    reader.Close();
+            //    SelectID.Dispose();
+            //    fb.Close();
+            //}
 
         }
 
+        private FbConnection GetConnection()
+        {
+            string connectionString =
+                "User=SYSDBA;" +
+                "Password=masterkey;" +
+                @"Database=" + path_db + ";" +
+                "Charset=UTF8;" +
+                "Pooling=true;" +
+                "ServerType=0;";
+
+            FbConnection conn = new FbConnection(connectionString.ToString());
+
+            conn.Open();
+
+            return conn;
+        }
+
+        /// <summary>
+        ///  редактор
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Button3_Click(object sender, EventArgs e)
         {
             if (dataGridView1.SelectedRows.Count > 0) // make sure user select at least 1 row 
@@ -274,8 +349,8 @@ namespace JOrders
                 string nameRep = dataGridView1.SelectedRows[0].Cells[1].Value + string.Empty;
 
                 Report report = new Report();
-               // report.Load(Application.StartupPath + @"\frx\testКвитанция заказа.frx");
-                report.Load(Application.StartupPath + @"\frx\"+ nameRep + ".frx");
+                // report.Load(Application.StartupPath + @"\frx\testКвитанция заказа.frx");
+                report.Load(Application.StartupPath + @"\frx\" + nameRep + ".frx");
 
                 if (nameRep == "Этикетка на заказ 3x2") report.SetParameterValue("ID", Id);
                 if (nameRep == "Квитанция заказа") report.SetParameterValue("ID", IdCh);

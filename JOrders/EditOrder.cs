@@ -74,14 +74,16 @@ namespace JOrders
 
             if (Id == null) AddFirstItems();
 
-            AddTitle();
+            AddTitle(Id);
 
             AddrowsToDataGrid();
         }
 
-        private void AddTitle()
+        private void AddTitle(string id)
         {
-            getOrderDetailsModel(Id);
+
+
+            getOrderDetailsModel(id);
 
 
             foreach (JrOrderDetailsModel s in JrOrderDetailsModel.GetJrOrdersModel)
@@ -135,7 +137,8 @@ namespace JOrders
             dataGridView1.AllowUserToAddRows = false; //запрешаем пользователю самому добавлять строки
             dataGridView1.AllowUserToResizeColumns = true;
 
-            JrChecksPrintRepModel.ClearjrChecksPrintRepModel();
+          //  JrChecksPrintRepModel.ClearjrChecksPrintRepModel(); /*?????*/
+            JrEditCheckModel.ClearJrOrdersModel();
 
             getJrCheckEditModel(Id);
 
@@ -223,6 +226,8 @@ namespace JOrders
 
         public void getOrderDetailsModel(string id = "")
         {
+
+            JrOrderDetailsModel.ClearJrOrdersModel();
 
             FbConnection fb = GetConnection();
             FbCommand SelectSQL = new FbCommand("select first 1 jc.id, jc.date_time, jc.NUM, jc.SUBDIVISION_ID," +
@@ -525,6 +530,7 @@ namespace JOrders
             {
                 PrintReport printForm = new PrintReport();
                 printForm.Param = "FJOR_CHECKS_EDITOR";
+                printForm.IdCh = Id;
                 printForm.ShowDialog();
             }
         }
@@ -922,11 +928,28 @@ namespace JOrders
             textBox11.Text = "";
         }
 
+        /// <summary>
+        /// PrintAuto
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void ToolStripButton8_Click(object sender, EventArgs e)
         {
             PrintAuto();
         }
+        /// <summary>
+        /// PrintAuto
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void ToolStripMenuItem4_Click(object sender, EventArgs e)
+        {
+            PrintAuto();
+        }
 
+        /// <summary>
+        /// PrintAuto
+        /// </summary>
         private void PrintAuto()
         {
 
@@ -959,5 +982,7 @@ namespace JOrders
             //}
 
         }
+
+
     }
 }
