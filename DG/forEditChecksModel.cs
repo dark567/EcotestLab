@@ -17,28 +17,34 @@ namespace DG
         public string Id { get; set; }
 
         [VisibleTypes(true)]
-        [DisplayName("ID___")]
+        [DisplayName("Название")]
         [ColumnWeight(10)] //todo
         [AutoSizeMode(DataGridViewAutoSizeColumnMode.AllCells)]
         public string Name { get; set; }
 
-        [VisibleTypes(true)]
-        [DisplayName("ID")]
+        [VisibleTypes(false)]
+        [DisplayName("Группа id")]
         [ColumnWeight(10)] //todo
         [AutoSizeMode(DataGridViewAutoSizeColumnMode.AllCells)]
-        public string Catgoria { get; set; }
+        public string CategoriaId { get; set; }
+
+        [VisibleTypes(false)]
+        [DisplayName("Группа")]
+        [ColumnWeight(10)] //todo
+        [AutoSizeMode(DataGridViewAutoSizeColumnMode.AllCells)]
+        public string Categoria { get; set; }
 
         [VisibleTypes(true)]
-        [DisplayName("ID")]
+        [DisplayName("Код")]
         [ColumnWeight(10)] //todo
         [AutoSizeMode(DataGridViewAutoSizeColumnMode.AllCells)]
         public string Code { get; set; }
 
         [VisibleTypes(true)]
-        [DisplayName("ID")]
+        [DisplayName("Цена")]
         [ColumnWeight(10)] //todo
         [AutoSizeMode(DataGridViewAutoSizeColumnMode.AllCells)]
-        public string EdIzm { get; set; }
+        public string Price { get; set; }
 
 
         public static List<forEditChecksModel> _jrTestModel;
@@ -48,10 +54,14 @@ namespace DG
             _jrTestModel = new List<forEditChecksModel>();
         }
 
-        public forEditChecksModel(string id, string name)
+        public forEditChecksModel(string id, string name, string categoriaId, string categoria, string code, string price)
         {
             Id = id;
             Name = name;
+            CategoriaId = categoriaId;
+            Categoria = categoria;
+            Code = code;
+            Price = price;
         }
 
         public static forEditChecksModel[] GetjrTestModel

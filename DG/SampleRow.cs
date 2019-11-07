@@ -17,6 +17,20 @@ namespace DG
         //[TypesIService(false)]
         public string id { get; set; }
 
+        [VisibleTypes(false)]
+        [DisplayName("ID")]
+        [ColumnWeight(10)] //todo
+        [AutoSizeMode(DataGridViewAutoSizeColumnMode.AllCells)]
+        //[TypesIService(false)]
+        public string GrpId { get; set; }
+
+        [VisibleTypes(false)]
+        [DisplayName("ID")]
+        [ColumnWeight(10)] //todo
+        [AutoSizeMode(DataGridViewAutoSizeColumnMode.AllCells)]
+        //[TypesIService(false)]
+        public string GrpName{ get; set; }
+
         [DisplayName("Код")]
         [ColumnWeight(10)] //todo
         [AutoSizeMode(DataGridViewAutoSizeColumnMode.AllCells)]
@@ -55,9 +69,11 @@ namespace DG
 
         public string Hidden = ""; //Данное свойство не будет отображаться как колонка
 
-        public SampleRow(string id, string code, string name, bool _isService, string price, bool _isSale)
+        public SampleRow(string id, string grpId, string grpName, string code, string name, bool _isService, string price, bool _isSale)
         {
             this.id = id;
+            this.GrpId = grpId;
+            this.GrpName = grpName;
             this.code = code;
             this.name = name;
             this.isService = _isService;

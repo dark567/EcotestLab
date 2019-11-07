@@ -287,7 +287,7 @@ namespace JOrders
         private void DataGridView1_ColumnAdded(object sender, DataGridViewColumnEventArgs e)
         {
 
-            // Get the property object based on the DataPropertyName of the column
+            // Get the property object based on the DataPropertyName of the column  - forEditChecksModel
             var property = typeof(JrEditCheckModel).GetProperty(e.Column.DataPropertyName);
             // Get the ColumnWeight attribute from the property if it exists
             var weightAttribute = (ColumnWeight)property?.GetCustomAttribute(typeof(ColumnWeight));
@@ -406,6 +406,7 @@ namespace JOrders
             // DicGoodsForm.ShowDialog();
 
             DicGoods f2 = new DicGoods();
+            forEditChecksModel.ClearjrTestModel(); /*очистка*/
             f2.MyLabelClicked += new DicGoods.MyLabelClickedHandler(DicGoods_DicGoodsClicked);
             f2.ShowDialog();
         }
@@ -414,16 +415,17 @@ namespace JOrders
         {
             // textBox6.Text = text;
 
+           // forEditChecksModel.ClearjrTestModel();
 
             SortableBindingList<forEditChecksModel> data = new SortableBindingList<forEditChecksModel>(); //Специальный список List с вызовом события обновления внутреннего состояния, необходимого для автообновления datagridview
 
             foreach (DataGridViewRow row in dataGridView1.Rows)
             {
                 //More code here
-                data.Add(new forEditChecksModel(id: row.Cells[0].Value.ToString(), name: row.Cells[1].Value.ToString()/*, secname: row.Cells[1].Value.ToString(), sex: row.Cells[1].Value.ToString(), birthdate: row.Cells[1].Value.ToString(), email: row.Cells[1].Value.ToString()*/));
+                data.Add(new forEditChecksModel(id: row.Cells[0].Value.ToString(), name: row.Cells[1].Value.ToString(), categoriaId: row.Cells[2].Value.ToString(), categoria: row.Cells[3].Value.ToString(), code: row.Cells[4].Value.ToString(), price: row.Cells[5].Value.ToString()/*, email: row.Cells[1].Value.ToString()*/));
             }
 
-            data.Add(new forEditChecksModel(id: testModel.Id, name: testModel.Name/*, secname: s.Surname, sex: s.Sex, birthdate: s?.Birthdate.ToString(), email: s.Email*/));
+            data.Add(new forEditChecksModel(id: testModel.Id, name: testModel.Name, categoriaId: testModel.CategoriaId, categoria: testModel.Categoria, code: testModel.Code, price: testModel.Price/*, secname: s.Surname, sex: s.Sex, birthdate: s?.Birthdate.ToString(), email: s.Email*/));
 
             dataGridView1.Rows.Clear();
             dataGridView1.Columns.Clear();
@@ -555,23 +557,17 @@ namespace JOrders
 
         private void Button3_Click(object sender, EventArgs e)
         {
-            //FbConnectionStringBuilder fb_con = new FbConnectionStringBuilder();
-            //fb_con.Charset = "UTF8"; //используемая кодировка
-            //fb_con.UserID = "SYSDBA"; //логин
-            //fb_con.Password = "masterkey"; //пароль
-            //fb_con.Database = path_db; //путь к файлу базы данных
-            //                           // fb_con.Database = "127.0.0.1:terra"; //путь к файлу базы данных
-            //fb_con.ServerType = 0; //указываем тип сервера (0 - "полноценный Firebird" (classic или super server), 1 - встроенный (embedded))
-            //FbConnection fb = new FbConnection(fb_con.ToString()); //передаем нашу строку подключения объекту класса FbConnection
 
-            //
 
             string IdCheck = CreateID();
 
-            if (IdCheck != null) WriteTitle(IdCheck);
-
+            if (IdCheck != null)
+            {
+                WriteTitle(IdCheck);
+                WriteSpecification(IdCheck);
+            }
             //
-            if (IdCheck != null) WriteSpecification(IdCheck);
+            
             Close();
         }
 
@@ -733,7 +729,7 @@ namespace JOrders
                     "LAB_PROCESS_ID, LAB_PROCESS_DATE_ADD, LAB_PROCESS_NUM, AUTO_PRINT_DATE)" +
                     "VALUES((select U.UUID from GET_HEX_UUID U), @idcheck," +
                     "@date, @num, @idclient, 'Верюхалова З. И.', @idsubdiv, 'Лаборатория - На дому'," +
-                    "NULL, NULL, @idemployee, NULL, '29419', 'КАК+Тромбоциты', '200', 'Общеклинические исследования крови', NULL, NULL, NULL," +
+                    "NULL, NULL, @idemployee, NULL, @idGoods, @nameGoods, @idGrpGoods, @nameGrpGoods, NULL, NULL, NULL," +
                     "898, NULL, 'c84a047e46f640b598657ee8fa106d38', NULL, 0, NULL, NULL, NULL, 1, 125, 125, 125, 125, NULL, NULL, NULL, NULL," +
                     "NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, NULL, 1, NULL, NULL, NULL, NULL, 0, 0, NULL, NULL, NULL, NULL, NULL, NULL," +
                     "NULL, NULL, NULL, '9-JUL-2019 06:18:22', NULL, NULL, NULL, NULL, NULL); ";
@@ -747,6 +743,10 @@ namespace JOrders
             SelectSQLSpecific.Parameters.Add("@idclient", FbDbType.Text);
             SelectSQLSpecific.Parameters.Add("@idsubdiv", FbDbType.Text);
             SelectSQLSpecific.Parameters.Add("@idemployee", FbDbType.Text);
+            SelectSQLSpecific.Parameters.Add("@idGoods", FbDbType.Text);
+            SelectSQLSpecific.Parameters.Add("@nameGoods", FbDbType.Text);
+            SelectSQLSpecific.Parameters.Add("@idGrpGoods", FbDbType.Text);
+            SelectSQLSpecific.Parameters.Add("@nameGrpGoods", FbDbType.Text);
 
             SelectSQLSpecific.Parameters[0].Value = idCheck;
             SelectSQLSpecific.Parameters[1].Value = textBox3.Text == null ? "n/a" : textBox3.Text;
@@ -754,25 +754,33 @@ namespace JOrders
             SelectSQLSpecific.Parameters[3].Value = DicClientsModelFormMain.idClients;
             SelectSQLSpecific.Parameters[4].Value = DicClientsModelFormMain.idSubdivision; //DicClientsModelFormMain
             SelectSQLSpecific.Parameters[5].Value = DicClientsModelFormMain.idManager; //DicClientsModelFormMain
-                                                                                       //SelectSQL.Parameters[2].Direction = ParameterDirection.ReturnValue;
 
+        
             FbTransaction fbtSpecif = fb.BeginTransaction();
             SelectSQLSpecific.Transaction = fbtSpecif;
 
             #endregion
             try
             {
-                int resultT = SelectSQLSpecific.ExecuteNonQuery();
+               // int resultT = SelectSQLSpecific.ExecuteNonQuery();
                 //  int resultS = SelectSQLSpecific.ExecuteNonQuery();
 
-                MessageBox.Show($"Add {resultT}");
+               // MessageBox.Show($"Add WriteSpecification{resultT}");
                 // MessageBox.Show($"Add {resultS}");
                 //
                 foreach (DataGridViewRow row in dataGridView1.Rows)
                 {
                     ////More code here
                     //data.Add(new forEditChecksModel(id: row.Cells[0].Value.ToString(), name: row.Cells[1].Value.ToString()/*, secname: row.Cells[1].Value.ToString(), sex: row.Cells[1].Value.ToString(), birthdate: row.Cells[1].Value.ToString(), email: row.Cells[1].Value.ToString()*/));
-                    MessageBox.Show($"Add {row.Cells[0].Value.ToString()}");
+                   // MessageBox.Show($"Add id:{row.Cells[0].Value.ToString()} goodName:{row.Cells[1].Value.ToString()} {row.Cells[2].Value.ToString()} {row.Cells[3].Value.ToString()}");
+
+                    SelectSQLSpecific.Parameters[6].Value = row.Cells[0].Value.ToString(); //DicClientsModelFormMain
+                    SelectSQLSpecific.Parameters[7].Value = row.Cells[1].Value.ToString(); //DicClientsModelFormMain
+                    SelectSQLSpecific.Parameters[8].Value = row.Cells[2].Value.ToString(); //DicClientsModelFormMain
+                    SelectSQLSpecific.Parameters[9].Value = row.Cells[3].Value.ToString(); //DicClientsModelFormMain
+
+                    int resultT = SelectSQLSpecific.ExecuteNonQuery();
+                   // MessageBox.Show($"Add WriteSpecification{resultT}");
 
                 }
             }
