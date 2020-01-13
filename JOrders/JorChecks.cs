@@ -699,5 +699,13 @@ namespace JOrders
                 }
             }
         }
+
+        private void TextBox2_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter || e.KeyCode == Keys.F2)
+            {
+                Button1_Click_1(sender, e);
+            }
+        }
     }
 }

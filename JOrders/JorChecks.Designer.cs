@@ -158,6 +158,7 @@
             this.textBox2.Name = "textBox2";
             this.textBox2.Size = new System.Drawing.Size(83, 20);
             this.textBox2.TabIndex = 7;
+            this.textBox2.KeyUp += new System.Windows.Forms.KeyEventHandler(this.TextBox2_KeyUp);
             // 
             // label4
             // 

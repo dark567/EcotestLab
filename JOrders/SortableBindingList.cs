@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace JOrders
+namespace WindowsFormsApp
 {
     /// <summary>
     /// Provides a generic collection that supports data binding and additionally supports sorting.

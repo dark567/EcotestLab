@@ -142,7 +142,7 @@ namespace JOrders
 
             getJrCheckEditModel(Id);
 
-            SortableBindingList<JrEditCheckModel> data = new SortableBindingList<JrEditCheckModel>(); //Специальный список List с вызовом события обновления внутреннего состояния, необходимого для автообновления datagridview
+            DG.SortableBindingList<JrEditCheckModel> data = new DG.SortableBindingList<JrEditCheckModel>(); //Специальный список List с вызовом события обновления внутреннего состояния, необходимого для автообновления datagridview
 
 
             foreach (JrEditCheckModel s in JrEditCheckModel.GetJrEditCheckModel)
@@ -413,19 +413,26 @@ namespace JOrders
 
         void DicGoods_DicGoodsClicked(forEditChecksModel testModel)
         {
+            //JrOrderDetailsModel.AddJrOrdersModel(new JrOrderDetailsModel(id: reader.GetString(0), dataCheck: reader.GetString(1), numCheck: reader.GetString(2), subdivisionId: reader.GetString(3), subdivisionName: reader.GetString(4), clientId: reader.GetString(5), clientName: reader.GetString(6), managerId: reader.GetString(7), managerName: reader.GetString(8), agentId: reader?.GetString(9), agentName: reader?.GetString(10), orgId: reader?.GetString(11), orgName: reader?.GetString(12), descr: reader.GetString(13), sum_Base: reader.GetDecimal(14), sum_Realiz: reader.GetDecimal(15), pAYED_SUM: reader.GetDecimal(16), isFiscal: reader.GetBoolean(18), fiscalNum: reader?.GetString(17)));
+
+
+
             // textBox6.Text = text;
 
-           // forEditChecksModel.ClearjrTestModel();
+            // forEditChecksModel.ClearjrTestModel();
 
-            SortableBindingList<forEditChecksModel> data = new SortableBindingList<forEditChecksModel>(); //Специальный список List с вызовом события обновления внутреннего состояния, необходимого для автообновления datagridview
+            DG.SortableBindingList<forEditChecksModel> data = new DG.SortableBindingList<forEditChecksModel>(); //Специальный список List с вызовом события обновления внутреннего состояния, необходимого для автообновления datagridview
 
             foreach (DataGridViewRow row in dataGridView1.Rows)
             {
                 //More code here
                 data.Add(new forEditChecksModel(id: row.Cells[0].Value.ToString(), name: row.Cells[1].Value.ToString(), categoriaId: row.Cells[2].Value.ToString(), categoria: row.Cells[3].Value.ToString(), code: row.Cells[4].Value.ToString(), price: row.Cells[5].Value.ToString()/*, email: row.Cells[1].Value.ToString()*/));
+              //  data.Add(new JrOrderDetailsModel(id: row.Cells[0].Value.ToString(), dataCheck: reader.GetString(1), numCheck: reader.GetString(2), subdivisionId: reader.GetString(3), subdivisionName: reader.GetString(4), clientId: reader.GetString(5), clientName: reader.GetString(6), managerId: reader.GetString(7), managerName: reader.GetString(8), agentId: reader?.GetString(9), agentName: reader?.GetString(10), orgId: reader?.GetString(11), orgName: reader?.GetString(12), descr: reader.GetString(13), sum_Base: reader.GetDecimal(14), sum_Realiz: reader.GetDecimal(15), pAYED_SUM: reader.GetDecimal(16), isFiscal: reader.GetBoolean(18), fiscalNum: reader?.GetString(17)));
+
             }
 
             data.Add(new forEditChecksModel(id: testModel.Id, name: testModel.Name, categoriaId: testModel.CategoriaId, categoria: testModel.Categoria, code: testModel.Code, price: testModel.Price/*, secname: s.Surname, sex: s.Sex, birthdate: s?.Birthdate.ToString(), email: s.Email*/));
+           // data.Add(new JrOrderDetailsModel(id: testModel.Id, dataCheck: reader.GetString(1), numCheck: reader.GetString(2), subdivisionId: reader.GetString(3), subdivisionName: reader.GetString(4), clientId: reader.GetString(5), clientName: reader.GetString(6), managerId: reader.GetString(7), managerName: reader.GetString(8), agentId: reader?.GetString(9), agentName: reader?.GetString(10), orgId: reader?.GetString(11), orgName: reader?.GetString(12), descr: reader.GetString(13), sum_Base: reader.GetDecimal(14), sum_Realiz: reader.GetDecimal(15), pAYED_SUM: reader.GetDecimal(16), isFiscal: reader.GetBoolean(18), fiscalNum: reader?.GetString(17)));
 
             dataGridView1.Rows.Clear();
             dataGridView1.Columns.Clear();

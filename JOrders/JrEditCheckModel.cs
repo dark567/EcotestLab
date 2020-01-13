@@ -18,7 +18,7 @@ namespace JOrders
         public string Id { get; set; }
 
         [VisibleTypes(true)]
-        [DisplayName("Анализ")]
+        [DisplayName("Анализзз")]
         [ColumnWeight(10)] //todo
         [AutoSizeMode(DataGridViewAutoSizeColumnMode.AllCells)]
         //[TypesIService(false)] //todo

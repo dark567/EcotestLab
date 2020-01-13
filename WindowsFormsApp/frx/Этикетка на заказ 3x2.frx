@@ -1,0 +1,354 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Report ScriptLanguage="CSharp" ReportInfo.Created="11/06/2019 21:55:47" ReportInfo.Modified="11/06/2019 21:56:05" ReportInfo.CreatorVersion="1.4.18.0">
+  <ScriptText>using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Windows.Forms;
+using System.Drawing;
+using System.Data;
+using FastReport;
+using FastReport.Data;
+using FastReport.Dialog;
+using FastReport.Barcode;
+using FastReport.Table;
+using FastReport.Utils;
+
+namespace FastReport
+{
+  public class ReportScript
+  {
+  }
+}
+/*procedure frxReport1OnStartReport(Sender: TfrxComponent);
+begin
+
+// showmessage(&lt;ID&gt;);  
+      
+  IBXQuery2.Open;          
+  if (IBXQuery2.RecordCount = 0) then 
+  begin
+Page3.Visible:= false;        
+Page2.Visible:= false;
+  end;
+    
+IBXQuery1.Open;
+if (IBXQuery1.RecordCount = 0) then Page1.Visible:= false;  
+IBXQuery2.Open;
+if (IBXQuery2.RecordCount = 0) then Page2.Visible:= false;  
+IBXQuery2.Open;
+if (IBXQuery2.RecordCount = 0) then Page3.Visible:= false;  
+IBXQuery3.Open;
+if (IBXQuery3.RecordCount = 0) then Page6.Visible:= false;  
+IBXQuery4.Open;
+if (IBXQuery4.RecordCount = 0) then Page27.Visible:= false;      
+IBXQuery5.Open;
+if (IBXQuery5.RecordCount = 0) then Page5.Visible:= false;   
+IBXQuery6.Open;
+if (IBXQuery6.RecordCount = 0) then Page28.Visible:= false;      
+IBXQuery8.Open;
+if (IBXQuery8.RecordCount = 0) then Page4.Visible:= false;          
+IBXQuery9.Open;
+if (IBXQuery9.RecordCount = 0) then Page7.Visible:= false;   
+IBXQuery10.Open;
+if (IBXQuery10.RecordCount = 0) then Page8.Visible:= false;   
+IBXQuery11.Open;
+if (IBXQuery11.RecordCount = 0) then Page9.Visible:= false;   
+IBXQuery12.Open;
+if (IBXQuery12.RecordCount = 0) then Page10.Visible:= false;  
+IBXQuery13.Open;
+if (IBXQuery13.RecordCount = 0) then Page11.Visible:= false;  
+IBXQuery14.Open;
+if (IBXQuery14.RecordCount = 0) then Page12.Visible:= false;  
+IBXQuery15.Open;
+if (IBXQuery15.RecordCount = 0) then Page13.Visible:= false;      
+IBXQuery16.Open;
+if (IBXQuery16.RecordCount = 0) then Page14.Visible:= false;  
+IBXQuery17.Open;
+if (IBXQuery17.RecordCount = 0) then Page15.Visible:= false;  
+IBXQuery18.Open;
+if (IBXQuery18.RecordCount = 0) then Page16.Visible:= false;  
+IBXQuery19.Open;
+if (IBXQuery19.RecordCount = 0) then Page17.Visible:= false;  
+IBXQuery20.Open;
+if (IBXQuery20.RecordCount = 0) then Page18.Visible:= false;  
+IBXQuery21.Open;
+if (IBXQuery21.RecordCount = 0) then Page19.Visible:= false;            
+IBXQuery21.Open;
+if (IBXQuery21.RecordCount = 0) then Page20.Visible:= false;  
+IBXQuery22.Open;
+if (IBXQuery22.RecordCount = 0) then Page21.Visible:= false;  
+IBXQuery22.Open;
+if (IBXQuery22.RecordCount = 0) then Page22.Visible:= false;  
+IBXQuery24.Open;
+if (IBXQuery24.RecordCount = 0) then Page24.Visible:= false;  
+IBXQuery25.Open;
+if (IBXQuery25.RecordCount = 0) then Page25.Visible:= false;  
+IBXQuery26.Open;
+if (IBXQuery26.RecordCount = 0) then Page26.Visible:= false;      
+IBXQuery23.Open;
+if (IBXQuery23.RecordCount = 0) then Page23.Visible:= false;
+  
+//showmessage(&lt;ID&gt;);      
+end;
+
+procedure Page1OnBeforePrint(Sender: TfrxComponent);
+begin
+                            
+end;
+
+procedure MasterData1OnBeforePrint(Sender: TfrxComponent);
+begin
+  if length(&lt;IBXQuery1.&quot;BULB_CODE&quot;&gt;)=8
+  then
+    begin
+      BarCode1.BarType := bcCodeEAN8;
+      BarCode1.Zoom := 1.3;                              
+    end else
+    begin
+      BarCode1.BarType := bcCodeEAN13;
+      BarCode1.Zoom := 1;                              
+    end;  
+end;
+  
+procedure MasterData14OnBeforePrint(Sender: TfrxComponent);
+begin
+   if length(&lt;IBXQuery16.&quot;BULB_CODE&quot;&gt;)=8
+  then
+    begin
+      BarCode13.BarType := bcCodeEAN8;
+      BarCode13.Zoom := 1;                              
+    end else
+    begin
+      BarCode13.BarType := bcCodeEAN13;
+      BarCode13.Zoom := 0.9;                              
+    end;           
+end;
+
+procedure MasterData27OnBeforePrint(Sender: TfrxComponent);
+begin
+    if length(&lt;IBXQuery23.&quot;BULB_CODE&quot;&gt;)&lt;&gt;8
+  then
+    begin
+       MasterData27.visible:=false;
+    end else
+    begin
+       MasterData27.visible:=true;
+    end;                       
+end;
+
+begin
+  
+end.
+*/</ScriptText>
+  <Dictionary>
+    <Parameter Name="ID" DataType="System.String"/>
+  </Dictionary>
+  <ReportPage Name="Page1" PaperWidth="30" PaperHeight="20" LeftMargin="0" TopMargin="0" RightMargin="0" BottomMargin="0">
+    <DataBand Name="MasterData1" Width="113.4" Height="75.59">
+      <BarcodeObject Name="BarCode1" Left="26.46" Width="83.75" Height="41.57" Expression="&lt;IBXQuery1.&quot;BULB_CODE&quot;&gt;" Barcode="EAN8" Barcode.CalcCheckSum="false"/>
+      <TextObject Name="Memo1" Left="3.78" Top="37.8" Width="105.83" Height="34.02" Text="[IBXQuery1.CLIENT] &#13;&#10;[IBXQuery1.BULB_TYPE] &#13;&#10;[IBXQuery1.ANALISYS]&#13;&#10;[IBXQuery1.DATE_TIME]" Padding="2, 1, 2, 1" Font="Tahoma, 5pt"/>
+      <TextObject Name="Memo45" Top="3.78" Width="18.9" Height="18.9" Text="1" Padding="2, 1, 2, 1" Font="Tahoma, 10pt"/>
+    </DataBand>
+  </ReportPage>
+  <ReportPage Name="Page2" PaperWidth="30" PaperHeight="20" LeftMargin="0" TopMargin="0" RightMargin="0" BottomMargin="0">
+    <DataBand Name="MasterData2" Height="71.81">
+      <BarcodeObject Name="BarCode2" Left="22.68" Width="67" Height="60.47" Expression="&lt;IBXQuery2.&quot;BULB_CODE&quot;&gt;" ShowText="false" Barcode="EAN8" Barcode.CalcCheckSum="false"/>
+      <ShapeObject Name="Shape3" Left="3.78" Top="26.46" Width="11.34" Height="11.34"/>
+    </DataBand>
+  </ReportPage>
+  <ReportPage Name="Page3" PaperWidth="30" PaperHeight="20" LeftMargin="0" TopMargin="0" RightMargin="0" BottomMargin="0">
+    <DataBand Name="MasterData3" Height="71.81">
+      <BarcodeObject Name="BarCode3" Left="20.5" Width="67" Height="41.57" Expression="&lt;IBXQuery2.&quot;BULB_CODE&quot;&gt;" Barcode="EAN8" Barcode.CalcCheckSum="false"/>
+      <TextObject Name="Memo2" Left="5.38" Top="37.8" Width="105.83" Height="34.02" Text="[IBXQuery1.CLIENT]&#13;&#10;[IBXQuery2.BIRTH_DATE]   [IBXQuery2.SEX]" Padding="2, 1, 2, 1" Font="Tahoma, 6pt"/>
+      <ShapeObject Name="Shape4" Left="3.78" Top="22.68" Width="11.34" Height="11.34"/>
+    </DataBand>
+  </ReportPage>
+  <ReportPage Name="Page4" PaperWidth="30" PaperHeight="20" LeftMargin="0" TopMargin="0" RightMargin="0" BottomMargin="0">
+    <DataBand Name="MasterData4" Height="75.59">
+      <BarcodeObject Name="BarCode4" Left="22.68" Top="3.78" Width="67" Height="34.02" Expression="&lt;IBXQuery8.&quot;BULB_CODE&quot;&gt;" Barcode="EAN8" Barcode.CalcCheckSum="false"/>
+      <TextObject Name="Memo3" Top="37.8" Width="113.39" Height="34.02" Text="[IBXQuery8.CLIENT]&#13;&#10;[IBXQuery8.BULB_TYPE]&#13;&#10;[IBXQuery8.ANALISYS]&#13;&#10;&#13;&#10;&#13;&#10;&#13;&#10;&#13;&#10;&#13;&#10;&#13;&#10;--[IIF(Length(Trim(&lt;IBXQuery8.&quot;DESCR&quot;&gt;)) = 0 ,&lt;IBXQuery8.&quot;BULB_TYPE&quot;&gt;,&lt;IBXQuery8.&quot;DESCR&quot;&gt;)]" Padding="2, 1, 2, 1" Font="Tahoma, 5pt"/>
+      <ShapeObject Name="Shape8" Left="3.78" Top="18.9" Width="11.34" Height="11.34" Shape="Ellipse"/>
+      <TextObject Name="Memo49" Left="3.78" Width="15.12" Height="18.9" Text="4" Padding="2, 1, 2, 1" Font="Tahoma, 10pt"/>
+    </DataBand>
+  </ReportPage>
+  <ReportPage Name="Page5" PaperWidth="30" PaperHeight="20" LeftMargin="0" TopMargin="0" RightMargin="0" BottomMargin="0">
+    <DataBand Name="MasterData5" Height="75.59">
+      <BarcodeObject Name="BarCode5" Left="22.68" Width="67" Height="41.57" Expression="&lt;IBXQuery5.&quot;BULB_CODE&quot;&gt;" Barcode="EAN8" Barcode.CalcCheckSum="false"/>
+      <TextObject Name="Memo4" Left="3.78" Top="37.8" Width="105.83" Height="34.02" Text="[&lt;IBXQuery5.&quot;CLIENT&quot;&gt;]&#13;&#10;[IBXQuery5.DESCR]&#13;&#10;[&lt;IBXQuery5.&quot;BULB_TYPE&quot;&gt;]" Padding="2, 1, 2, 1" Font="Tahoma, 5pt"/>
+      <ShapeObject Name="Shape5" Left="3.78" Top="22.68" Width="11.34" Height="11.34"/>
+    </DataBand>
+  </ReportPage>
+  <ReportPage Name="Page6" PaperWidth="30" PaperHeight="20" LeftMargin="0" TopMargin="0" RightMargin="0" BottomMargin="0">
+    <DataBand Name="MasterData6" Height="75.59">
+      <BarcodeObject Name="BarCode6" Left="22.68" Width="67" Height="41.57" Expression="&lt;IBXQuery3.&quot;BULB_CODE&quot;&gt;" Barcode="EAN8" Barcode.CalcCheckSum="false"/>
+      <TextObject Name="Memo5" Left="3.78" Top="37.8" Width="105.83" Height="34.02" Text="[IBXQuery3.CLIENT]&#13;&#10;КАК[&lt;IBXQuery4.&quot;DESCR&quot;&gt;][&lt;IBXQuery6.&quot;DESCR&quot;&gt;][&lt;IBXQuery7.&quot;DESCR&quot;&gt;]&#13;&#10;[IBXQuery3.BULB_TYPE]" Padding="2, 1, 2, 1" Font="Tahoma, 5pt"/>
+      <ShapeObject Name="Shape6" Left="3.78" Top="22.68" Width="11.34" Height="11.34"/>
+    </DataBand>
+  </ReportPage>
+  <ReportPage Name="Page7" PaperWidth="30" PaperHeight="20" LeftMargin="0" TopMargin="0" RightMargin="0" BottomMargin="0">
+    <DataBand Name="MasterData7" Height="75.59">
+      <BarcodeObject Name="BarCode7" Left="22.68" Width="67" Height="41.57" Expression="&lt;IBXQuery9.&quot;BULB_CODE&quot;&gt;" Barcode="EAN8" Barcode.CalcCheckSum="false"/>
+      <TextObject Name="Memo6" Left="3.78" Top="37.8" Width="105.83" Height="34.02" Text="[IBXQuery9.CLIENT]&#13;&#10;[IBXQuery9.DESCR]&#13;&#10;[IBXQuery9.DATE_TIME]" Padding="2, 1, 2, 1" Font="Tahoma, 5pt"/>
+      <ShapeObject Name="Shape7" Left="3.78" Top="22.68" Width="11.34" Height="11.34"/>
+    </DataBand>
+  </ReportPage>
+  <ReportPage Name="Page8" PaperWidth="30" PaperHeight="20" LeftMargin="0" TopMargin="0" RightMargin="0" BottomMargin="0">
+    <DataBand Name="MasterData8" Height="75.59">
+      <BarcodeObject Name="BarCode8" Left="22.68" Width="67" Height="41.57" Expression="&lt;IBXQuery10.&quot;BULB_CODE&quot;&gt;" Barcode="EAN8" Barcode.CalcCheckSum="false"/>
+      <TextObject Name="Memo7" Left="3.78" Top="37.8" Width="105.83" Height="34.02" Text="[IBXQuery10.CLIENT]&#13;&#10;[IBXQuery10.DESCR]&#13;&#10;[IBXQuery10.DATE_TIME]" Padding="2, 1, 2, 1" Font="Tahoma, 5pt"/>
+      <ShapeObject Name="Shape9" Left="3.78" Top="18.9" Width="11.34" Height="11.34" Shape="Ellipse"/>
+      <TextObject Name="Memo44" Left="3.78" Width="94.49" Height="18.9" Text="p8" Padding="2, 1, 2, 1" Font="Tahoma, 10pt"/>
+    </DataBand>
+  </ReportPage>
+  <ReportPage Name="Page9" PaperWidth="30" PaperHeight="20" LeftMargin="0" TopMargin="0" RightMargin="0" BottomMargin="0">
+    <DataBand Name="MasterData9" Height="75.59">
+      <BarcodeObject Name="BarCode9" Left="22.68" Width="67" Height="41.57" Expression="&lt;IBXQuery11.&quot;BULB_CODE&quot;&gt;" Barcode="EAN8" Barcode.CalcCheckSum="false"/>
+      <TextObject Name="Memo8" Left="3.78" Top="37.8" Width="105.83" Height="34.02" Text="[IBXQuery11.CLIENT]&#13;&#10;[IBXQuery11.DESCR]&#13;&#10;[IBXQuery11.DATE_TIME]" Padding="2, 1, 2, 1" Font="Tahoma, 5pt"/>
+      <ShapeObject Name="Shape10" Left="3.78" Top="22.68" Width="11.34" Height="11.34"/>
+      <TextObject Name="Memo38" Left="94.49" Width="98.27" Height="18.9" Text="9" Padding="2, 1, 2, 1" Font="Tahoma, 10pt"/>
+    </DataBand>
+  </ReportPage>
+  <ReportPage Name="Page10" PaperWidth="30" PaperHeight="20" LeftMargin="0" TopMargin="0" RightMargin="0" BottomMargin="0">
+    <DataBand Name="MasterData10" Height="75.59">
+      <ShapeObject Name="Shape1" Left="3.78" Top="11.34" Width="11.34" Height="11.34" Shape="Triangle"/>
+      <TextObject Name="Memo37" Left="94.49" Top="3.78" Width="98.27" Height="18.9" Text="10" Padding="2, 1, 2, 1" Font="Tahoma, 10pt"/>
+      <BarcodeObject Name="BarCode10" Left="22.68" Width="67" Height="41.57" Expression="&lt;IBXQuery12.&quot;BULB_CODE&quot;&gt;" Barcode="EAN8" Barcode.CalcCheckSum="false"/>
+      <TextObject Name="Memo9" Left="3.78" Top="41.57" Width="105.83" Height="34.02" Text="[IBXQuery12.CLIENT]-[IBXQuery12.DESCR]&#13;&#10;[IBXQuery12.BULB_TYPE]   [IBXQuery12.V]&#13;&#10;=[IBXQuery12.BULB_CODE]=" Padding="2, 1, 2, 1" Font="Tahoma, 5pt"/>
+    </DataBand>
+  </ReportPage>
+  <ReportPage Name="Page11" PaperWidth="30" PaperHeight="20" LeftMargin="0" TopMargin="0" RightMargin="0" BottomMargin="0">
+    <DataBand Name="MasterData11" Height="75.59">
+      <BarcodeObject Name="BarCode11" Left="22.68" Width="67" Height="41.57" Expression="&lt;IBXQuery13.&quot;BULB_CODE&quot;&gt;" Barcode="EAN8" Barcode.CalcCheckSum="false"/>
+      <TextObject Name="Memo10" Left="3.78" Top="37.8" Width="105.83" Height="34.02" Text="[IBXQuery13.CLIENT]&#13;&#10;[IBXQuery13.BULB_TYPE]&#13;&#10;[IBXQuery13.DESCR]" Padding="2, 1, 2, 1" Font="Tahoma, 5pt"/>
+      <ShapeObject Name="Shape2" Left="3.78" Top="22.68" Width="11.34" Height="11.34" Shape="Triangle"/>
+      <TextObject Name="Memo41" Top="3.78" Width="102.05" Height="18.9" Text="11" Padding="2, 1, 2, 1" Font="Tahoma, 10pt"/>
+    </DataBand>
+  </ReportPage>
+  <ReportPage Name="Page12" PaperWidth="30" PaperHeight="20" LeftMargin="0" TopMargin="0" RightMargin="0" BottomMargin="0">
+    <DataBand Name="MasterData12" Height="75.59">
+      <TextObject Name="Memo11" Left="3.78" Top="37.8" Width="113.39" Height="30.24" ShiftMode="Never" Text="[IBXQuery14.DESCR]&#13;&#10;[IBXQuery14.NUM]  [IBXQuery14.CLIENT]&#13;&#10;[IBXQuery14.DATE_TIME]&#13;&#10;[IBXQuery14.BULB_TYPE]&#13;&#10;[IBXQuery14.DESCR]" Padding="2, 1, 2, 1" Font="Tahoma, 6pt"/>
+      <TextObject Name="Memo15" Left="3.78" Top="7.56" Width="11.34" Height="18.9" Text="B" Padding="2, 1, 2, 1" Font="Tahoma, 10pt"/>
+      <BarcodeObject Name="BarCode22" Left="22.68" Width="67" Height="41.57" Expression="&lt;IBXQuery14.&quot;BULB_CODE&quot;&gt;" Barcode="EAN8" Barcode.CalcCheckSum="false"/>
+    </DataBand>
+  </ReportPage>
+  <ReportPage Name="Page13" PaperWidth="30" PaperHeight="20" LeftMargin="0" TopMargin="0" RightMargin="0" BottomMargin="0">
+    <DataBand Name="MasterData13" Height="75.59">
+      <TextObject Name="Memo13" Left="7.56" Top="11.34" Width="11.34" Height="18.9" Text="А" Padding="2, 1, 2, 1" Font="Tahoma, 10pt"/>
+      <TextObject Name="Memo12" Left="18.9" Width="105.83" Height="64.25" ShiftMode="Never" Text="[IBXQuery15.NUM]&#13;&#10;[IBXQuery15.DATE_TIME]&#13;&#10;[IBXQuery15.CLIENT]&#13;&#10;[IBXQuery15.BULB_TYPE]&#13;&#10;[IBXQuery15.DESCR]" Padding="2, 1, 2, 1" Font="Tahoma, 6pt"/>
+    </DataBand>
+  </ReportPage>
+  <ReportPage Name="Page14" PaperWidth="30" PaperHeight="20" LeftMargin="0" TopMargin="0" RightMargin="0" BottomMargin="0">
+    <DataBand Name="MasterData14" Height="75.59">
+      <TextObject Name="Memo14" Left="3.78" Top="37.8" Width="105.83" Height="34.02" Text="[IBXQuery16.CLIENT]&#13;&#10;[IBXQuery16.BULB_TYPE]&#13;&#10;[IBXQuery16.V]&#13;&#10;[IBXQuery16.ANALISYS]" Padding="2, 1, 2, 1" Font="Tahoma, 5pt"/>
+      <ShapeObject Name="Shape12" Top="11.34" Width="11.34" Height="15.12" Shape="Diamond"/>
+      <BarcodeObject Name="BarCode13" Left="15.12" Width="67" Height="41.57" Expression="&lt;IBXQuery16.&quot;BULB_CODE&quot;&gt;" Text="87654321" Barcode="EAN8" Barcode.CalcCheckSum="false"/>
+      <TextObject Name="Memo50" Left="83.15" Top="3.78" Width="22.68" Height="18.9" Text="14" Padding="2, 1, 2, 1" Font="Tahoma, 10pt"/>
+    </DataBand>
+  </ReportPage>
+  <ReportPage Name="Page15" PaperWidth="30" PaperHeight="20" LeftMargin="0" TopMargin="0" RightMargin="0" BottomMargin="0">
+    <DataBand Name="MasterData15" Height="75.59">
+      <TextObject Name="Memo17" Left="3.78" Top="11.34" Width="22.68" Height="18.9" Text="АИ" Padding="2, 1, 2, 1" Font="Tahoma, 10pt"/>
+      <TextObject Name="Memo16" Left="22.68" Width="94.49" Height="64.25" ShiftMode="Never" Text="[IBXQuery17.NUM]&#13;&#10;[IBXQuery17.DATE_TIME]&#13;&#10;[IBXQuery17.CLIENT]&#13;&#10;[IBXQuery17.BULB_TYPE]&#13;&#10;[IBXQuery17.DESCR]" Padding="2, 1, 2, 1" Font="Tahoma, 6pt"/>
+    </DataBand>
+  </ReportPage>
+  <ReportPage Name="Page16" PaperWidth="30" PaperHeight="20" LeftMargin="0" TopMargin="0" RightMargin="0" BottomMargin="0">
+    <DataBand Name="MasterData16" Height="75.59">
+      <TextObject Name="Memo18" Top="11.34" Width="22.68" Height="18.9" Text="ИМ" Padding="2, 1, 2, 1" Font="Tahoma, 10pt"/>
+      <TextObject Name="Memo19" Left="3.78" Top="37.8" Width="90.71" Height="22.68" ShiftMode="Never" Text="[IBXQuery18.DESCR]&#13;&#10;[IBXQuery18.DATE_TIME]&#13;&#10;[IBXQuery18.CLIENT]&#13;&#10;[IBXQuery18.BULB_TYPE]" Padding="2, 1, 2, 1" Font="Tahoma, 6pt"/>
+      <BarcodeObject Name="BarCode21" Left="26.46" Width="67" Height="41.57" Expression="&lt;IBXQuery18.&quot;BULB_CODE&quot;&gt;" Barcode="EAN8" Barcode.CalcCheckSum="false"/>
+    </DataBand>
+  </ReportPage>
+  <ReportPage Name="Page17" PaperWidth="30" PaperHeight="20" LeftMargin="0" TopMargin="0" RightMargin="0" BottomMargin="0">
+    <DataBand Name="MasterData17" Height="75.59">
+      <BarcodeObject Name="BarCode12" Left="22.68" Width="67" Height="37.8" Expression="&lt;IBXQuery19.&quot;BULB_CODE&quot;&gt;" Barcode="EAN8" Barcode.CalcCheckSum="false"/>
+      <TextObject Name="Memo20" Left="7.56" Top="37.8" Width="105.83" Height="71.81" Text="[IBXQuery19.DESCR]&#13;&#10;[IBXQuery19.CLIENT]&#13;&#10;[IBXQuery19.BULB_TYPE]&#13;&#10;[IBXQuery19.DATE_TIME]" Padding="2, 1, 2, 1" Font="Tahoma, 5pt"/>
+      <ShapeObject Name="Shape11" Left="3.78" Top="22.68" Width="11.34" Height="11.34"/>
+      <TextObject Name="Memo39" Left="3.78" Width="98.27" Height="18.9" Text="17" Padding="2, 1, 2, 1" Font="Tahoma, 10pt"/>
+    </DataBand>
+  </ReportPage>
+  <ReportPage Name="Page18" PaperWidth="30" PaperHeight="20" LeftMargin="0" TopMargin="0" RightMargin="0" BottomMargin="0">
+    <DataBand Name="MasterData18" Height="75.59">
+      <TextObject Name="Memo22" Left="7.56" Top="37.8" Width="102.05" Height="26.46" ShiftMode="Never" Text="[IBXQuery20.CLIENT]&#13;&#10;[IBXQuery20.NUM]&#13;&#10;[IBXQuery20.TYPE_]&#13;&#10;[IBXQuery20.DATE_TIME]&#13;&#10;[IBXQuery20.BULB_TYPE]&#13;&#10;[IBXQuery20.DESCR]" Padding="2, 1, 2, 1" Font="Tahoma, 5pt"/>
+      <ShapeObject Name="Shape13" Left="3.78" Top="15.12" Width="11.34" Height="11.34" Shape="Triangle"/>
+      <BarcodeObject Name="BarCode23" Left="22.68" Width="67" Height="37.8" Expression="&lt;IBXQuery20.&quot;BULB_CODE&quot;&gt;" Barcode="EAN8" Barcode.CalcCheckSum="false"/>
+      <TextObject Name="Memo47" Left="90.71" Top="3.78" Width="26.46" Height="18.9" Text="18" Padding="2, 1, 2, 1" Font="Tahoma, 10pt"/>
+    </DataBand>
+  </ReportPage>
+  <ReportPage Name="Page19" PaperWidth="30" PaperHeight="20" LeftMargin="0" TopMargin="0" RightMargin="0" BottomMargin="0">
+    <DataBand Name="MasterData19" Height="75.59">
+      <TextObject Name="Memo21" Left="22.68" Width="105.83" Height="56.69" ShiftMode="Never" Text="[IBXQuery21.NUM]&#13;&#10;[IBXQuery21.DATE_TIME]&#13;&#10;[IBXQuery21.CLIENT]&#13;&#10;[IBXQuery21.BULB_TYPE]&#13;&#10;Б/П Зева" Padding="2, 1, 2, 1" Font="Tahoma, 6pt"/>
+      <TextObject Name="Memo23" Left="7.56" Top="18.9" Width="11.34" Height="18.9" Text="B" Padding="2, 1, 2, 1" Font="Tahoma, 10pt"/>
+    </DataBand>
+  </ReportPage>
+  <ReportPage Name="Page20" PaperWidth="30" PaperHeight="20" LeftMargin="0" TopMargin="0" RightMargin="0" BottomMargin="0">
+    <DataBand Name="MasterData20" Height="75.59">
+      <TextObject Name="Memo24" Left="22.68" Top="3.78" Width="105.83" Height="56.69" ShiftMode="Never" Text="[IBXQuery21.NUM]&#13;&#10;[IBXQuery21.DATE_TIME]&#13;&#10;[IBXQuery21.CLIENT]&#13;&#10;[IBXQuery21.BULB_TYPE]&#13;&#10;Б/П Носа" Padding="2, 1, 2, 1" Font="Tahoma, 6pt"/>
+      <TextObject Name="Memo25" Left="7.56" Top="18.9" Width="11.34" Height="18.9" Text="B" Padding="2, 1, 2, 1" Font="Tahoma, 10pt"/>
+    </DataBand>
+  </ReportPage>
+  <ReportPage Name="Page21" PaperWidth="30" PaperHeight="20" LeftMargin="0" TopMargin="0" RightMargin="0" BottomMargin="0">
+    <DataBand Name="MasterData21" Height="75.59">
+      <TextObject Name="Memo26" Left="22.68" Width="105.83" Height="56.69" ShiftMode="Never" Text="[IBXQuery22.NUM]&#13;&#10;[IBXQuery22.DATE_TIME]&#13;&#10;[IBXQuery22.CLIENT]&#13;&#10;[IBXQuery22.BULB_TYPE]&#13;&#10;Б/П стаф. Зева" Padding="2, 1, 2, 1" Font="Tahoma, 6pt"/>
+      <TextObject Name="Memo27" Left="7.56" Top="7.56" Width="11.34" Height="18.9" Text="B" Padding="2, 1, 2, 1" Font="Tahoma, 10pt"/>
+    </DataBand>
+  </ReportPage>
+  <ReportPage Name="Page22" PaperWidth="30" PaperHeight="20" LeftMargin="0" TopMargin="0" RightMargin="0" BottomMargin="0">
+    <DataBand Name="MasterData22" Height="75.59">
+      <TextObject Name="Memo28" Left="22.68" Width="105.83" Height="56.69" ShiftMode="Never" Text="[IBXQuery22.NUM]&#13;&#10;[IBXQuery22.DATE_TIME]&#13;&#10;[IBXQuery22.CLIENT]&#13;&#10;[IBXQuery22.BULB_TYPE]&#13;&#10;Б/П стаф. Носа" Padding="2, 1, 2, 1" Font="Tahoma, 6pt"/>
+      <TextObject Name="Memo29" Left="7.56" Top="18.9" Width="11.34" Height="18.9" Text="B" Padding="2, 1, 2, 1" Font="Tahoma, 10pt"/>
+    </DataBand>
+  </ReportPage>
+  <ReportPage Name="Page23" PaperWidth="30" PaperHeight="20" LeftMargin="0" TopMargin="0" RightMargin="0" BottomMargin="0">
+    <DataBand Name="MasterData27" Height="75.59">
+      <BarcodeObject Name="BarCode18" Left="22.68" Width="67" Height="37.8" Expression="&lt;IBXQuery23.&quot;BULB_CODE&quot;&gt;" Barcode="EAN8" Barcode.CalcCheckSum="false"/>
+      <TextObject Name="Memo34" Left="7.56" Top="37.8" Width="105.83" Height="71.81" Text="[IBXQuery23.CLIENT]&#13;&#10;[IBXQuery23.BULB_TYPE]&#13;&#10;[IBXQuery23.DESCR]&#13;&#10;[IBXQuery23.DATE_TIME]" Padding="2, 1, 2, 1" Font="Tahoma, 5pt"/>
+      <TextObject Name="Memo42" Left="90.71" Top="3.78" Width="113.39" Height="18.9" Text="23" Padding="2, 1, 2, 1" Font="Tahoma, 10pt"/>
+    </DataBand>
+  </ReportPage>
+  <ReportPage Name="Page24" PaperWidth="30" PaperHeight="20" LeftMargin="0" TopMargin="0" RightMargin="0" BottomMargin="0">
+    <DataBand Name="MasterData24" Height="75.59">
+      <BarcodeObject Name="BarCode15" Left="22.68" Width="67" Height="37.8" Expression="&lt;IBXQuery24.&quot;BULB_CODE&quot;&gt;" Barcode="EAN8" Barcode.CalcCheckSum="false"/>
+      <TextObject Name="Memo31" Left="7.56" Top="34.02" Width="105.83" Height="75.59" Text="[IBXQuery24.CLIENT]&#13;&#10;[IBXQuery24.DESCR]&#13;&#10;[IBXQuery24.BULB_TYPE]-[IBXQuery24.NUM]&#13;&#10;[IBXQuery24.DATE_TIME]" Padding="2, 1, 2, 1" Font="Tahoma, 5pt"/>
+      <ShapeObject Name="Shape15" Left="3.78" Top="22.68" Width="11.34" Height="11.34"/>
+      <TextObject Name="Memo51" Width="18.9" Height="18.9" Text="24" Padding="2, 1, 2, 1" Font="Tahoma, 10pt"/>
+    </DataBand>
+  </ReportPage>
+  <ReportPage Name="Page25" PaperWidth="30" PaperHeight="20" LeftMargin="0" TopMargin="0" RightMargin="0" BottomMargin="0">
+    <DataBand Name="MasterData23" Height="75.59">
+      <BarcodeObject Name="BarCode14" Left="22.68" Width="67" Height="37.8" Expression="&lt;IBXQuery25.&quot;BULB_CODE&quot;&gt;" Barcode="EAN8" Barcode.CalcCheckSum="false"/>
+      <TextObject Name="Memo30" Left="7.56" Top="37.8" Width="105.83" Height="71.81" Text="[IBXQuery25.CLIENT]&#13;&#10;[IBXQuery25.BULB_TYPE]-[IBXQuery25.NUM]&#13;&#10;[IBXQuery25.DESCR]&#13;&#10;[IBXQuery25.DATE_TIME]" Padding="2, 1, 2, 1" Font="Tahoma, 5pt"/>
+      <ShapeObject Name="Shape14" Left="3.78" Top="7.56" Width="11.34" Height="11.34"/>
+      <TextObject Name="Memo40" Left="90.71" Width="22.68" Height="18.9" Text="25" Padding="2, 1, 2, 1" Font="Tahoma, 10pt"/>
+    </DataBand>
+  </ReportPage>
+  <ReportPage Name="Page26" PaperWidth="30" PaperHeight="20" LeftMargin="0" TopMargin="0" RightMargin="0" BottomMargin="0">
+    <DataBand Name="MasterData26" Height="75.59">
+      <BarcodeObject Name="BarCode17" Left="22.68" Width="67" Height="37.8" Expression="&lt;IBXQuery26.&quot;BULB_CODE&quot;&gt;" Barcode="EAN8" Barcode.CalcCheckSum="false"/>
+      <TextObject Name="Memo33" Left="7.56" Top="37.8" Width="105.83" Height="71.81" Text="[IBXQuery26.CLIENT]&#13;&#10;[IBXQuery26.BULB_TYPE]-[IBXQuery26.NUM]&#13;&#10;[IBXQuery26.DESCR]&#13;&#10;[IBXQuery26.DATE_TIME]" Padding="2, 1, 2, 1" Font="Tahoma, 5pt"/>
+      <ShapeObject Name="Shape17" Left="3.78" Top="7.56" Width="11.34" Height="11.34"/>
+      <TextObject Name="Memo48" Left="56.69" Width="56.69" Height="18.9" Text="26" Padding="2, 1, 2, 1" HorzAlign="Right" Font="Tahoma, 10pt"/>
+    </DataBand>
+    <DataBand Name="MasterData25" Height="75.59">
+      <BarcodeObject Name="BarCode16" Left="22.68" Width="67" Height="37.8" Expression="&lt;IBXQuery25.&quot;BULB_CODE&quot;&gt;" Barcode="EAN8" Barcode.CalcCheckSum="false"/>
+      <TextObject Name="Memo32" Left="7.56" Top="37.8" Width="105.83" Height="71.81" Text="[IBXQuery25.CLIENT]&#13;&#10;[IBXQuery25.BULB_TYPE]-[IBXQuery25.NUM]&#13;&#10;[IBXQuery25.DESCR]&#13;&#10;[IBXQuery25.DATE_TIME]" Padding="2, 1, 2, 1" Font="Tahoma, 5pt"/>
+      <ShapeObject Name="Shape16" Left="3.78" Top="22.68" Width="11.34" Height="11.34"/>
+    </DataBand>
+  </ReportPage>
+  <ReportPage Name="Page27" PaperWidth="30" PaperHeight="20" LeftMargin="0" TopMargin="0" RightMargin="0" BottomMargin="0">
+    <DataBand Name="MasterData28" Height="75.59">
+      <BarcodeObject Name="BarCode19" Left="22.68" Width="67" Height="37.8" Expression="&lt;IBXQuery4.&quot;BULB_CODE&quot;&gt;" Barcode="EAN8" Barcode.CalcCheckSum="false"/>
+      <TextObject Name="Memo35" Left="7.56" Top="37.8" Width="105.83" Height="71.81" Text="[IBXQuery4.CLIENT]&#13;&#10;[IBXQuery4.BULB_TYPE]&#13;&#10;[IBXQuery4.DESCR]&#13;&#10;[IBXQuery4.DATE_TIME]" Padding="2, 1, 2, 1" Font="Tahoma, 5pt"/>
+      <TextObject Name="Memo46" Left="90.71" Top="3.78" Width="22.68" Height="18.9" Text="27" Padding="2, 1, 2, 1" Font="Tahoma, 10pt"/>
+      <ShapeObject Name="Shape19" Left="3.78" Top="3.78" Width="11.34" Height="11.34"/>
+    </DataBand>
+  </ReportPage>
+  <ReportPage Name="Page28" PaperWidth="30" PaperHeight="20" LeftMargin="0" TopMargin="0" RightMargin="0" BottomMargin="0">
+    <DataBand Name="MasterData29" Height="75.59">
+      <BarcodeObject Name="BarCode20" Left="22.68" Width="67" Height="41.57" Expression="&lt;IBXQuery6.&quot;BULB_CODE&quot;&gt;" Barcode="EAN8" Barcode.CalcCheckSum="false"/>
+      <TextObject Name="Memo36" Left="3.78" Top="37.8" Width="105.83" Height="34.02" Text="[&lt;IBXQuery6.&quot;CLIENT&quot;&gt;]&#13;&#10;[IBXQuery6.DESCR]&#13;&#10;[&lt;IBXQuery6.&quot;BULB_TYPE&quot;&gt;]" Padding="2, 1, 2, 1" Font="Tahoma, 5pt"/>
+      <ShapeObject Name="Shape18" Left="3.78" Top="7.56" Width="11.34" Height="11.34"/>
+      <TextObject Name="Memo43" Left="90.71" Width="22.68" Height="18.9" Text="28" Padding="2, 1, 2, 1" Font="Tahoma, 10pt"/>
+    </DataBand>
+  </ReportPage>
+</Report>

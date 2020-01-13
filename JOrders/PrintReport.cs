@@ -1,4 +1,5 @@
-﻿using FastReport;
+﻿using DG;
+using FastReport;
 using FastReport.Data;
 using FastReport.Utils;
 using FirebirdSql.Data.FirebirdClient;

@@ -27,6 +27,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DicAgent", "DicAgent\DicAge
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DicOrg", "DicOrg\DicOrg.csproj", "{D1624309-2FDC-4A83-AE08-BF417D166E78}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GetLic", "GetLic\GetLic.csproj", "{805F406C-BE45-4E09-82B0-965A03D34944}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -81,6 +83,10 @@ Global
 		{D1624309-2FDC-4A83-AE08-BF417D166E78}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D1624309-2FDC-4A83-AE08-BF417D166E78}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D1624309-2FDC-4A83-AE08-BF417D166E78}.Release|Any CPU.Build.0 = Release|Any CPU
+		{805F406C-BE45-4E09-82B0-965A03D34944}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{805F406C-BE45-4E09-82B0-965A03D34944}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{805F406C-BE45-4E09-82B0-965A03D34944}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{805F406C-BE45-4E09-82B0-965A03D34944}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,0 +1,928 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Report ScriptLanguage="CSharp" ReferencedAssemblies="System.dll&#13;&#10;System.Drawing.dll&#13;&#10;System.Windows.Forms.dll&#13;&#10;System.Data.dll&#13;&#10;System.Xml.dll&#13;&#10;FirebirdSql.Data.FirebirdClient.dll" StartReportEvent="_StartReport" ReportInfo.Created="11/05/2019 15:24:41" ReportInfo.Modified="11/07/2019 12:43:42" ReportInfo.CreatorVersion="1.4.18.0">
+  <ScriptText>using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Windows.Forms;
+using System.Drawing;
+using System.Data;
+using FastReport;
+using FastReport.Data;
+using FastReport.Dialog;
+using FastReport.Barcode;
+using FastReport.Table;
+using FastReport.Utils;
+using System.IO;
+using System.Runtime.InteropServices;
+using System.Text;
+using FirebirdSql.Data.FirebirdClient;
+
+namespace FastReport
+{
+
+  
+  public class ReportScript
+  {
+    public static string path_db;
+    public readonly string fileIniPath = Application.StartupPath + @&quot;\set.ini&quot;;
+    
+    public string Param =&quot;&quot;;
+    
+   
+    
+
+    private void _StartReport(object sender, EventArgs e)
+    {
+      try
+      {
+        if (File.Exists(fileIniPath))
+        {
+          //Создание объекта, для работы с файлом
+          INIManager manager = new INIManager(fileIniPath);
+          //Получить значение по ключу name из секции main
+          path_db = manager.GetPrivateString(&quot;connection&quot;, &quot;db&quot;);
+          //db_puth.Value = path_db;
+
+          //path_db = manager.GetPrivateString(&quot;workstation&quot;, &quot;Key&quot;);
+          // Key.Value = path_db;
+          //MessageBox.Show(&quot;бд - &quot; + path_db, &quot;Information&quot;, MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+          File.AppendAllText(Application.StartupPath + @&quot;\Applog.log&quot;, &quot;путь к db:&quot; + path_db + &quot;\n&quot;);
+          //Записать значение по ключу age в секции main
+          // manager.WritePrivateString(&quot;main&quot;, &quot;age&quot;, &quot;21&quot;);
+        }
+        else MessageBox.Show(&quot;File set.ini not found&quot;, &quot;Error&quot;, MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+      }
+      catch (Exception ex)
+      {
+        MessageBox.Show(&quot;File set.ini don't read&quot; + ex.Message, &quot;Error&quot;, MessageBoxButtons.OK, MessageBoxIcon.Error);
+      }
+      
+      
+      
+      FbConnection fb = GetConnection();
+      
+      FbCommand SelectSQL = new FbCommand(&quot;select id from jor_checks_dt where hd_id = (cast(@paramId as ID))&quot;, fb);
+
+      //add one IN parameter                     
+      FbParameter nameParam = new FbParameter(&quot;@paramId&quot;, value: ((String)Report.GetParameterValue(&quot;ID&quot;)));
+      // добавляем параметр к команде
+      SelectSQL.Parameters.Add(nameParam);
+
+      FbTransaction fbt = fb.BeginTransaction();
+      SelectSQL.Transaction = fbt;
+      FbDataReader reader = SelectSQL.ExecuteReader();
+
+      try
+      {
+        if (reader.HasRows)
+        {
+          // Page1.Visible = true;
+         
+          while (reader.Read())
+          {
+            //getOrderDetails(((String)Report.GetParameterValue(&quot;ID&quot;)));    /*0ee43ad7e140474295efd8b1e0fcfcb2*/
+            if (getOrderDetails_1(reader.GetString(0))) Page1.Visible = true; 
+            if (getOrderDetails_2(reader.GetString(0))) Page3.Visible = true; 
+            if (getOrderDetails_4(reader.GetString(0))) Page4.Visible = true; 
+            if (getOrderDetails_5(reader.GetString(0))) Page5.Visible = true; 
+            if (getOrderDetails_7(reader.GetString(0))) Page7.Visible = true; 
+            if (getOrderDetails_8(reader.GetString(0))) Page8.Visible = true; 
+            if (getOrderDetails_9(reader.GetString(0))) Page9.Visible = true; 
+            if (getOrderDetails_10(reader.GetString(0))) Page10.Visible = true; 
+            if (getOrderDetails_11(reader.GetString(0))) Page11.Visible = true; 
+            if (getOrderDetails_12(reader.GetString(0))) Page12.Visible = true; 
+            if (getOrderDetails_18(reader.GetString(0))) Page18.Visible = true; 
+
+
+            if (getOrderDetails_24(reader.GetString(0))) Page24.Visible = true; 
+
+
+          }
+        }
+        else 
+        {
+          //  Page1.Visible = false;
+        }
+      }
+      catch (Exception)
+      {
+        
+      }
+      finally
+      {
+        fbt.Commit();
+        reader.Close();
+        SelectSQL.Dispose();
+        fb.Close();
+      }
+
+
+      //MessageBox.Show(((String)Report.GetParameterValue(&quot;ID&quot;)));
+    }
+    
+    public bool getOrderDetails_1(string id)
+    {
+
+      FbConnection fb = GetConnection();
+      
+      FbCommand SelectSQL = new FbCommand(&quot;select * from prc_rp_check_barcodes_1 (cast(@paramId as ID))&quot;, fb);
+
+      //add one IN parameter                     
+      FbParameter nameParam = new FbParameter(&quot;@paramId&quot;, value: id);
+      // добавляем параметр к команде
+      SelectSQL.Parameters.Add(nameParam);
+
+      FbTransaction fbt = fb.BeginTransaction();
+      SelectSQL.Transaction = fbt;
+      FbDataReader reader = SelectSQL.ExecuteReader();
+
+      try
+      {
+        if (reader.HasRows)
+        {
+          // Page1.Visible = true;
+         
+          while (reader.Read())
+          {
+            BarCode1.Text = reader.GetString(0);
+            BarCode2.Text = reader.GetString(0);
+            
+            Memo1.Text = reader.GetString(1) +&quot;\n&quot;+ reader.GetString(3)+/*+&quot;\n&quot;+ reader.GetString(2)+*/&quot;\n&quot;+ reader.GetString(4).Substring(0,10);
+            Memo2.Text = reader.GetString(1);
+          }
+          
+          return true;
+        }
+        else 
+        {
+          //  Page1.Visible = false;
+        }
+      }
+      catch (Exception)
+      {
+        
+      }
+      finally
+      {
+        fbt.Commit();
+        reader.Close();
+        SelectSQL.Dispose();
+        fb.Close();
+                
+      }
+      return false;
+    }
+    
+    public bool getOrderDetails_2(string id)
+    {
+
+      FbConnection fb = GetConnection();
+      
+      FbCommand SelectSQL = new FbCommand(&quot;select * from prc_rp_check_barcodes_2 (cast(@paramId as ID))&quot;, fb);
+
+      //add one IN parameter                     
+      FbParameter nameParam = new FbParameter(&quot;@paramId&quot;, value: id);
+      // добавляем параметр к команде
+      SelectSQL.Parameters.Add(nameParam);
+
+      FbTransaction fbt = fb.BeginTransaction();
+      SelectSQL.Transaction = fbt;
+      FbDataReader reader = SelectSQL.ExecuteReader();
+
+      try
+      {
+        if (reader.GetString(0) != null)
+        {
+          // Page2.Visible = true;
+          // Page3.Visible = true;
+          while (reader.Read())
+          {
+            BarCode1.Text = reader.GetString(0);
+            BarCode2.Text = reader.GetString(0);
+            
+            BarCode3.Text = reader.GetString(0);
+            Memo2.Text += reader.GetString(5) + &quot;\n&quot; + reader.GetString(6);;
+          }
+          
+          return true;
+        }
+        else 
+        {
+          // Page3.Visible = false;
+        }
+      }
+      catch (Exception)
+      {
+
+      }
+      finally
+      {
+        fbt.Commit();
+        reader.Close();
+        SelectSQL.Dispose();
+        fb.Close();
+      }
+      return false;
+    }
+    
+    public bool getOrderDetails_4(string id)
+    {
+
+      FbConnection fb = GetConnection();
+      
+      FbCommand SelectSQL = new FbCommand(&quot;select * from prc_rp_check_barcodes_8 (cast(@paramId as ID))&quot;, fb);
+
+      //add one IN parameter                     
+      FbParameter nameParam = new FbParameter(&quot;@paramId&quot;, value: id);
+      // добавляем параметр к команде
+      SelectSQL.Parameters.Add(nameParam);
+
+      FbTransaction fbt = fb.BeginTransaction();
+      SelectSQL.Transaction = fbt;
+      FbDataReader reader = SelectSQL.ExecuteReader();
+
+      try
+      {
+        if (reader.GetString(1) != null)
+        {
+          // Page4.Visible = true;
+         
+          while (reader.Read())
+          {
+            BarCode4.Text = reader.GetString(1);
+            Memo3.Text = reader.GetString(2) +&quot;\n&quot;+ reader.GetString(4)+&quot;\n&quot;+ reader.GetString(3);
+          }
+          
+          return true;
+        }
+        else 
+        {
+          // Page4.Visible = false;
+        }
+      }
+      catch (Exception)
+      {
+
+      }
+      finally
+      {
+        fbt.Commit();
+        reader.Close();
+        SelectSQL.Dispose();
+        fb.Close();
+      }
+      return false;
+    }
+    
+    public bool getOrderDetails_5(string id)
+    {
+
+      FbConnection fb = GetConnection();
+      
+      FbCommand SelectSQL = new FbCommand(&quot;select * from prc_rp_check_barcodes_5 (cast(@paramId as ID))&quot;, fb);
+
+      //add one IN parameter                     
+      FbParameter nameParam = new FbParameter(&quot;@paramId&quot;, value: id);
+      // добавляем параметр к команде
+      SelectSQL.Parameters.Add(nameParam);
+
+      FbTransaction fbt = fb.BeginTransaction();
+      SelectSQL.Transaction = fbt;
+      FbDataReader reader = SelectSQL.ExecuteReader();
+
+      try
+      {
+        if (reader.GetString(1) != null)
+        {
+          // Page4.Visible = true;
+         
+          while (reader.Read())
+          {
+            BarCode5.Text = reader.GetString(1);
+            Memo4.Text = reader.GetString(2) +&quot;\n&quot;+ reader.GetString(0)+&quot;\n&quot;+ reader.GetString(4);
+          }
+          return true;
+        }
+        else 
+        {
+          // Page4.Visible = false;
+        }
+      }
+      catch (Exception)
+      {
+      }
+      finally
+      {
+        fbt.Commit();
+        reader.Close();
+        SelectSQL.Dispose();
+        fb.Close();
+      }
+      return false;
+    }
+    
+    public bool getOrderDetails_7(string id)
+    {
+
+      FbConnection fb = GetConnection();
+      
+      FbCommand SelectSQL = new FbCommand(&quot;select * from prc_rp_check_barcodes_9 (cast(@paramId as ID))&quot;, fb);
+
+      //add one IN parameter                     
+      FbParameter nameParam = new FbParameter(&quot;@paramId&quot;, value: id);
+      // добавляем параметр к команде
+      SelectSQL.Parameters.Add(nameParam);
+
+      FbTransaction fbt = fb.BeginTransaction();
+      SelectSQL.Transaction = fbt;
+      FbDataReader reader = SelectSQL.ExecuteReader();
+
+      try
+      {
+        if (reader.GetString(1) != null)
+        {
+          // Page4.Visible = true;
+         
+          while (reader.Read())
+          {
+            BarCode7.Text = reader.GetString(1);
+            Memo6.Text = reader.GetString(2) +&quot;\n&quot;+ reader.GetString(0)+&quot;\n&quot;+ reader.GetString(5);
+          }
+          return true;
+        }
+        else 
+        {
+          // Page4.Visible = false;
+        }
+      }
+      catch (Exception)
+      {
+      }
+      finally
+      {
+        fbt.Commit();
+        reader.Close();
+        SelectSQL.Dispose();
+        fb.Close();
+      }
+      return false;
+    }
+    
+    public bool getOrderDetails_8(string id)
+    {
+
+      FbConnection fb = GetConnection();
+      
+      FbCommand SelectSQL = new FbCommand(&quot;select * from prc_rp_check_barcodes_10 (cast(@paramId as ID))&quot;, fb);
+
+      //add one IN parameter                     
+      FbParameter nameParam = new FbParameter(&quot;@paramId&quot;, value: id);
+      // добавляем параметр к команде
+      SelectSQL.Parameters.Add(nameParam);
+
+      FbTransaction fbt = fb.BeginTransaction();
+      SelectSQL.Transaction = fbt;
+      FbDataReader reader = SelectSQL.ExecuteReader();
+
+      try
+      {
+        if (reader.GetString(1) != null)
+        {
+          // Page4.Visible = true;
+         
+          while (reader.Read())
+          {
+            BarCode8.Text = reader.GetString(1);
+            Memo7.Text = reader.GetString(2) +&quot;\n&quot;+ reader.GetString(0)+&quot;\n&quot;+ reader.GetString(5);
+          }
+          return true;
+        }
+        else 
+        {
+          // Page4.Visible = false;
+        }
+      }
+      catch (Exception)
+      {
+      }
+      finally
+      {
+        fbt.Commit();
+        reader.Close();
+        SelectSQL.Dispose();
+        fb.Close();
+      }
+      return false;
+    }
+    
+    public bool getOrderDetails_9(string id)
+    {
+
+      FbConnection fb = GetConnection();
+      
+      FbCommand SelectSQL = new FbCommand(&quot;select * from prc_rp_check_barcodes_11 (cast(@paramId as ID))&quot;, fb);
+
+      //add one IN parameter                     
+      FbParameter nameParam = new FbParameter(&quot;@paramId&quot;, value: id);
+      // добавляем параметр к команде
+      SelectSQL.Parameters.Add(nameParam);
+
+      FbTransaction fbt = fb.BeginTransaction();
+      SelectSQL.Transaction = fbt;
+      FbDataReader reader = SelectSQL.ExecuteReader();
+
+      try
+      {
+        if (reader.GetString(1) != null)
+        {
+          // Page4.Visible = true;
+         
+          while (reader.Read())
+          {
+            BarCode9.Text = reader.GetString(1);
+            Memo8.Text = reader.GetString(2) +&quot;\n&quot;+ reader.GetString(0)+&quot;\n&quot;+ reader.GetString(5);
+          }
+          return true;
+        }
+        else 
+        {
+          // Page4.Visible = false;
+        }
+      }
+      catch (Exception)
+      {
+      }
+      finally
+      {
+        fbt.Commit();
+        reader.Close();
+        SelectSQL.Dispose();
+        fb.Close();
+      }
+      return false;
+    }
+  
+    
+    public bool getOrderDetails_10(string id)
+    {
+
+      FbConnection fb = GetConnection();
+      
+      FbCommand SelectSQL = new FbCommand(&quot;select * from prc_rp_check_barcodes_12 (cast(@paramId as ID))&quot;, fb);
+
+      //add one IN parameter                     
+      FbParameter nameParam = new FbParameter(&quot;@paramId&quot;, value: id);
+      // добавляем параметр к команде
+      SelectSQL.Parameters.Add(nameParam);
+
+      FbTransaction fbt = fb.BeginTransaction();
+      SelectSQL.Transaction = fbt;
+      FbDataReader reader = SelectSQL.ExecuteReader();
+
+      try
+      {
+        if (reader.GetString(1) != null)
+        {
+          // Page4.Visible = true;
+         
+          while (reader.Read())
+          {
+            BarCode10.Text = reader.GetString(1);
+            Memo9.Text = reader.GetString(2) +&quot;\n&quot;+ reader.GetString(0)+&quot;\n&quot;+ reader.GetString(5);
+          }
+          return true;
+        }
+        else 
+        {
+          // Page4.Visible = false;
+        }
+      }
+      catch (Exception)
+      {
+      }
+      finally
+      {
+        fbt.Commit();
+        reader.Close();
+        SelectSQL.Dispose();
+        fb.Close();
+      }
+      return false;
+    }
+    
+    public bool getOrderDetails_11(string id)
+    {
+
+      FbConnection fb = GetConnection();
+      
+      FbCommand SelectSQL = new FbCommand(&quot;select * from prc_rp_check_barcodes_13 (cast(@paramId as ID))&quot;, fb);
+
+      //add one IN parameter                     
+      FbParameter nameParam = new FbParameter(&quot;@paramId&quot;, value: id);
+      // добавляем параметр к команде
+      SelectSQL.Parameters.Add(nameParam);
+
+      FbTransaction fbt = fb.BeginTransaction();
+      SelectSQL.Transaction = fbt;
+      FbDataReader reader = SelectSQL.ExecuteReader();
+
+      try
+      {
+        if (reader.GetString(1) != null)
+        {
+          // Page4.Visible = true;
+         
+          while (reader.Read())
+          {
+            BarCode11.Text = reader.GetString(1);
+            Memo10.Text = reader.GetString(2) +&quot;\n&quot;+ reader.GetString(0)+&quot;\n&quot;+ reader.GetString(5);
+          }
+          return true;
+        }
+        else 
+        {
+          // Page4.Visible = false;
+        }
+      }
+      catch (Exception)
+      {
+      }
+      finally
+      {
+        fbt.Commit();
+        reader.Close();
+        SelectSQL.Dispose();
+        fb.Close();
+      }
+      return false;
+    }
+    
+     
+    public bool getOrderDetails_12(string id)
+    {
+      FbConnection fb = GetConnection();
+      
+      FbCommand SelectSQL = new FbCommand(&quot;select * from prc_rp_check_barcodes_14 (cast(@paramId as ID))&quot;, fb);
+
+      //add one IN parameter                     
+      FbParameter nameParam = new FbParameter(&quot;@paramId&quot;, value: id);
+      // добавляем параметр к команде
+      SelectSQL.Parameters.Add(nameParam);
+
+      FbTransaction fbt = fb.BeginTransaction();
+      SelectSQL.Transaction = fbt;
+      FbDataReader reader = SelectSQL.ExecuteReader();
+
+      try
+      {
+        if (reader.GetString(1) != null)
+        {
+          // Page4.Visible = true;
+         
+          while (reader.Read())
+          {
+            BarCode22.Text = reader.GetString(1);
+            Memo10.Text = reader.GetString(0) +&quot;\n&quot;+ reader.GetString(7)+&quot; &quot;+reader.GetString(2)+&quot;\n&quot;+ reader.GetString(5)+&quot;\n&quot;+ reader.GetString(4);
+          }
+          return true;
+        }
+        else 
+        {
+          // Page4.Visible = false;
+        }
+      }
+      catch (Exception)
+      {
+      }
+      finally
+      {
+        fbt.Commit();
+        reader.Close();
+        SelectSQL.Dispose();
+        fb.Close();
+      }
+      return false;
+    }
+    
+    public bool getOrderDetails_18(string id)
+    {
+
+      FbConnection fb = GetConnection();
+      
+      FbCommand SelectSQL = new FbCommand(&quot;select * from prc_rp_check_barcodes_20 (cast(@paramId as ID))&quot;, fb);
+
+      //add one IN parameter                     
+      FbParameter nameParam = new FbParameter(&quot;@paramId&quot;, value: id);
+      // добавляем параметр к команде
+      SelectSQL.Parameters.Add(nameParam);
+
+      FbTransaction fbt = fb.BeginTransaction();
+      SelectSQL.Transaction = fbt;
+      FbDataReader reader = SelectSQL.ExecuteReader();
+
+      try
+      {
+        if (reader.GetString(1) != null)
+        {
+          // Page4.Visible = true;
+         
+          while (reader.Read())
+          {
+            BarCode23.Text = reader.GetString(1);
+            Memo22.Text = reader.GetString(2) +&quot;\n&quot;+ reader.GetString(7)+&quot;\n&quot;+ reader.GetString(9)+&quot;\n&quot;+ reader.GetString(5)+&quot;\n&quot;+ reader.GetString(4)+&quot;\n&quot;+ reader.GetString(0);
+          }
+          return true;
+        }
+        else 
+        {
+          // Page4.Visible = false;
+        }
+      }
+      catch (Exception)
+      {
+      }
+      finally
+      {
+        fbt.Commit();
+        reader.Close();
+        SelectSQL.Dispose();
+        fb.Close();
+      }
+      return false;
+    }
+    
+    
+    public bool getOrderDetails_24(string id)
+    {
+
+      FbConnection fb = GetConnection();
+      
+      FbCommand SelectSQL = new FbCommand(&quot;select * from prc_rp_check_barcodes_24 (cast(@paramId as ID))&quot;, fb);
+
+      //add one IN parameter                     
+      FbParameter nameParam = new FbParameter(&quot;@paramId&quot;, value: id);
+      // добавляем параметр к команде
+      SelectSQL.Parameters.Add(nameParam);
+
+      FbTransaction fbt = fb.BeginTransaction();
+      SelectSQL.Transaction = fbt;
+      FbDataReader reader = SelectSQL.ExecuteReader();
+
+      try
+      {
+        if (reader.GetString(1) != null)
+        {
+          // Page4.Visible = true;
+         
+          while (reader.Read())
+          {
+            BarCode15.Text = reader.GetString(1);
+            Memo31.Text = reader.GetString(2) +&quot;\n&quot;+ reader.GetString(0)+&quot;\n&quot;+ reader.GetString(4)+&quot;-&quot;+ reader.GetString(7)+&quot;\n&quot;+ reader.GetString(5);
+          }
+          return true;
+        }
+        else 
+        {
+          // Page4.Visible = false;
+        }
+      }
+      catch (Exception)
+      {
+      }
+      finally
+      {
+        fbt.Commit();
+        reader.Close();
+        SelectSQL.Dispose();
+        fb.Close();
+      }
+      return false;
+    }
+    
+    private FbConnection GetConnection()
+    {
+      string connectionString =
+        &quot;User=SYSDBA;&quot; +
+        &quot;Password=masterkey;&quot; +
+        @&quot;Database=&quot; + path_db + &quot;;&quot; +
+        &quot;Charset=UTF8;&quot; +
+        &quot;Pooling=true;&quot; +
+        &quot;ServerType=0;&quot;;
+
+      FbConnection conn = new FbConnection(connectionString.ToString());
+
+      conn.Open();
+
+      return conn;
+    }
+  }
+  
+    
+    
+  
+ 
+  
+  
+  
+  public class INIManager
+  {
+    //Конструктор, принимающий путь к INI-файлу
+    public INIManager(string aPath)
+    {
+      path = aPath;
+    }
+
+    //Конструктор без аргументов (путь к INI-файлу нужно будет задать отдельно)
+    public INIManager() : this(&quot;&quot;) { }
+
+    //Возвращает значение из INI-файла (по указанным секции и ключу) 
+    public string GetPrivateString(string aSection, string aKey)
+    {
+      //Для получения значения
+      StringBuilder buffer = new StringBuilder(SIZE);
+
+      //Получить значение в buffer
+      GetPrivateString(aSection, aKey, null, buffer, SIZE, path);
+
+      //Вернуть полученное значение
+      return buffer.ToString();
+    }
+
+    //Пишет значение в INI-файл (по указанным секции и ключу) 
+    public void WritePrivateString(string aSection, string aKey, string aValue)
+    {
+      //Записать значение в INI-файл
+      WritePrivateString(aSection, aKey, aValue, path);
+    }
+
+    //Возвращает или устанавливает путь к INI файлу
+    public string Path { get { return path; } set { path = value; } }
+
+    //Поля класса
+    private const int SIZE = 1024; //Максимальный размер (для чтения значения из файла)
+    private string path = null; //Для хранения пути к INI-файлу
+
+    //Импорт функции GetPrivateProfileString (для чтения значений) из библиотеки kernel32.dll
+    [DllImport(&quot;kernel32.dll&quot;, EntryPoint = &quot;GetPrivateProfileString&quot;)]
+    private static extern int GetPrivateString(string section, string key, string def, StringBuilder buffer, int size, string path);
+
+    //Импорт функции WritePrivateProfileString (для записи значений) из библиотеки kernel32.dll
+    [DllImport(&quot;kernel32.dll&quot;, EntryPoint = &quot;WritePrivateProfileString&quot;)]
+    private static extern int WritePrivateString(string section, string key, string str, string path);
+  }
+}
+</ScriptText>
+  <Dictionary>
+    <Parameter Name="Parameter" DataType="System.String"/>
+    <Parameter Name="ID" DataType="System.String"/>
+  </Dictionary>
+  <ReportPage Name="Page1" Visible="false" PaperWidth="30" PaperHeight="20" LeftMargin="0" TopMargin="0" RightMargin="0" BottomMargin="0">
+    <DataBand Name="MasterData1" Width="113.4" Height="75.59">
+      <BarcodeObject Name="BarCode1" Left="26.46" Width="83.75" Height="41.57" Barcode="EAN8" Barcode.CalcCheckSum="false"/>
+      <TextObject Name="Memo1" Left="3.78" Top="37.8" Width="105.83" Height="34.02" Padding="2, 1, 2, 1" Font="Tahoma, 5pt"/>
+      <TextObject Name="Memo45" Top="3.78" Width="18.9" Height="18.9" Text="1" Padding="2, 1, 2, 1" Font="Tahoma, 10pt"/>
+    </DataBand>
+  </ReportPage>
+  <ReportPage Name="Page2" PaperWidth="30" PaperHeight="20" LeftMargin="0" TopMargin="0" RightMargin="0" BottomMargin="0">
+    <DataBand Name="MasterData2" Width="113.4" Height="71.81">
+      <BarcodeObject Name="BarCode2" Left="22.68" Width="83.75" Height="60.47" ShowText="false" Barcode="EAN8" Barcode.CalcCheckSum="false"/>
+      <ShapeObject Name="Shape3" Left="3.78" Top="26.46" Width="11.34" Height="11.34"/>
+    </DataBand>
+  </ReportPage>
+  <ReportPage Name="Page3" Visible="false" PaperWidth="30" PaperHeight="20" LeftMargin="0" TopMargin="0" RightMargin="0" BottomMargin="0" FirstPageSource="4" OtherPagesSource="4">
+    <DataBand Name="Data1" Width="113.4" Height="71.82">
+      <BarcodeObject Name="BarCode3" Left="20" Top="-0.41" Width="83.75" Height="41.57" Barcode="EAN8" Barcode.CalcCheckSum="false"/>
+      <TextObject Name="Memo2" Left="4.88" Top="37.39" Width="105.83" Height="34.02" Padding="2, 1, 2, 1" Font="Tahoma, 6pt"/>
+      <ShapeObject Name="Shape4" Left="3.28" Top="22.27" Width="11.34" Height="11.34"/>
+    </DataBand>
+  </ReportPage>
+  <ReportPage Name="Page4" Visible="false" PaperWidth="30" PaperHeight="20" LeftMargin="0" TopMargin="0" RightMargin="0" BottomMargin="0" FirstPageSource="4" OtherPagesSource="4">
+    <DataBand Name="Data2" Width="113.4" Height="75.6">
+      <BarcodeObject Name="BarCode4" Left="22.68" Top="-5.67" Width="83.75" Height="43.47" Barcode="EAN8" Barcode.CalcCheckSum="false"/>
+      <TextObject Name="Memo3" Top="37.8" Width="113.39" Height="34.02" Padding="2, 1, 2, 1" Font="Tahoma, 5pt"/>
+      <ShapeObject Name="Shape8" Left="3.78" Top="18.9" Width="11.34" Height="11.34" Shape="Ellipse"/>
+      <TextObject Name="Memo49" Left="3.78" Width="15.12" Height="18.9" Text="4" Padding="2, 1, 2, 1" Font="Tahoma, 10pt"/>
+    </DataBand>
+  </ReportPage>
+  <ReportPage Name="Page5" Visible="false" PaperWidth="30" PaperHeight="20" LeftMargin="0" TopMargin="0" RightMargin="0" BottomMargin="0" FirstPageSource="4" OtherPagesSource="4">
+    <DataBand Name="Data3" Width="113.4" Height="75.6">
+      <BarcodeObject Name="BarCode5" Left="22.18" Top="-0.41" Width="83.75" Height="41.57" Barcode="EAN8" Barcode.CalcCheckSum="false"/>
+      <TextObject Name="Memo4" Left="3.28" Top="37.39" Width="105.83" Height="34.02" Padding="2, 1, 2, 1" Font="Tahoma, 5pt"/>
+      <ShapeObject Name="Shape5" Left="3.28" Top="12.82" Width="11.34" Height="11.34"/>
+    </DataBand>
+  </ReportPage>
+  <ReportPage Name="Page6" Visible="false" PaperWidth="30" PaperHeight="20" LeftMargin="0" TopMargin="0" RightMargin="0" BottomMargin="0" FirstPageSource="4" OtherPagesSource="4">
+    <DataBand Name="Data4" Width="113.4" Height="75.6">
+      <BarcodeObject Name="BarCode6" Left="20.95" Width="83.75" Height="41.57" Barcode="EAN8" Barcode.CalcCheckSum="false"/>
+      <TextObject Name="Memo5" Left="2.05" Top="37.8" Width="105.83" Height="34.02" Padding="2, 1, 2, 1" Font="Tahoma, 5pt"/>
+      <ShapeObject Name="Shape6" Left="2.05" Top="22.68" Width="11.34" Height="11.34"/>
+    </DataBand>
+  </ReportPage>
+  <ReportPage Name="Page7" Visible="false" PaperWidth="30" PaperHeight="20" LeftMargin="0" TopMargin="0" RightMargin="0" BottomMargin="0" FirstPageSource="4" OtherPagesSource="4">
+    <DataBand Name="Data5" Width="113.4" Height="75.6">
+      <BarcodeObject Name="BarCode7" Left="21.75" Top="-0.01" Width="83.75" Height="41.57" Barcode="EAN8" Barcode.CalcCheckSum="false"/>
+      <TextObject Name="Memo6" Left="2.85" Top="37.79" Width="105.83" Height="34.02" Padding="2, 1, 2, 1" Font="Tahoma, 5pt"/>
+      <ShapeObject Name="Shape7" Left="2.85" Top="22.67" Width="11.34" Height="11.34"/>
+    </DataBand>
+  </ReportPage>
+  <ReportPage Name="Page8" Visible="false" PaperWidth="30" PaperHeight="20" LeftMargin="0" TopMargin="0" RightMargin="0" BottomMargin="0" FirstPageSource="4" OtherPagesSource="4">
+    <DataBand Name="Data6" Width="113.4" Height="75.6">
+      <BarcodeObject Name="BarCode8" Left="23" Top="-0.41" Width="83.75" Height="41.57" Barcode="EAN8" Barcode.CalcCheckSum="false"/>
+      <TextObject Name="Memo7" Left="4.1" Top="37.39" Width="105.83" Height="34.02" Padding="2, 1, 2, 1" Font="Tahoma, 5pt"/>
+      <ShapeObject Name="Shape9" Left="4.1" Top="18.49" Width="11.34" Height="11.34" Shape="Ellipse"/>
+      <TextObject Name="Memo44" Left="4.1" Top="-0.41" Width="94.49" Height="18.9" Text="p8" Padding="2, 1, 2, 1" Font="Tahoma, 10pt"/>
+    </DataBand>
+  </ReportPage>
+  <ReportPage Name="Page9" Visible="false" PaperWidth="30" PaperHeight="20" LeftMargin="0" TopMargin="0" RightMargin="0" BottomMargin="0" FirstPageSource="4" OtherPagesSource="4">
+    <DataBand Name="Data7" Width="113.4" Height="75.6">
+      <BarcodeObject Name="BarCode9" Left="22.18" Width="83.75" Height="41.57" Barcode="EAN8" Barcode.CalcCheckSum="false"/>
+      <TextObject Name="Memo8" Left="3.28" Top="37.8" Width="105.83" Height="34.02" Padding="2, 1, 2, 1" Font="Tahoma, 5pt"/>
+      <ShapeObject Name="Shape10" Left="3.28" Top="22.68" Width="11.34" Height="11.34"/>
+      <TextObject Name="Memo38" Left="93.99" Width="98.27" Height="18.9" Text="9" Padding="2, 1, 2, 1" Font="Tahoma, 10pt"/>
+    </DataBand>
+  </ReportPage>
+  <ReportPage Name="Page10" Visible="false" PaperWidth="30" PaperHeight="20" LeftMargin="0" TopMargin="0" RightMargin="0" BottomMargin="0" FirstPageSource="4" OtherPagesSource="4">
+    <DataBand Name="Data8" Width="113.4" Height="75.6">
+      <ShapeObject Name="Shape1" Left="3.28" Top="10.93" Width="11.34" Height="11.34" Shape="Triangle"/>
+      <TextObject Name="Memo37" Left="92.35" Top="2.96" Width="98.27" Height="18.9" Text="10" Padding="2, 1, 2, 1" Font="Tahoma, 10pt"/>
+      <BarcodeObject Name="BarCode10" Left="20.54" Top="-0.82" Width="83.75" Height="41.57" Barcode="EAN8" Barcode.CalcCheckSum="false"/>
+      <TextObject Name="Memo9" Left="1.64" Top="40.75" Width="105.83" Height="34.02" Padding="2, 1, 2, 1" Font="Tahoma, 5pt"/>
+    </DataBand>
+  </ReportPage>
+  <ReportPage Name="Page11" Visible="false" PaperWidth="30" PaperHeight="20" LeftMargin="0" TopMargin="0" RightMargin="0" BottomMargin="0" FirstPageSource="4" OtherPagesSource="4">
+    <DataBand Name="Data9" Width="113.4" Height="75.6">
+      <BarcodeObject Name="BarCode11" Left="23.91" Top="-0.82" Width="83.75" Height="41.57" Barcode="EAN8" Barcode.CalcCheckSum="false"/>
+      <TextObject Name="Memo10" Left="5.01" Top="36.98" Width="105.83" Height="34.02" Padding="2, 1, 2, 1" Font="Tahoma, 5pt"/>
+      <ShapeObject Name="Shape2" Left="5.01" Top="21.86" Width="11.34" Height="11.34" Shape="Triangle"/>
+      <TextObject Name="Memo41" Left="1.23" Top="2.96" Width="102.05" Height="18.9" Text="11" Padding="2, 1, 2, 1" Font="Tahoma, 10pt"/>
+    </DataBand>
+  </ReportPage>
+  <ReportPage Name="Page12" Visible="false" PaperWidth="30" PaperHeight="20" LeftMargin="0" TopMargin="0" RightMargin="0" BottomMargin="0" FirstPageSource="4" OtherPagesSource="4">
+    <DataBand Name="Data10" Width="113.4" Height="75.6">
+      <TextObject Name="Memo11" Left="3.69" Top="37.39" Width="113.39" Height="30.24" ShiftMode="Never" Padding="2, 1, 2, 1" Font="Tahoma, 6pt"/>
+      <TextObject Name="Memo15" Left="3.69" Top="7.15" Width="11.34" Height="18.9" Text="B" Padding="2, 1, 2, 1" Font="Tahoma, 10pt"/>
+      <BarcodeObject Name="BarCode22" Left="22.59" Top="-0.41" Width="83.75" Height="41.57" Barcode="EAN8" Barcode.CalcCheckSum="false"/>
+    </DataBand>
+  </ReportPage>
+  <ReportPage Name="Page13" Visible="false" PaperWidth="30" PaperHeight="20" LeftMargin="0" TopMargin="0" RightMargin="0" BottomMargin="0" FirstPageSource="4" OtherPagesSource="4">
+    <DataBand Name="Data11" Width="113.4" Height="75.6"/>
+  </ReportPage>
+  <ReportPage Name="Page14" Visible="false" PaperWidth="30" PaperHeight="20" LeftMargin="0" TopMargin="0" RightMargin="0" BottomMargin="0" FirstPageSource="4" OtherPagesSource="4">
+    <DataBand Name="Data12" Width="113.4" Height="75.6"/>
+  </ReportPage>
+  <ReportPage Name="Page15" Visible="false" PaperWidth="30" PaperHeight="20" LeftMargin="0" TopMargin="0" RightMargin="0" BottomMargin="0" FirstPageSource="4" OtherPagesSource="4">
+    <DataBand Name="Data13" Width="113.4" Height="75.6"/>
+  </ReportPage>
+  <ReportPage Name="Page16" Visible="false" PaperWidth="30" PaperHeight="20" LeftMargin="0" TopMargin="0" RightMargin="0" BottomMargin="0" FirstPageSource="4" OtherPagesSource="4">
+    <DataBand Name="Data14" Width="113.4" Height="75.6"/>
+  </ReportPage>
+  <ReportPage Name="Page17" Visible="false" PaperWidth="30" PaperHeight="20" LeftMargin="0" TopMargin="0" RightMargin="0" BottomMargin="0" FirstPageSource="4" OtherPagesSource="4">
+    <DataBand Name="Data15" Width="113.4" Height="75.6"/>
+  </ReportPage>
+  <ReportPage Name="Page18" Visible="false" PaperWidth="30" PaperHeight="20" LeftMargin="0" TopMargin="0" RightMargin="0" BottomMargin="0" FirstPageSource="4" OtherPagesSource="4">
+    <DataBand Name="Data16" Width="113.4" Height="75.6">
+      <TextObject Name="Memo22" Left="5.83" Top="37.8" Width="102.05" Height="26.46" ShiftMode="Never" Padding="2, 1, 2, 1" Font="Tahoma, 5pt"/>
+      <ShapeObject Name="Shape13" Left="2.05" Top="15.12" Width="11.34" Height="11.34" Shape="Triangle"/>
+      <BarcodeObject Name="BarCode23" Left="20.95" Width="83.75" Height="37.8" Barcode="EAN8" Barcode.CalcCheckSum="false"/>
+      <TextObject Name="Memo47" Left="88.98" Top="3.78" Width="26.46" Height="18.9" Text="18" Padding="2, 1, 2, 1" Font="Tahoma, 10pt"/>
+    </DataBand>
+  </ReportPage>
+  <ReportPage Name="Page19" Visible="false" PaperWidth="30" PaperHeight="20" LeftMargin="0" TopMargin="0" RightMargin="0" BottomMargin="0" FirstPageSource="4" OtherPagesSource="4">
+    <DataBand Name="Data17" Width="113.4" Height="75.6"/>
+  </ReportPage>
+  <ReportPage Name="Page20" Visible="false" PaperWidth="30" PaperHeight="20" LeftMargin="0" TopMargin="0" RightMargin="0" BottomMargin="0" FirstPageSource="4" OtherPagesSource="4">
+    <DataBand Name="Data18" Width="113.4" Height="75.6"/>
+  </ReportPage>
+  <ReportPage Name="Page21" Visible="false" PaperWidth="30" PaperHeight="20" LeftMargin="0" TopMargin="0" RightMargin="0" BottomMargin="0" FirstPageSource="4" OtherPagesSource="4">
+    <DataBand Name="Data19" Width="113.4" Height="75.6"/>
+  </ReportPage>
+  <ReportPage Name="Page22" Visible="false" PaperWidth="30" PaperHeight="20" LeftMargin="0" TopMargin="0" RightMargin="0" BottomMargin="0" FirstPageSource="4" OtherPagesSource="4">
+    <DataBand Name="Data20" Width="113.4" Height="75.6"/>
+  </ReportPage>
+  <ReportPage Name="Page23" Visible="false" PaperWidth="30" PaperHeight="20" LeftMargin="0" TopMargin="0" RightMargin="0" BottomMargin="0" FirstPageSource="4" OtherPagesSource="4">
+    <DataBand Name="Data21" Width="113.4" Height="75.6"/>
+  </ReportPage>
+  <ReportPage Name="Page24" Visible="false" PaperWidth="30" PaperHeight="20" LeftMargin="0" TopMargin="0" RightMargin="0" BottomMargin="0" FirstPageSource="4" OtherPagesSource="4">
+    <DataBand Name="Data22" Width="113.4" Height="109.6">
+      <BarcodeObject Name="BarCode15" Left="23.49" Top="-0.01" Width="83.75" Height="37.8" Barcode="EAN8" Barcode.CalcCheckSum="false"/>
+      <TextObject Name="Memo31" Left="8.37" Top="34.01" Width="105.83" Height="75.59" Padding="2, 1, 2, 1" Font="Tahoma, 5pt"/>
+      <ShapeObject Name="Shape15" Left="4.59" Top="22.67" Width="11.34" Height="11.34"/>
+      <TextObject Name="Memo51" Left="0.81" Top="-0.01" Width="18.9" Height="18.9" Text="24" Padding="2, 1, 2, 1" Font="Tahoma, 10pt"/>
+    </DataBand>
+  </ReportPage>
+  <ReportPage Name="Page25" Visible="false" PaperWidth="30" PaperHeight="20" LeftMargin="0" TopMargin="0" RightMargin="0" BottomMargin="0" FirstPageSource="4" OtherPagesSource="4">
+    <DataBand Name="Data23" Width="113.4" Height="75.6"/>
+  </ReportPage>
+  <ReportPage Name="Page26" Visible="false" PaperWidth="30" PaperHeight="20" LeftMargin="0" TopMargin="0" RightMargin="0" BottomMargin="0" FirstPageSource="4" OtherPagesSource="4">
+    <DataBand Name="Data24" Width="113.4" Height="75.6"/>
+  </ReportPage>
+  <ReportPage Name="Page27" Visible="false" PaperWidth="30" PaperHeight="20" LeftMargin="0" TopMargin="0" RightMargin="0" BottomMargin="0" FirstPageSource="4" OtherPagesSource="4">
+    <DataBand Name="Data25" Width="113.4" Height="75.6"/>
+  </ReportPage>
+  <ReportPage Name="Page28" Visible="false" PaperWidth="30" PaperHeight="20" LeftMargin="0" TopMargin="0" RightMargin="0" BottomMargin="0" FirstPageSource="4" OtherPagesSource="4">
+    <DataBand Name="Data26" Width="113.4" Height="75.6"/>
+  </ReportPage>
+</Report>

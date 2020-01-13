@@ -72,7 +72,7 @@ namespace JResultsAdd
 
         }
 
-        private void AddrowsToDataGrid(string id = null, string nomer = null)
+        private void AddrowsToDataGrid(string id = null, string nomer = null, string barcode = null)
         {
             dataGridView1.Rows.Clear();
             dataGridView2.Rows.Clear();
@@ -85,7 +85,7 @@ namespace JResultsAdd
             JrResultsMainModel.ClearJrOrdersModel();
             JrResultsChildModel.ClearJrOrdersModel();
 
-            getJrOrdersModel(from: dateTimePickerFrom.Value, to: dateTimePickerTo.Value, id: id, filtr: FiltrModel.FiltrTest, nomer: nomer);
+            getJrOrdersModel(from: dateTimePickerFrom.Value, to: dateTimePickerTo.Value, id: id, filtr: FiltrModel.FiltrTest, nomer: nomer, barcode: barcode);
 
             SortableBindingList<JrResultsMainModel> data = new SortableBindingList<JrResultsMainModel>(); //Специальный список List с вызовом события обновления внутреннего состояния, необходимого для автообновления datagridview
             SortableBindingList<JrResultsChildModel> dataChild = new SortableBindingList<JrResultsChildModel>(); //Специальный список List с вызовом события обновления внутреннего состояния, необходимого для автообновления datagridview
@@ -97,7 +97,8 @@ namespace JResultsAdd
                 if (id != null)
                 {
                     textBox2.Text = s.Nomer;
-                   // DateTime DateFrom = DateTime.ParseExact(s.DateDoc, "dd.MM.yyyy HH:mm:ss", CultureInfo.InvariantCulture);
+                    textBox3.Text = s.ShkProb;
+                    // DateTime DateFrom = DateTime.ParseExact(s.DateDoc, "dd.MM.yyyy HH:mm:ss", CultureInfo.InvariantCulture);
                     DateTime DateFrom = DateTime.Parse(s.DateDoc);
                     dateTimePickerFrom.Value = DateFrom;
                    // DateTime DateTo = DateTime.ParseExact(s.DateDoc, "dd.MM.yyyy HH:mm:ss", CultureInfo.InvariantCulture);
@@ -116,7 +117,7 @@ namespace JResultsAdd
             dataGridView2.DataSource = dataChild;
         }
 
-        public static void getJrOrdersModel(DateTime from, DateTime to, string id = null, string filtr = null, string nomer = null)
+        public static void getJrOrdersModel(DateTime from, DateTime to, string id = null, string filtr = null, string nomer = null, string barcode = null)
         {
             // string _param = "5c79547510ab484fa0f4dbc72ccdb74e";
 
@@ -223,7 +224,7 @@ namespace JResultsAdd
                 //// добавляем параметр к команде
                 //SelectSQL.Parameters.Add(nameParamId);
             }
-            else if ((id == null || id == "") && (filtr != null) && (nomer == null || nomer == ""))
+            else if ((id == null || id == "") && (filtr != null) && (nomer == null || nomer == "") && (barcode == null || barcode == ""))
             {
                 //add one IN parameter   
                 string param;
@@ -293,7 +294,7 @@ namespace JResultsAdd
                 //// добавляем параметр к команде
                 //SelectSQL.Parameters.Add(nameParamFiltr);
             }
-            else if ((id == null || id == "") && (nomer != null))
+            else if ((id == null || id == "") && (nomer != null) && (barcode == null || barcode == ""))
             {
                 //add one IN parameter   
 
@@ -347,6 +348,51 @@ namespace JResultsAdd
                 //FbParameter nameParamFiltr = new FbParameter("@param", param);
                 //// добавляем параметр к команде
                 //SelectSQL.Parameters.Add(nameParamFiltr);
+            }
+            else if ((id == null || id == "") && (barcode != null || barcode != ""))
+            {
+                SelectSQL = new FbCommand("select first 1000 D.ID as ID, D.IS_URGENT, D.IS_REFUSE, D.CHECK_NUM as NUM," +
+                    " D.BULB_NUM_CODE as BULB_CODE, D.GOODS_ID, " +
+                                       " D.GOODS_NAME as GOODS, D.GOODS_GRP_ID as GRP_ID, D.GOODS_GRP_NAME as GRP_, D.CHECK_DATE as DATE_TIME, " +
+                                       " D.CHECK_CLIENT_CODE_NAME as CLIENT, D.CHECK_CLIENT_ID as CLIENT_CODE, " +
+                                       " D.CHECK_SUBDIVISION_NAME as SUBDIVISION_RECEPT, D.CHECK_SUBDIVISION_ID as SUBDIVISION_RECEPT_ID, " +
+                                       " D.CHECK_PAYER_ORG_CODE_NAME as PAYER_ORG, D.SUBDIVISION_EXEC_NAME as SUBDIVISION_EXEC, D.SUBDIVISION_EXEC_ID, " +
+                                       " D.ORG_EXEC_CODE_NAME as ORG_EXEC, D.ORG_EXEC_ID, D.PLAN_DATE_DONE, D.DATE_DONE, D.DATE_DONE_PREV, " +
+                                       " D.DONE_EMPLOYEE_ID, D.DONE_EMPLOYEE_CODE_NAME as DONE_EMPLOYEE, D.CHECK_EMPLOYEE_ID, " +
+                                       " D.CHECK_EMPLOYEE_CODE_NAME as CHECK_EMPLOYEE, CL.SEX as SEX_ID, CL.SEX as SEX_NAME, " +
+                                       " (select R_YEAR from GET_DATE_DIFF(CL.BIRTH_DATE, current_date)) as AGE, DI.CODE_NAME as DIAGNOSIS, DD.VAL_IDX as MENSTPHASE, " +
+                                       " C.PREG_WEEK_FROM, C.PREG_WEEK_TO, C.DESCR_PREVIEW as CHECK_DESCR, D.DESCR as DT_DESCR, " +
+                                       " D.DESCR_PREVIEW as DT_DESCR_PREVIEW, D.RESULT_TEXT_PREVIEW as RESULT_TEXT, D.GOODS_ORDER as ORDER_, " +
+                                       " D.CHECK_AGENT_CODE_NAME as AGENT, AGO.CODE_NAME as AGENT_ORG, C.AGENT_ID, D.HD_ID as JOR_CHECKS_ID, " +
+                                       " D.MANIPULATION_DATE_TIME as MANIPULATION_DATE, D.MANIPULATION_EMPLOYEE_CODE_NAME as MANIPULATION_EXECUTOR, " +
+                                       " case when VIS.CNT_ > 1 then 1 " +
+                                       " else 0 end as IS_WAS_BEFORE, " +
+                                       " LNUM.NUM_TEXT as NUM_TEXT_ADD, D.DIC_NO_OPPORT_TO_RES_ID, D.DIC_NO_OPPORT_TO_RES_NAME as NO_OPPORT_TO_RES_NAME, " +
+                                       " D.MATERIAL_ID, BM.VAL_IDX as BIOMATERIAL, D.LAB_PROCESS_ID, LP.NUM as LAB_PROCESS, M.VAL_IDX as METHODIC, " +
+                                       " D.IS_REMARKED_DATE_TIME, D.BLANK_ID as DIC_BLANK_ID " +
+                                       " , (select jb.print_time from JOR_BLANKS JB " +
+                                       " where d.date_done is not null " +
+                                       " and D.HD_ID = JB.JOR_CHECK_ID " +
+                                       " and D.BLANK_ID = JB.BLANK_ID) as PRINT_BLANK_DATE " +
+                                       " from JOR_CHECKS_DT D " +
+                                       " left join JOR_CHECKS C on C.ID = D.HD_ID " +
+                                       " left join DIC_CLIENTS CL on CL.ID = C.CLIENT_ID " +
+                                       " left join ACC_CNT_CLIENTS_VISITS VIS on VIS.CLIENT_ID = C.CLIENT_ID " +
+                                       " left join DIC_DIAGNOSIS DI on DI.ID = C.DIAGNOSIS_ID " +
+                                       " left join DIC_DICS DD on DD.ID = C.MENSTRPHASE_ID " +
+                                       " left join DIC_CLIENTS AG on AG.ID = C.AGENT_ID " +
+                                       " left join DIC_ORG AGO on AGO.ID = AG.ORG_ID " +
+                                       " left join JOR_CHECKS_DT_LABNUM LNUM on LNUM.HD_ID = D.ID " +
+                                       " left join DIC_DICS BM on BM.ID = D.MATERIAL_ID " +
+                                       " left join JOR_LAB_PROCESS LP on LP.ID = D.LAB_PROCESS_ID " +
+                                       " left join JOR_CHECKS_DT_METHODIC DTM on DTM.CHECK_DT_ID = D.ID " +
+                                       " left join DIC_DICS M on M.ID = DTM.METHODIC_ID " +
+                                       " where D.BULB_NUM_ID is not null and D.IS_COMPLEX = 0 " +
+                                       " /*BEGINWHERECONDITIONS*/ " +
+                                       " and D.BULB_NUM_CODE = '" + barcode + "'" +
+                                       " and D.CHECK_DATE < cast('" + to.ToString("dd.MM.yyyy") + "' as date) + 1 " +
+                                       " and D.CHECK_DATE >= cast('" + from.ToString("dd.MM.yyyy") + "' as date) " +
+                                       " /*ENDWHERECONDITIONS*/", fb);
             }
             else
             {
@@ -451,14 +497,24 @@ namespace JResultsAdd
             if (dateTimePickerFrom.Value > dateTimePickerTo.Value) dateTimePickerFrom.Value = dateTimePickerTo.Value;
         }
 
+        /// <summary>
+        /// Поиск
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Button1_Click(object sender, EventArgs e)
         {
-            if (textBox2.Text != "")
+            if (textBox2.Text != "" || textBox3.Text == "")
             {
                 // MessageBox.Show("");
                 AddrowsToDataGrid(nomer: textBox2.Text);
             }
-            else AddrowsToDataGrid();
+            if (textBox2.Text == "" || textBox3.Text != "")
+            {
+                // MessageBox.Show("");
+                AddrowsToDataGrid(barcode: textBox3.Text);
+            }
+           // else AddrowsToDataGrid();
 
         }
 
@@ -773,6 +829,21 @@ namespace JResultsAdd
                         dataGridView2.Rows[e.RowIndex].Selected = true;
                         dataGridView2.Focus();
                     }
+            }
+        }
+
+        private void Button2_Click(object sender, EventArgs e)
+        {
+            textBox1.Text = null;
+            textBox2.Text = null;
+
+        }
+
+        private void TextBox2_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter || e.KeyCode == Keys.F2)
+            {
+                Button1_Click(sender, e);
             }
         }
     }

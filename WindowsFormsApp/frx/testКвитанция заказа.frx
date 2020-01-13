@@ -1,0 +1,396 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Report ScriptLanguage="CSharp" ReferencedAssemblies="System.dll&#13;&#10;System.Drawing.dll&#13;&#10;System.Windows.Forms.dll&#13;&#10;System.Data.dll&#13;&#10;System.Xml.dll&#13;&#10;FirebirdSql.Data.FirebirdClient.dll" ReportInfo.Created="11/05/2019 12:05:59" ReportInfo.Modified="11/05/2019 15:13:27" ReportInfo.CreatorVersion="1.4.18.0">
+  <ScriptText>using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Windows.Forms;
+using System.Drawing;
+using System.Data;
+using FastReport;
+using FastReport.Data;
+using FastReport.Dialog;
+using FastReport.Barcode;
+using FastReport.Table;
+using FastReport.Utils;
+using System.IO;
+using System.Runtime.InteropServices;
+using System.Text;
+using FirebirdSql.Data.FirebirdClient;
+
+namespace FastReport
+{
+  
+  public class ReportScript  /*((String)Report.GetParameterValue(&quot;ID&quot;)) */
+  {
+    public static string path_db;
+    public readonly string fileIniPath = Application.StartupPath + @&quot;\set.ini&quot;;
+    
+     public string Param =&quot;&quot;;
+    
+
+    private void Page1_StartPage(object sender, EventArgs e)
+    {
+      try
+      {
+        if (File.Exists(fileIniPath))
+        {
+          //Создание объекта, для работы с файлом
+          INIManager manager = new INIManager(fileIniPath);
+          //Получить значение по ключу name из секции main
+          path_db = manager.GetPrivateString(&quot;connection&quot;, &quot;db&quot;);
+          //db_puth.Value = path_db;
+
+          //path_db = manager.GetPrivateString(&quot;workstation&quot;, &quot;Key&quot;);
+          // Key.Value = path_db;
+          //MessageBox.Show(&quot;бд - &quot; + path_db, &quot;Information&quot;, MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+          File.AppendAllText(Application.StartupPath + @&quot;\Applog.log&quot;, &quot;путь к db:&quot; + path_db + &quot;\n&quot;);
+          //Записать значение по ключу age в секции main
+          // manager.WritePrivateString(&quot;main&quot;, &quot;age&quot;, &quot;21&quot;);
+        }
+        else MessageBox.Show(&quot;File set.ini not found&quot;, &quot;Error&quot;, MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+      }
+      catch (Exception ex)
+      {
+        MessageBox.Show(&quot;File set.ini don't read&quot; + ex.Message, &quot;Error&quot;, MessageBoxButtons.OK, MessageBoxIcon.Error);
+      }
+       
+      Memo105.Text = &quot;До заказу № &quot;+((String)Report.GetParameterValue(&quot;ID&quot;))+&quot; від &quot;;
+      
+      getOrderDetails(((String)Report.GetParameterValue(&quot;ID&quot;)));
+      getOrderDetailsDt(((String)Report.GetParameterValue(&quot;ID&quot;)));
+    }
+    
+    
+    
+    private FbConnection GetConnection()
+    {
+      string connectionString =
+        &quot;User=SYSDBA;&quot; +
+        &quot;Password=masterkey;&quot; +
+        @&quot;Database=&quot; + path_db + &quot;;&quot; +
+        &quot;Charset=UTF8;&quot; +
+        &quot;Pooling=true;&quot; +
+        &quot;ServerType=0;&quot;;
+
+      FbConnection conn = new FbConnection(connectionString.ToString());
+
+      conn.Open();
+
+      return conn;
+    }
+    
+    public void getOrderDetails(string id)
+    {
+
+      FbConnection fb = GetConnection();
+      FbCommand SelectSQL = new FbCommand(&quot;select first 1 jc.id, jc.date_time, jc.NUM, jc.SUBDIVISION_ID,&quot; +
+        &quot;jcd.check_subdivision_name, jc.CLIENT_ID, jcd.check_client_code_name, jc.MANAGER_ID,&quot; +
+        &quot;de.code_name, jc.AGENT_ID, jcd.CHECK_AGENT_CODE_NAME, jc.PAYER_ORG_ID, jcd.check_payer_org_code_name, jc.DESCR/*13*/,&quot; +
+        &quot;jc.SUM_BASE, jc.SUM_, jc.PAYED_SUM, jc.FISCAL_NUM, jc.is_fiscal &quot; +
+        &quot;from jor_checks jc &quot; +
+        &quot;join jor_checks_dt jcd on jcd.hd_id = jc.id &quot; + 
+        &quot;join dic_employee de on de.id = jc.MANAGER_ID &quot; +
+        &quot;where jc.id = cast(@paramId as ID)&quot;, fb);
+
+      //add one IN parameter                     
+      FbParameter nameParam = new FbParameter(&quot;@paramId&quot;, value: id);
+      // добавляем параметр к команде
+      SelectSQL.Parameters.Add(nameParam);
+
+      FbTransaction fbt = fb.BeginTransaction();
+      SelectSQL.Transaction = fbt;
+      FbDataReader reader = SelectSQL.ExecuteReader();
+
+      try
+      {
+        while (reader.Read())
+        {
+          Memo105.Text = &quot;До заказу № &quot;+reader.GetString(2)+&quot;\n від &quot; +reader.GetString(1);
+          Memo102.Text = &quot;До заказу № &quot;+reader.GetString(2)+&quot;\n від &quot; + reader.GetString(1);
+         
+          Memo4.Text = reader.GetString(6);
+          Memo70.Text = reader.GetString(6);
+          
+          BarCode1.Text = reader.GetString(2);
+          
+          Memo5.Text = &quot;Сума: &quot;+reader.GetString(16)+&quot; грн.  (&quot;+RusNumber.Str(reader.GetInt32(16))+&quot;грн. 00 коп.)&quot;;
+          Memo73.Text = &quot;Сума: &quot;+reader.GetString(16)+&quot; грн.  (&quot;+RusNumber.Str(reader.GetInt32(16))+&quot;грн. 00 коп.)&quot;;
+          
+          Text1.Text = &quot;Дата:&quot;+reader.GetString(1)+&quot;\nНомер:&quot; +reader.GetString(2)+&quot;\n&quot;+reader.GetString(6);
+        }
+        //while (reader.Read())
+        //{
+        //    JrOrderDetailsModel.AddJrOrdersModel(new JrOrderDetailsModel(id: reader.GetString(0), dataCheck: reader.GetString(1), numCheck: reader.GetString(2), subdivisionId: reader.GetString(3), subdivisionName: reader.GetString(4), isFiscal: reader.GetBoolean(18), sum_Base: reader.GetDecimal(14), sum_Realiz: reader.GetDecimal(15), pAYED_SUM: reader.GetDecimal(16)));
+        //}
+      }
+      catch (Exception)
+      {
+
+      }
+      finally
+      {
+        fbt.Commit();
+        reader.Close();
+        SelectSQL.Dispose();
+        fb.Close();
+      }
+    }
+    
+    public void getOrderDetailsDt(string id)
+    {
+
+      FbConnection fb = GetConnection();
+      FbCommand SelectSQL = new FbCommand(&quot;select list(&quot; +
+      &quot;case &quot; +
+      &quot;when ( (select gc0.\&quot;COUNT\&quot; from get_calc_count(g.id) gc0) &gt; 0 ) and ( g.grp_id =  '29530' ) &quot; +
+      &quot;then (select gc.name_g  || ' { ' || gc.list || ' }'  from get_calc(g.id) gc) &quot; +                                                             
+      &quot;when ( (select gc0.\&quot;COUNT\&quot; from get_calc_count(g.id) gc0) &gt; 0 ) and ( g.id =  '30536' ) &quot; +
+      &quot;then (select gc.name_g  || ' { ' || gc.list || ' }'  from get_calc(g.id) gc) &quot; +                                                                             
+      &quot;else g.name &quot; +
+      &quot;end, ', ') &quot; +
+      &quot;from jor_checks_dt DT &quot; +
+      &quot;inner join DIC_GOODS G on G.ID = DT.GOODS_ID &quot; +
+      &quot;where DT.HD_ID = cast(@paramId as ID) and &quot; +
+      &quot;DT.COMPLEX_ID is null&quot;, fb);
+
+      //add one IN parameter                     
+      FbParameter nameParam = new FbParameter(&quot;@paramId&quot;, value: id);
+      // добавляем параметр к команде
+      SelectSQL.Parameters.Add(nameParam);
+
+      FbTransaction fbt = fb.BeginTransaction();
+      SelectSQL.Transaction = fbt;
+      FbDataReader reader = SelectSQL.ExecuteReader();
+
+      try
+      {
+        while (reader.Read())
+        {
+          Memo109.Text = reader.GetString(0);
+          Memo71.Text = reader.GetString(0);
+          
+          Text1.Text += &quot;\n&quot;+reader.GetString(0);
+        }
+        //while (reader.Read())
+        //{
+        //    JrOrderDetailsModel.AddJrOrdersModel(new JrOrderDetailsModel(id: reader.GetString(0), dataCheck: reader.GetString(1), numCheck: reader.GetString(2), subdivisionId: reader.GetString(3), subdivisionName: reader.GetString(4), isFiscal: reader.GetBoolean(18), sum_Base: reader.GetDecimal(14), sum_Realiz: reader.GetDecimal(15), pAYED_SUM: reader.GetDecimal(16)));
+        //}
+      }
+      catch (Exception)
+      {
+
+      }
+      finally
+      {
+        fbt.Commit();
+        reader.Close();
+        SelectSQL.Dispose();
+        fb.Close();
+      }
+    }
+    
+    
+    public class INIManager
+    {
+      //Конструктор, принимающий путь к INI-файлу
+      public INIManager(string aPath)
+      {
+        path = aPath;
+      }
+
+      //Конструктор без аргументов (путь к INI-файлу нужно будет задать отдельно)
+      public INIManager() : this(&quot;&quot;) { }
+
+      //Возвращает значение из INI-файла (по указанным секции и ключу) 
+      public string GetPrivateString(string aSection, string aKey)
+      {
+        //Для получения значения
+        StringBuilder buffer = new StringBuilder(SIZE);
+
+        //Получить значение в buffer
+        GetPrivateString(aSection, aKey, null, buffer, SIZE, path);
+
+        //Вернуть полученное значение
+        return buffer.ToString();
+      }
+
+      //Пишет значение в INI-файл (по указанным секции и ключу) 
+      public void WritePrivateString(string aSection, string aKey, string aValue)
+      {
+        //Записать значение в INI-файл
+        WritePrivateString(aSection, aKey, aValue, path);
+      }
+
+      //Возвращает или устанавливает путь к INI файлу
+      public string Path { get { return path; } set { path = value; } }
+
+      //Поля класса
+      private const int SIZE = 1024; //Максимальный размер (для чтения значения из файла)
+      private string path = null; //Для хранения пути к INI-файлу
+
+      //Импорт функции GetPrivateProfileString (для чтения значений) из библиотеки kernel32.dll
+      [DllImport(&quot;kernel32.dll&quot;, EntryPoint = &quot;GetPrivateProfileString&quot;)]
+      private static extern int GetPrivateString(string section, string key, string def, StringBuilder buffer, int size, string path);
+
+      //Импорт функции WritePrivateProfileString (для записи значений) из библиотеки kernel32.dll
+      [DllImport(&quot;kernel32.dll&quot;, EntryPoint = &quot;WritePrivateProfileString&quot;)]
+      private static extern int WritePrivateString(string section, string key, string str, string path);
+    }
+    
+    public class RusNumber
+    {
+      //Наименования сотен
+      private static string[] hunds =
+        {
+        &quot;&quot;, &quot;сто &quot;, &quot;двести &quot;, &quot;триста &quot;, &quot;четыреста &quot;,
+        &quot;пятьсот &quot;, &quot;шестьсот &quot;, &quot;семьсот &quot;, &quot;восемьсот &quot;, &quot;девятьсот &quot;
+        };
+      //Наименования десятков
+      private static string[] tens =
+        {
+        &quot;&quot;, &quot;десять &quot;, &quot;двадцать &quot;, &quot;тридцать &quot;, &quot;сорок &quot;, &quot;пятьдесят &quot;,
+        &quot;шестьдесят &quot;, &quot;семьдесят &quot;, &quot;восемьдесят &quot;, &quot;девяносто &quot;
+        };
+      /// &lt;summary&gt;
+      /// Перевод в строку числа с учётом падежного окончания относящегося к числу существительного
+      /// &lt;/summary&gt;
+      /// &lt;param name=&quot;val&quot;&gt;Число&lt;/param&gt;
+      /// &lt;param name=&quot;male&quot;&gt;Род существительного, которое относится к числу&lt;/param&gt;
+      /// &lt;param name=&quot;one&quot;&gt;Форма существительного в единственном числе&lt;/param&gt;
+      /// &lt;param name=&quot;two&quot;&gt;Форма существительного от двух до четырёх&lt;/param&gt;
+      /// &lt;param name=&quot;five&quot;&gt;Форма существительного от пяти и больше&lt;/param&gt;
+      /// &lt;returns&gt;&lt;/returns&gt;
+      public static string Str(int val, bool male, string one, string two, string five)
+      {
+        string[] frac20 =
+          {
+          &quot;&quot;, &quot;один &quot;, &quot;два &quot;, &quot;три &quot;, &quot;четыре &quot;, &quot;пять &quot;, &quot;шесть &quot;,
+          &quot;семь &quot;, &quot;восемь &quot;, &quot;девять &quot;, &quot;десять &quot;, &quot;одиннадцать &quot;,
+          &quot;двенадцать &quot;, &quot;тринадцать &quot;, &quot;четырнадцать &quot;, &quot;пятнадцать &quot;,
+          &quot;шестнадцать &quot;, &quot;семнадцать &quot;, &quot;восемнадцать &quot;, &quot;девятнадцать &quot;
+          };
+
+        int num = val % 1000;
+        if (0 == num) return &quot;&quot;;
+        if (num &lt; 0) throw new ArgumentOutOfRangeException(&quot;val&quot;, &quot;Параметр не может быть отрицательным&quot;);
+        if (!male)
+        {
+          frac20[1] = &quot;одна &quot;;
+          frac20[2] = &quot;две &quot;;
+        }
+
+        StringBuilder r = new StringBuilder(hunds[num / 100]);
+
+        if (num % 100 &lt; 20)
+        {
+          r.Append(frac20[num % 100]);
+        }
+        else
+        {
+          r.Append(tens[num % 100 / 10]);
+          r.Append(frac20[num % 10]);
+        }
+
+        r.Append(Case(num, one, two, five));
+
+        if (r.Length != 0) r.Append(&quot; &quot;);
+        return r.ToString();
+      }
+      /// &lt;summary&gt;
+      /// Выбор правильного падежного окончания сущесвительного
+      /// &lt;/summary&gt;
+      /// &lt;param name=&quot;val&quot;&gt;Число&lt;/param&gt;
+      /// &lt;param name=&quot;one&quot;&gt;Форма существительного в единственном числе&lt;/param&gt;
+      /// &lt;param name=&quot;two&quot;&gt;Форма существительного от двух до четырёх&lt;/param&gt;
+      /// &lt;param name=&quot;five&quot;&gt;Форма существительного от пяти и больше&lt;/param&gt;
+      /// &lt;returns&gt;Возвращает существительное с падежным окончанием, которое соответсвует числу&lt;/returns&gt;
+      public static string Case(int val, string one, string two, string five)
+      {
+        int t = (val % 100 &gt; 20) ? val % 10 : val % 20;
+
+        switch (t)
+        {
+          case 1: return one;
+          case 2: case 3: case 4: return two;
+          default: return five;
+        }
+      }
+      /// &lt;summary&gt;
+      /// Перевод целого числа в строку
+      /// &lt;/summary&gt;
+      /// &lt;param name=&quot;val&quot;&gt;Число&lt;/param&gt;
+      /// &lt;returns&gt;Возвращает строковую запись числа&lt;/returns&gt;
+      public static string Str(int val)
+      {
+        bool minus = false;
+        if (val &lt; 0) { val = -val; minus = true; }
+
+        int n = (int)val;
+
+        StringBuilder r = new StringBuilder();
+
+        if (0 == n) r.Append(&quot;0 &quot;);
+        if (n % 1000 != 0)
+          r.Append(RusNumber.Str(n, true, &quot;&quot;, &quot;&quot;, &quot;&quot;));
+
+        n /= 1000;
+
+        r.Insert(0, RusNumber.Str(n, false, &quot;тысяча&quot;, &quot;тысячи&quot;, &quot;тысяч&quot;));
+        n /= 1000;
+
+        r.Insert(0, RusNumber.Str(n, true, &quot;миллион&quot;, &quot;миллиона&quot;, &quot;миллионов&quot;));
+        n /= 1000;
+
+        r.Insert(0, RusNumber.Str(n, true, &quot;миллиард&quot;, &quot;миллиарда&quot;, &quot;миллиардов&quot;));
+        n /= 1000;
+
+        r.Insert(0, RusNumber.Str(n, true, &quot;триллион&quot;, &quot;триллиона&quot;, &quot;триллионов&quot;));
+        n /= 1000;
+
+        r.Insert(0, RusNumber.Str(n, true, &quot;триллиард&quot;, &quot;триллиарда&quot;, &quot;триллиардов&quot;));
+        if (minus) r.Insert(0, &quot;минус &quot;);
+
+        //Делаем первую букву заглавной
+        r[0] = char.ToUpper(r[0]);
+
+        return r.ToString();
+      }
+    }
+  }
+}
+</ScriptText>
+  <Dictionary>
+    <Parameter Name="ID" DataType="System.String"/>
+  </Dictionary>
+  <ReportPage Name="Page1" FirstPageSource="4" OtherPagesSource="4" StartPageEvent="Page1_StartPage">
+    <ReportTitleBand Name="ReportTitle1" Width="718.2" Height="557.49">
+      <TextObject Name="Memo8" Width="362.83" Height="548.03" Border.Lines="All" Padding="2, 1, 2, 1" VertAlign="Bottom" Font="Tahoma, 10pt"/>
+      <TextObject Name="Memo6" Left="362.83" Width="362.83" Height="548.03" Border.Lines="All" Padding="2, 1, 2, 1" VertAlign="Bottom" Font="Tahoma, 10pt"/>
+      <TextObject Name="Memo70" Top="120.94" Width="359.06" Height="18.9" Padding="2, 1, 2, 1" HorzAlign="Center" Font="Tahoma, 10pt, style=Underline"/>
+      <TextObject Name="Memo71" Top="143.62" Width="355.28" Height="177.64" Border.Lines="Bottom" Padding="2, 1, 2, 1" Font="Tahoma, 10pt"/>
+      <TextObject Name="Memo73" Top="391.18" Width="362.83" Height="39.69" Border.Lines="Bottom" Text="Сума: грн.  ()" Padding="2, 1, 2, 1" VertAlign="Bottom" Font="Tahoma, 10pt"/>
+      <TextObject Name="Memo78" Top="445.98" Width="362.83" Height="15.12" Border.Lines="Bottom" Text="Адміністратор" Padding="2, 1, 2, 1" Font="Tahoma, 8pt"/>
+      <TextObject Name="Memo102" Top="49.13" Width="362.83" Height="60.47" Border.Lines="Bottom" Text="Талон заказа &#13;&#10;№ &#13;&#10;від " Padding="2, 1, 2, 1" HorzAlign="Center" VertAlign="Bottom" Font="Tahoma, 12pt, style=Bold"/>
+      <TextObject Name="Memo104" Left="377.95" Top="52.91" Width="355.28" Height="18.9" Text="КВИТАНЦІЯ" Padding="2, 1, 2, 1" HorzAlign="Center" Font="Tahoma, 12pt, style=Bold"/>
+      <TextObject Name="Memo105" Left="377.95" Top="75.59" Width="340.16" Height="37.8" Text="До заказу №&#13;&#10;від " Padding="2, 1, 2, 1" HorzAlign="Center" Font="Tahoma, 10pt"/>
+      <TextObject Name="Memo109" Left="362.83" Top="143.62" Width="355.28" Height="177.64" Border.Lines="Bottom" Padding="2, 1, 2, 1" Font="Tahoma, 10pt"/>
+      <BarcodeObject Name="BarCode1" Left="532.91" Top="476.22" Width="193.5" Height="56.69" Zoom="1.2" Barcode.CalcCheckSum="false"/>
+      <TextObject Name="Memo1" Left="377.95" Top="30.24" Width="340.16" Height="15.12" Border.Lines="Bottom" Text="ТОВ &quot;ЭКОТЕСТ+&quot;" Padding="2, 1, 2, 1" HorzAlign="Center" Font="Tahoma, 10pt, style=Bold"/>
+      <TextObject Name="Memo4" Left="362.83" Top="113.39" Width="355.28" Height="26.46" Padding="2, 1, 2, 1" HorzAlign="Center" VertAlign="Bottom" Font="Tahoma, 10pt, style=Underline"/>
+      <TextObject Name="Memo5" Left="362.83" Top="391.18" Width="355.28" Height="39.69" Border.Lines="Bottom" Text="Сума:  грн.  ()" Padding="2, 1, 2, 1" VertAlign="Bottom" Font="Tahoma, 10pt"/>
+      <TextObject Name="Memo3" Left="362.83" Top="445.98" Width="351.5" Height="15.12" Border.Lines="Bottom" Text="Адміністратор" Padding="2, 1, 2, 1" Font="Tahoma, 8pt"/>
+      <TextObject Name="Memo41" Top="30.24" Width="362.83" Height="15.12" Border.Lines="Bottom" Text="ТОВ &quot;ЭКОТЕСТ+&quot;" Padding="2, 1, 2, 1" HorzAlign="Center" Font="Tahoma, 10pt, style=Bold"/>
+      <TextObject Name="Memo9" Left="211.65" Top="3.78" Width="147.4" Height="18.9" Border.Lines="Bottom" Text="код ЄДРПОУ 39031112" Padding="2, 1, 2, 1" VertAlign="Bottom" Font="Tahoma, 8pt"/>
+      <TextObject Name="Memo10" Left="561.26" Top="3.78" Width="145.52" Height="18.9" Border.Lines="Bottom" Text="код ЄДРПОУ 39031112" Padding="2, 1, 2, 1" VertAlign="Bottom" Font="Tahoma, 8pt"/>
+      <TextObject Name="Memo11" Left="3.78" Top="510.24" Width="359.06" Height="37.8" Border.Lines="Right, Bottom" Padding="2, 1, 2, 1" VertAlign="Bottom" Font="Tahoma, 10pt"/>
+      <TextObject Name="Memo12" Left="362.83" Top="510.24" Width="359.06" Height="37.8" Border.Lines="Right, Bottom" Padding="2, 1, 2, 1" VertAlign="Bottom" Font="Tahoma, 10pt"/>
+      <TextObject Name="Memo13" Left="362.83" Top="332.6" Width="355.28" Height="45.35" Border.Lines="Bottom" Text="Завітайте на наш сайт: rcld.com.ua . А також до групи facebook: facebook.com/rcldlab" Padding="2, 1, 2, 1" HorzAlign="Center" Font="Tahoma, 11pt, style=Italic"/>
+    </ReportTitleBand>
+    <ReportSummaryBand Name="ReportSummary1" Top="561.49" Width="718.2" Height="166.32">
+      <TextObject Name="Text1" Width="425.21" Height="166.32" Border.Lines="Bottom" Padding="2, 1, 2, 1" Font="Tahoma, 10pt"/>
+    </ReportSummaryBand>
+  </ReportPage>
+</Report>

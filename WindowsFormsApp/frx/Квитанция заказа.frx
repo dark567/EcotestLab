@@ -1,0 +1,60 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Report ScriptLanguage="CSharp" ReportInfo.Created="11/05/2019 12:18:08" ReportInfo.Modified="11/05/2019 12:23:49" ReportInfo.CreatorVersion="1.4.18.0">
+  <ScriptText>using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Windows.Forms;
+using System.Drawing;
+using System.Data;
+using FastReport;
+using FastReport.Data;
+using FastReport.Dialog;
+using FastReport.Barcode;
+using FastReport.Table;
+using FastReport.Utils;
+
+namespace FastReport
+{
+  public class ReportScript
+  {
+  }
+}
+/*procedure frxReport1OnStartReport(Sender: TfrxComponent);
+begin
+  //ПКО Лаб
+   dt_l.Open;
+
+   P_LAB.visible := true;
+                                                                                                        
+end;
+
+begin
+      
+
+end.
+*/</ScriptText>
+  <Dictionary>
+    <Parameter Name="ID" DataType="System.String"/>
+  </Dictionary>
+  <ReportPage Name="P_LAB">
+    <ReportTitleBand Name="ReportTitle1" Width="718.2" Height="582.05">
+      <TextObject Name="Memo8" Width="362.83" Height="548.03" Border.Lines="All" Padding="2, 1, 2, 1" VertAlign="Bottom" Font="Tahoma, 10pt"/>
+      <TextObject Name="Memo6" Left="362.83" Width="362.83" Height="548.03" Border.Lines="All" Padding="2, 1, 2, 1" VertAlign="Bottom" Font="Tahoma, 10pt"/>
+      <TextObject Name="Memo78" Top="445.98" Width="362.83" Height="15.12" Border.Lines="Bottom" Text="Адміністратор" Padding="2, 1, 2, 1" Font="Tahoma, 8pt"/>
+      <TextObject Name="Memo102" Top="49.13" Width="362.83" Height="60.47" Border.Lines="Bottom" Text="Талон заказа &#13;&#10;№ &#13;&#10;від " Padding="2, 1, 2, 1" HorzAlign="Center" VertAlign="Bottom" Font="Tahoma, 12pt, style=Bold"/>
+      <TextObject Name="Memo104" Left="377.95" Top="52.91" Width="355.28" Height="18.9" Text="КВИТАНЦІЯ" Padding="2, 1, 2, 1" HorzAlign="Center" Font="Tahoma, 12pt, style=Bold"/>
+      <TextObject Name="Memo105" Left="377.95" Top="75.59" Width="340.16" Height="37.8" Text="До заказу №&#13;&#10;від " Padding="2, 1, 2, 1" HorzAlign="Center" Font="Tahoma, 10pt"/>
+      <BarcodeObject Name="BarCode1" Left="532.91" Top="476.22" Width="193.5" Height="56.69" Zoom="1.2" Barcode.CalcCheckSum="false"/>
+      <TextObject Name="Memo1" Left="377.95" Top="30.24" Width="340.16" Height="15.12" Border.Lines="Bottom" Text="ТОВ &quot;ЭКОТЕСТ+&quot;" Padding="2, 1, 2, 1" HorzAlign="Center" Font="Tahoma, 10pt, style=Bold"/>
+      <TextObject Name="Memo3" Left="362.83" Top="445.98" Width="351.5" Height="15.12" Border.Lines="Bottom" Text="Адміністратор" Padding="2, 1, 2, 1" Font="Tahoma, 8pt"/>
+      <TextObject Name="Memo41" Top="30.24" Width="362.83" Height="15.12" Border.Lines="Bottom" Text="ТОВ &quot;ЭКОТЕСТ+&quot;" Padding="2, 1, 2, 1" HorzAlign="Center" Font="Tahoma, 10pt, style=Bold"/>
+      <TextObject Name="Memo9" Left="211.65" Top="3.78" Width="147.4" Height="18.9" Border.Lines="Bottom" Text="код ЄДРПОУ 39031112" Padding="2, 1, 2, 1" VertAlign="Bottom" Font="Tahoma, 8pt"/>
+      <TextObject Name="Memo10" Left="551.81" Top="3.78" Width="154.97" Height="18.9" Border.Lines="Bottom" Text="код ЄДРПОУ 39031112" Padding="2, 1, 2, 1" VertAlign="Bottom" Font="Tahoma, 8pt"/>
+      <TextObject Name="Memo11" Left="3.78" Top="510.24" Width="359.06" Height="37.8" Border.Lines="Right, Bottom" Padding="2, 1, 2, 1" VertAlign="Bottom" Font="Tahoma, 10pt"/>
+      <TextObject Name="Memo12" Left="362.83" Top="510.24" Width="359.06" Height="37.8" Border.Lines="Right, Bottom" Padding="2, 1, 2, 1" VertAlign="Bottom" Font="Tahoma, 10pt"/>
+      <TextObject Name="Memo13" Left="362.83" Top="332.6" Width="355.28" Height="45.35" Border.Lines="Bottom" Text="Завітайте на наш сайт: rcld.com.ua . А також до групи facebook: facebook.com/rcldlab" Padding="2, 1, 2, 1" HorzAlign="Center" Font="Tahoma, 11pt, style=Italic"/>
+    </ReportTitleBand>
+    <ReportSummaryBand Name="ReportSummary1" Top="586.05" Width="718.2" Height="464.88"/>
+  </ReportPage>
+</Report>

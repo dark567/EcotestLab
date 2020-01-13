@@ -202,6 +202,7 @@
             this.button2.TextColorDisabled = System.Drawing.Color.Black;
             this.button2.TextColorHover = System.Drawing.Color.White;
             this.button2.TextColorNormal = System.Drawing.Color.Black;
+            this.button2.Click += new System.EventHandler(this.Button2_Click);
             // 
             // button1
             // 
@@ -228,6 +229,7 @@
             this.textBox2.Name = "textBox2";
             this.textBox2.Size = new System.Drawing.Size(83, 20);
             this.textBox2.TabIndex = 19;
+            this.textBox2.KeyUp += new System.Windows.Forms.KeyEventHandler(this.TextBox2_KeyUp);
             // 
             // label4
             // 
